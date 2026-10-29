@@ -202,7 +202,7 @@ The **single-case smoke run succeeded** and **all ten preregistered Hindi resear
 
 An initial, non-specialist editorial review indicated **nine of ten examples were acceptable or correctly left unchanged; one was not acceptable**, with an altered technical term and unresolved grammatical agreement. This is a small, self-authored research sample and not a formal quality certification, broader statistical accuracy estimate, or independent linguist assessment. The earlier 40-case IndicXlit transliteration results remain a separate experiment.
 
-**Publication limitation:** BharatGen Research License history restricts public output/weight distribution without approval despite inconsistent model metadata. The individual generated sentences and source evidence are retained for private academic review, not published here. No public BharatGen service exists; the opt-in localhost UI never auto-applies edits and still needs live private-GPU browser QA.
+**Publication limitation:** BharatGen's research-license history restricts public output and checkpoint distribution without approval. Raw outputs remain private. No public BharatGen service is deployed; the localhost interface still requires live private-GPU browser QA.
 
 
 ## 14. Deployment reproducibility and model-fidelity decision
