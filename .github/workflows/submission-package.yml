@@ -1,0 +1,28 @@
+name: Package verifiable IndicWrite faculty submission
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/submission-package.yml'
+      - 'scripts/build_submission_package.py'
+      - 'reports/IndicWrite_CS3235_Project_Report.pdf'
+jobs:
+  submit-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m pip install pytest
+      - name: Verify offline source/evaluation/report consistency
+        run: python -m pytest -q
+      - name: Create audited submission archive (no weights or secrets)
+        run: python scripts/build_submission_package.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: IndicWrite-CS3235-CIE3-Faculty-Submission
+          path: submission/IndicWrite_CS3235_CIE3_Submission.zip
+          if-no-files-found: error
+          retention-days: 60
