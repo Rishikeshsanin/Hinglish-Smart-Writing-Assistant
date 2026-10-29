@@ -11,7 +11,7 @@ Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an 
 - Real-model IndicXlit wrapper via the official `ai4bharat-transliteration` Python package (no hardcoded generated results).
 - Roman Hindi → Hindi script, preserving spaces, punctuation, digits, existing Devanagari, and explicitly preserved English terms.
 - Streamlit UI with sample inputs, validation, comparison, and copyable output.
-- 40 offline tests, clearly separate from executable real-model smoke tests.
+- Offline deterministic tests separated from genuine pretrained-model smoke and browser QA.
 
 **Model execution status:** VERIFIED on Ubuntu 22.04 / Python 3.10 in [genuine IndicXlit smoke run #40870311669](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40870311669), with official downloaded neural weights. Unit tests remain distinct from real inference.
 
@@ -24,7 +24,7 @@ Install Python 3.10 (not the system Python 3.14) and create an isolated environm
 ```powershell
 py -3.10 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip setuptools wheel
+python -m pip install 'pip==23.3.2' 'setuptools<70' wheel
 python -m pip install -r requirements.txt
 $env:PYTHONPATH="src"
 python scripts/smoke_indicxlit.py
@@ -48,7 +48,7 @@ PYTHONPATH=src streamlit run app.py
 
 ```bash
 python -m pip install pytest
-PYTHONPATH=src python -m pytest -q
+python -m pytest -q
 ```
 
 The tests use a controlled **stub** to verify text handling; the smoke script is the required genuine-model check.
@@ -60,7 +60,7 @@ Roman-Hindi input → validation / tokenization → IndicXlit XlitEngine (hi)
                  → Devanagari text → side-by-side Streamlit output
 ```
 
-The engine loads once per Python process. Roman tokens are sent individually to `XlitEngine.translit_word(..., topk=1)`; existing non-Roman characters, punctuation, and digit tokens are preserved. Users can list explicit English words that must remain unchanged. Automatic language identification is **not** implemented, and ambiguous Hinglish words may be transliterated incorrectly.
+The engine is cached per Python process (concurrent cold starts require separate load testing). Roman tokens are sent individually to `XlitEngine.translit_word(..., topk=1)`; existing non-Roman characters, punctuation, and digit tokens are preserved. Users can list explicit English words that must remain unchanged. Automatic language identification is **not** implemented, and ambiguous Hinglish words may be transliterated incorrectly.
 
 ## References & attribution
 
@@ -115,3 +115,17 @@ The BharatGen repository history contains a restrictive Research License even th
 ### Input safety and provenance
 
 Preservation terms currently support **A–Z words only**. Unsupported entries such as `C++`, an email address, or `3d` show a validation warning rather than being silently ignored. Input length and token limits are checked before loading neural weights. If the input is already Hindi or every Roman token is protected, no model is loaded and the UI describes the result as unchanged rather than AI-generated. Changing preservation settings invalidates the previous output and downloads.
+
+
+## Research-only BharatGen reproducibility (not a hosted feature)
+
+The BharatGen adapter is isolated from the normal Streamlit application. It pins the upstream model revision, checks reviewed custom-code hashes, preserves all official stopping tokens, rejects incomplete generations, and writes JSONL evidence. **No full pretrained BharatGen inference is currently verified.** The live model metadata and historical license information disagree; written clarification is necessary before publicly releasing weights or model outputs.
+
+The [GPU notebook](notebooks/BharatGen_Real_Smoke_Colab.ipynb) uses a separate Python 3.12 virtual environment and explicitly opts in to downloading pretrained weights and executing audited upstream Python. The notebook requires a user-authorized disposable GPU session. It should never be presented as already executed.
+
+## Release and submission boundaries
+
+- The real IndicXlit→OPUS-MT browser flow was verified, but that translation model is **Helsinki OPUS**, not IndicTrans2.
+- Hindi grammar rewriting remains experimental and disabled; human review is not interchangeable with real model inference.
+- Native Windows support, public deployment, and full accessibility conformance are not verified. Prefer the documented Python 3.10 Ubuntu/WSL2 classroom demo, which matches the executed Linux test environment.
+- The current 40-case evaluation uses authored references and is **not** an official Aksharantar leaderboard result.

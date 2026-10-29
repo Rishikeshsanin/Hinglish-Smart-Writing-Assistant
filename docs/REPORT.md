@@ -157,7 +157,7 @@ The next development phases would evaluate BharatGen Param-1 for grammatical rew
 
 ## 10. Conclusion
 
-IndicWrite now provides an independently testable Indian-language AI transliteration application, with an accessible Streamlit interface, genuine AI4Bharat IndicXlit inference, forty measured cases, transparent failure analysis and real desktop/mobile screenshots. The reported performance and implementation scope are grounded in saved logs and results, while rewriting/translation remain unimplemented and explicitly documented.
+IndicWrite now provides an independently testable Indian-language AI transliteration application, with a responsive Streamlit interface, genuine AI4Bharat IndicXlit inference, forty measured cases, transparent failure analysis and real desktop/mobile screenshots. The reported performance and implementation scope are grounded in saved logs and results, while rewriting/translation remain unimplemented and explicitly documented.
 
 ## References
 
@@ -184,3 +184,12 @@ A third research-only candidate, `Qwen/Qwen2.5-0.5B-Instruct`, exactly corrected
 A separately attributed, Apache-2.0 Helsinki-NLP OPUS-MT Hindi-English model was successfully executed on two sentences, returning `I have to go to college tomorrow.` and `Hello, how are you?`. This independent optional translation feature is **not AI4Bharat IndicTrans2**. The original 40-case IndicXlit CER/accuracy remains a transliteration-only result, not a measure of grammar or translation.
 
 Evidence: https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545, https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876907788, https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40877372435, and https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40878109536. BharatGen license history: https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct/commits/main.
+
+
+## 12. Engineering hardening and final release gates
+
+Following independent QA, the implementation now validates input and preservation settings before neural model loading, clears stale results whenever preservation settings change, labels unchanged Hindi text accurately, and conservatively preserves complete Unicode words and structured items such as emails and URLs. Browser QA now records the actual generated Devanagari text, checks the exported UTF-8 data, verifies Clear and checks horizontal overflow. These repairs do not alter the historical 40-case reference dataset or retroactively change the measured scores.
+
+The experimental BharatGen research loader has been hardened to pin a reviewed model revision and hashes of custom Python files, require explicit remote-code opt-in, enforce a prompt budget and complete EOS handling, and reject non-Hindi/incomplete outputs. The model has **not** been executed on a GPU here, so no grammatical accuracy or semantic preservation score is claimed. The separate public-model licensing question is unresolved.
+
+The UI has been tested for desktop and narrow Chromium viewports, but a full screen-reader, keyboard, high-zoom, and WCAG audit has not been completed. Any public deployment requires an external reachable conversion test and resource measurements. The project is therefore a verified transliteration and optional independently-attributed translation prototype, not a fully validated BharatGen rewriting application.
