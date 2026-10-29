@@ -93,7 +93,6 @@ def generate_hindi_gec(text: str, resources=None) -> str:
 
 def generate_english(text: str, resources=None) -> str:
     """Run actual pretrained Hindi->English translation, without substitution."""
-    import torch
 
     sentence = validate_hindi(text)
     tokenizer, model, device = resources if resources is not None else load_hi_en()
