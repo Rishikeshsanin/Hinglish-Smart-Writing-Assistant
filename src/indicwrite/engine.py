@@ -3,6 +3,7 @@
 import argparse
 from functools import lru_cache
 from threading import RLock
+from .compat_py311 import fairseq_py311_dataclass_context
 
 
 _LOAD_LOCK = RLock()
@@ -19,10 +20,12 @@ def _load_indicxlit_cached():
     No untrusted user-supplied checkpoint paths are supported.
     """
     import torch
-    from ai4bharat.transliteration import XlitEngine
-
-    with torch.serialization.safe_globals([argparse.Namespace]):
-        return XlitEngine("hi", beam_width=4, rescore=False)
+    # Fairseq imports configuration classes lazily inside the constructor.
+    # Keep the dataclass compatibility boundary around import AND initialization.
+    with fairseq_py311_dataclass_context():
+        from ai4bharat.transliteration import XlitEngine
+        with torch.serialization.safe_globals([argparse.Namespace]):
+            return XlitEngine("hi", beam_width=4, rescore=False)
 
 
 def load_indicxlit():

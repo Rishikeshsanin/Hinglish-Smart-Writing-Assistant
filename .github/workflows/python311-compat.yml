@@ -3,7 +3,9 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['.github/workflows/python311-compat.yml']
+    paths: ['.github/workflows/python311-compat.yml','src/indicwrite/engine.py','src/indicwrite/compat_py311.py']
+  pull_request:
+    paths: ['.github/workflows/python311-compat.yml','src/indicwrite/engine.py','src/indicwrite/compat_py311.py']
 jobs:
   python311:
     runs-on: ubuntu-22.04
