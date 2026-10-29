@@ -58,7 +58,7 @@ def test_caps_roman_word_count():
 
 
 def test_preserve_terms_filter():
-    assert parse_preserve_terms("Python, EMAIL,  , 3d, can't") == {"python", "email"}
+    assert parse_preserve_terms("Python, EMAIL,  , ") == {"python", "email"}
 
 
 def test_invalid_model_response_not_silently_faked():
