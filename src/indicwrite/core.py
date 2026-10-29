@@ -29,11 +29,42 @@ class ModelOutputError(RuntimeError):
 
 def parse_preserve_terms(raw: str) -> set[str]:
     """Parse a user-controlled comma-separated set of English tokens."""
-    return {
-        item.strip().casefold()
-        for item in raw.split(",")
-        if item.strip() and ROMAN_TOKEN.fullmatch(item.strip())
-    }
+    if not isinstance(raw, str):
+        raise InputError("Preserved terms must be comma-separated text.")
+    terms = [item.strip() for item in raw.split(",") if item.strip()]
+    invalid = [item for item in terms if not ROMAN_TOKEN.fullmatch(item)]
+    if invalid:
+        raise InputError(
+            "Preserved terms currently accept A-Z words only; unsupported: "
+            + ", ".join(invalid[:5])
+        )
+    return {term.casefold() for term in terms}
+
+
+def validate_text(text: str) -> list[str]:
+    """Reject invalid text before the heavyweight AI4Bharat model is loaded."""
+    if not isinstance(text, str):
+        raise InputError("Input must be text.")
+    if not text.strip():
+        raise InputError("Enter a Roman-Hindi sentence to continue.")
+    if len(text) > MAX_CHARS:
+        raise InputError(f"Maximum input is {MAX_CHARS} characters.")
+    tokens = TOKENIZER.findall(text)
+    roman_count = sum(bool(ROMAN_TOKEN.fullmatch(token)) for token in tokens)
+    if roman_count > MAX_ROMAN_WORDS:
+        raise InputError(f"Maximum input is {MAX_ROMAN_WORDS} Roman-script words.")
+    return tokens
+
+
+def has_convertible_tokens(tokens: list[str], preserve_terms: set[str] | None = None) -> bool:
+    """Check whether inference is necessary; skip model for fully preserved input."""
+    protected = {term.casefold() for term in (preserve_terms or set())}
+    return any(
+        ROMAN_TOKEN.fullmatch(token)
+        and token.casefold() not in protected
+        and not (token.isupper() and 2 <= len(token) <= 6)
+        for token in tokens
+    )
 
 
 def transliterate_text(
@@ -47,18 +78,7 @@ def transliterate_text(
     English words are inherently ambiguous: an explicit preserve list and
     all-uppercase acronyms (2–6 letters) stay in Latin script.
     """
-    if not isinstance(text, str):
-        raise InputError("Input must be text.")
-    if not text.strip():
-        raise InputError("Enter a Roman-Hindi sentence to continue.")
-    if len(text) > MAX_CHARS:
-        raise InputError(f"Maximum input is {MAX_CHARS} characters.")
-
-    tokens = TOKENIZER.findall(text)
-    roman_count = sum(bool(ROMAN_TOKEN.fullmatch(token)) for token in tokens)
-    if roman_count > MAX_ROMAN_WORDS:
-        raise InputError(f"Maximum input is {MAX_ROMAN_WORDS} Roman-script words.")
-
+    tokens = validate_text(text)
     protected = {term.casefold() for term in (preserve_terms or set())}
     output: list[str] = []
     cache: dict[str, str] = {}

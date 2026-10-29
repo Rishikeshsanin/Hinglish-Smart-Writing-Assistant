@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['.github/workflows/browser-qa.yml', 'scripts/browser_smoke.py']
+    paths: ['.github/workflows/browser-qa.yml', 'scripts/browser_smoke.py', 'app.py', 'src/indicwrite/core.py', 'src/indicwrite/engine.py', 'requirements.txt']
 
 permissions:
   contents: write

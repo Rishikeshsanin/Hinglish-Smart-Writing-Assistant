@@ -4,6 +4,7 @@ import pytest
 
 from indicwrite.core import (
     InputError, ModelOutputError, parse_preserve_terms, transliterate_text,
+    validate_text, has_convertible_tokens,
 )
 
 
@@ -57,7 +58,7 @@ def test_caps_roman_word_count():
 
 
 def test_preserve_terms_filter():
-    assert parse_preserve_terms("Python, EMAIL,  , 3d, can't") == {"python", "email"}
+    assert parse_preserve_terms("Python, EMAIL,  , ") == {"python", "email"}
 
 
 def test_invalid_model_response_not_silently_faked():
@@ -73,3 +74,30 @@ def test_no_roman_characters_yields_unmodified_input():
     engine = FakeEngine()
     assert transliterate_text("हिंदी 123! 🎉", engine) == "हिंदी 123! 🎉"
     assert engine.calls == []
+
+
+@pytest.mark.parametrize("bad", ["3d", "can't", "C++", "user@example.com", "e-mail"])
+def test_unsupported_preservation_terms_raise_instead_of_ignoring(bad):
+    with pytest.raises(InputError, match="unsupported"):
+        parse_preserve_terms("Python, " + bad)
+
+
+def test_preflight_rejects_81_tokens():
+    with pytest.raises(InputError, match="80"):
+        validate_text("kal " * 81)
+
+
+def test_preflight_handles_exact_limits():
+    assert len(validate_text("a" * 500)) == 1
+    assert len(validate_text("kal " * 79 + "kal")) > 0
+
+
+def test_preflight_skips_model_for_unmodified_hindi_and_protected_terms():
+    assert not has_convertible_tokens(validate_text("हिंदी 123! 🎉"))
+    assert not has_convertible_tokens(validate_text("Python AI"), {"python"})
+    assert has_convertible_tokens(validate_text("kal Python AI"), {"python"})
+
+
+def test_noop_with_no_model_is_not_an_inference_claim():
+    assert transliterate_text("हिंदी 123!", None) == "हिंदी 123!"
+    assert transliterate_text("Python AI", None, {"python"}) == "Python AI"
