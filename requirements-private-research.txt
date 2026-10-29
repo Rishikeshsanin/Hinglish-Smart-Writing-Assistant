@@ -1,0 +1,5 @@
+# PRIVATE academic GPU research in an isolated Python 3.12 environment.
+# No ai4bharat-transliteration, Fairseq or public hosting. Install only after
+# reviewing the model's pin, remote code hashes and research-license terms.
+-r requirements-bharatgen.txt
+streamlit>=1.42,<2
