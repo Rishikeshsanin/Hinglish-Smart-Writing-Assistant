@@ -1,16 +1,16 @@
 # Model implementation and evidence status
 
-Last reviewed: 2026-10-29.
+Last reviewed: 2026-10-29. Real-model and browser evidence verified.
 
 | Feature | Official checkpoint/package | Status |
 | --- | --- | --- |
-| Roman Hindi to Devanagari | AI4Bharat IndicXlit, `ai4bharat-transliteration==1.1.3` | Official API implemented; inference **NOT verified** as of initial commit |
+| Roman Hindi to Devanagari | AI4Bharat IndicXlit, `ai4bharat-transliteration==1.1.3` | Official neural inference **VERIFIED** on GitHub Actions (run 40870311669) |
 | Hindi grammar rewriting | `bharatgenai/Param-1-2.9B-Instruct` | Not downloaded, not integrated, not executed |
 | Hindi → English translation | AI4Bharat IndicTrans2 | Not downloaded, not integrated, not executed |
 
 ## Why genuine inference is still pending
 
-The authoring environment cannot resolve external PyPI/Hugging Face hosts; Python packages and weights cannot be downloaded there. No fallback fake model is shipped. The optional GitHub Actions workflow named **Genuine IndicXlit model smoke (manual)** is supplied to test actual inference on an Ubuntu runner after triggering it manually. Mark as verified **only** once output and successful exit status have been inspected.
+The initial runner installed the package and downloaded the 121 MB checkpoint but failed due to PyTorch 2.6+ restricted legacy Fairseq checkpoint loading. Scoped allowlisting of the official checkpoint's `argparse.Namespace` resolved this. Follow-up GitHub Actions run **40870311669** passed real inference on three sample sentences; run **40870722731** executed forty genuine predictions; run **40871267464** passed Chromium desktop/mobile UI checks. No mock results were used for these executed checks.
 
 ## Model considerations
 
@@ -22,7 +22,7 @@ The authoring environment cannot resolve external PyPI/Hugging Face hosts; Pytho
 
 - `tests/test_core.py` verifies transformations, input checks, formatting and error propagation using a fake model.
 - `scripts/smoke_indicxlit.py` must execute the genuine pretrained model and assert a Devanagari result.
-- Full evaluation results and real UI screenshots must follow successful inference; no results have been invented.
+- Real results are committed under `evaluation/results/`; authentic Chromium screenshots and evidence are under `screenshots/`.
 
 ## Official sources
 

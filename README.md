@@ -13,7 +13,7 @@ Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an 
 - Streamlit UI with sample inputs, validation, comparison, and copyable output.
 - Unit tests with a **fake engine**, clearly separate from an executable real-model smoke test.
 
-**Model execution status:** Real AI4Bharat inference requires downloading the pretrained checkpoint on first use. Check `scripts/smoke_indicxlit.py` and GitHub Actions logs for an actual inference result. Unit tests passing **do not** establish model execution.
+**Model execution status:** VERIFIED on Ubuntu 22.04 / Python 3.10 in [genuine IndicXlit smoke run #40870311669](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40870311669), with official downloaded neural weights. Unit tests remain distinct from real inference.
 
 **Not yet integrated:** BharatGen Param-1 rewriting and IndicTrans2 translation. Neither is represented as available or executed.
 
@@ -75,10 +75,18 @@ The engine loads once per Python process. Roman tokens are sent individually to 
 
 - [x] Source structure and initial application
 - [x] Stubbed text-handling tests and real-model smoke-test script
-- [ ] Successful genuine IndicXlit inference with captured logs
-- [ ] 40 evaluated representative cases and error analysis
+- [x] Successful genuine IndicXlit inference with captured logs
+- [x] 40 real-model cases, recorded predictions and error analysis (macro CER 5.58%, word accuracy 82.67%; handcrafted test set)
 - [ ] Verified smart rewriting and optional translation (if feasible)
-- [ ] Actual running-app screenshots
-- [ ] Academic PDF report
+- [x] Actual Chromium desktop/mobile screenshots and browser QA
+- [ ] Academic PDF report (being prepared from measured evidence)
 
 **Due:** November 6, 2026 at 10:00 AM IST.
+
+## Evidence links (executed, not simulated)
+
+- [Real model smoke run](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40870311669)
+- [40-case evaluated predictions](evaluation/results/predictions.csv) · [Metrics](evaluation/results/metrics.json) · [Failure examples](evaluation/results/worst_cases.csv)
+- [Real desktop screenshot](screenshots/desktop.png) · [Real mobile screenshot](screenshots/mobile.png) · [Browser QA trace](screenshots/browser-qa.json)
+
+**Observed custom dataset metrics:** 40 test cases; macro CER 5.58%; macro word accuracy 82.67%; exact-match rate 55%. These figures are not official Aksharantar benchmark results. The worst category was spelling variation (49.33% mean word accuracy).

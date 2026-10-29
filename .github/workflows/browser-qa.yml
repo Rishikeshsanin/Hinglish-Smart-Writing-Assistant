@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['.github/workflows/browser-qa.yml']
+    paths: ['.github/workflows/browser-qa.yml', 'scripts/browser_smoke.py']
 
 permissions:
   contents: write
@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f screenshots/desktop.png screenshots/mobile.png screenshots/browser-qa.json
+          git add -f screenshots/desktop.png screenshots/mobile.png screenshots/mobile-top.png screenshots/browser-qa.json
           git diff --cached --exit-code && exit 0
           git commit -m "test(ui): record real desktop and mobile IndicWrite screenshots"
           git push origin HEAD:main
