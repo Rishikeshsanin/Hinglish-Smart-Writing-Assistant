@@ -169,3 +169,14 @@ IndicWrite now provides an independently testable Indian-language AI translitera
 6. [AI4Bharat IndicTrans2 official repository](https://github.com/AI4Bharat/IndicTrans2).
 7. [PyTorch serialization behavior](https://docs.pytorch.org/docs/stable/notes/serialization.html).
 8. [This project's recorded smoke test](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40870311669), [evaluation run](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40870722731), and [browser QA run](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40871267464).
+
+
+## 11. Further real-model experiments and restrictions (October 29, 2026)
+
+The real BharatGen Param-1 checkpoint LICENSE is the **BharatGen Research License**, not merely the Apache-2.0 badge displayed in metadata. Academic non-commercial experiments are permitted, but public dissemination of the checkpoint or its outputs requires written approval. This project does not claim to have executed BharatGen or obtained publishing approval.
+
+A real run of the independently authored, MIT-licensed Hindi mT5 grammar checkpoint `manavdhamecha77/GEC-mT5-Small-Hindi` yielded severe Bengali/mixed-script drift from Hindi prompts, including `আমি স্কুলে যাবে?` from `मैं स्कूल जाता है।`. It is a **failed model-quality experiment**, not a completed writing-improvement feature. Another model, `Rucha-Ambaliya/mt5-small-indic-gec`, had only 1/5 exact matches on five test sentences (same score with raw and instruction-prefixed input). The grammar UI is disabled by default to avoid misleading users.
+
+A separately attributed, Apache-2.0 Helsinki-NLP OPUS-MT Hindi-English model was successfully executed on two sentences, returning `I have to go to college tomorrow.` and `Hello, how are you?`. This independent optional translation feature is **not AI4Bharat IndicTrans2**. The original 40-case IndicXlit CER/accuracy remains a transliteration-only result, not a measure of grammar or translation.
+
+Evidence: https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545 and https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876907788. The BharatGen license is https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct/blob/main/LICENSE.

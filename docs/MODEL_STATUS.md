@@ -31,3 +31,14 @@ The initial runner installed the package and downloaded the 121 MB checkpoint bu
 - https://pypi.org/project/ai4bharat-transliteration/1.1.3/
 - https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct
 - https://github.com/AI4Bharat/IndicTrans2
+
+
+## Updated optional-model verification and licensing
+
+Actual BharatGen checkpoint license is **BharatGen Research License**, despite an Apache-2.0 badge in metadata. Its terms require written permission to publicly share outputs or deploy its weights. No BharatGen inference is verified; a local research notebook exists.
+
+A real test of MIT `manavdhamecha77/GEC-mT5-Small-Hindi` exposed severe script drift into Bengali, so it **failed quality review**. A second MIT checkpoint `Rucha-Ambaliya/mt5-small-indic-gec` ran on five Hindi sentences with two prompt variants and achieved 1/5 exact matches in either variant. Do not call either an effective grammar improvement module. The grammar UI is disabled by default.
+
+Apache-2.0 `Helsinki-NLP/opus-mt-hi-en` **ran genuine Hindi-to-English inference successfully**, with two comprehensible examples (GitHub Actions run 40876423545). This is an independently attributed optional model, **not AI4Bharat IndicTrans2**. IndicTrans2 remains access-gated, with no executed inference.
+
+Evidence: https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545 and https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876907788.

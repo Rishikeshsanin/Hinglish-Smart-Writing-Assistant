@@ -99,3 +99,13 @@ The engine loads once per Python process. Roman tokens are sent individually to 
 - [Report generation CI](.github/workflows/report.yml)
 
 **Scope disclosure:** The genuine transliteration MVP, evaluation, and browser QA are complete. BharatGen rewriting and optional IndicTrans2 translation are not yet integrated. This is not a claim that the entire original multi-model project is finished.
+
+
+## Additional real-model findings (October 29, 2026)
+
+The optional language-service models can be installed with `python -m pip install -r requirements-language-services.txt`.
+Run `INDICWRITE_ENABLE_LANGUAGE_SERVICES=1 PYTHONPATH=src streamlit run app.py` to expose the separately attributed **Helsinki-NLP OPUS-MT Hindi-to-English** model. It is *not* IndicTrans2. The public Apache-2.0 checkpoint produced two coherent actual translations on GitHub Actions run [40876423545](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545).
+
+**Grammar is intentionally disabled by default**, including in the optional environment. Two genuine MIT Hindi mT5 checkpoints were tested: the first produced mixed Bengali/Hindi, and the second corrected only 1 of 5 manually authored Hindi sentences. For controlled research only, set `INDICWRITE_ENABLE_GEC_EXPERIMENTAL=1`; outputs are checked for script drift and altered digits but still require human scrutiny. Neither model is BharatGen.
+
+The actual [BharatGen Research License](https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct/blob/main/LICENSE) requires written approval for publicly publishing model outputs or hosting the checkpoint. We do not publicly host it or claim to have executed it. The original 40-case IndicXlit evaluation remains unchanged and is not a grammar accuracy measure.
