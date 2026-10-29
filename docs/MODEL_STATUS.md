@@ -42,3 +42,8 @@ A real test of MIT `manavdhamecha77/GEC-mT5-Small-Hindi` exposed severe script d
 Apache-2.0 `Helsinki-NLP/opus-mt-hi-en` **ran genuine Hindi-to-English inference successfully**, with two comprehensible examples (GitHub Actions run 40876423545). This is an independently attributed optional model, **not AI4Bharat IndicTrans2**. IndicTrans2 remains access-gated, with no executed inference.
 
 Evidence: https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545 and https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876907788.
+
+
+## Additional instruction-model screening
+
+Independent Apache-2.0 Qwen2.5-0.5B-Instruct achieved 2/5 exact matches but committed major meaning changes; Qwen3-0.6B achieved 0/5 exact matches. Both were actually executed; neither is an Indian sovereign checkpoint or integrated as a trustworthy grammar feature. See actual CI logs under `.github/workflows/qwen-gec.yml` and `.github/workflows/qwen3-gec.yml`.

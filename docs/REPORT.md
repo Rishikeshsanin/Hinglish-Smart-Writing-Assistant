@@ -180,3 +180,10 @@ A real run of the independently authored, MIT-licensed Hindi mT5 grammar checkpo
 A separately attributed, Apache-2.0 Helsinki-NLP OPUS-MT Hindi-English model was successfully executed on two sentences, returning `I have to go to college tomorrow.` and `Hello, how are you?`. This independent optional translation feature is **not AI4Bharat IndicTrans2**. The original 40-case IndicXlit CER/accuracy remains a transliteration-only result, not a measure of grammar or translation.
 
 Evidence: https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545 and https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876907788. The BharatGen license is https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct/blob/main/LICENSE.
+
+
+### 11.5 Final independent small-model screening
+
+The study also ran two additional Apache-2.0 instruction-tuned Qwen models as explicitly **non-sovereign research comparators**, not as replacements silently presented as BharatGen. `Qwen/Qwen2.5-0.5B-Instruct` produced 2/5 exact Hindi sentence matches, but also translated one input into unrelated English text and replaced a concrete noun with a different meaning. `Qwen/Qwen3-0.6B` produced 0/5 exact matches on the same reference examples. Neither was judged sufficiently reliable to release as an automatic grammar correction model.
+
+Both analyses executed actual pretrained model inference (and were not simulated) in GitHub Actions. Their failure to meet the task requirements reinforces the decision to keep rewriting disabled by default. Models were not integrated into the user's verified AI4Bharat conversion path.
