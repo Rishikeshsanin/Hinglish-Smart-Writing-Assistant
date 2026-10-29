@@ -68,7 +68,7 @@ The engine is cached per Python process (concurrent cold starts require separate
 - [Official Python API](https://github.com/AI4Bharat/IndicXlit/tree/master/app)
 - [PyPI ai4bharat-transliteration 1.1.3](https://pypi.org/project/ai4bharat-transliteration/)
 - [Aksharantar dataset](https://huggingface.co/datasets/ai4bharat/Aksharantar)
-- [BharatGen Param-1-2.9B-Instruct](https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct) — **experimental adapter; real inference not yet executed**
+- [BharatGen Param-1-2.9B-Instruct](https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct) — **private T4 pretrained inference executed (1 smoke + 10 cases); not a public hosted feature**
 - [AI4Bharat IndicTrans2](https://github.com/AI4Bharat/IndicTrans2) — **feasibility investigated; gated checkpoint not executed**
 
 ## Faculty deliverables tracker
@@ -99,7 +99,7 @@ The engine is cached per Python process (concurrent cold starts require separate
 - [Reproducible report renderer](scripts/build_faculty_report.py)
 - [Report generation CI](.github/workflows/report.yml)
 
-**Scope disclosure:** The genuine transliteration MVP, evaluation, and browser QA are complete. BharatGen rewriting and optional IndicTrans2 translation are not verified or integrated. This is not a claim that the entire original multi-model project is finished.
+**Scope disclosure:** The genuine transliteration MVP, evaluation, and browser QA are complete. Private BharatGen checkpoint inference is verified but reliable public rewriting/deployment and independent language-expert quality validation remain incomplete. Gated IndicTrans2 inference is not verified. This is not a claim that the entire original multi-model project is finished.
 
 
 ## Additional real-model findings (October 29, 2026)
@@ -119,13 +119,28 @@ Preservation terms currently support **A–Z words only**. Unsupported entries s
 
 ## Research-only BharatGen reproducibility (not a hosted feature)
 
-The BharatGen adapter is isolated from the normal Streamlit application. It pins the upstream model revision, checks reviewed custom-code hashes, preserves all official stopping tokens, rejects incomplete generations, and writes JSONL evidence. **No full pretrained BharatGen inference is currently verified.** The live model metadata and historical license information disagree; written clarification is necessary before publicly releasing weights or model outputs.
+The BharatGen adapter is isolated from the normal Streamlit application. It pins the upstream model revision, checks reviewed custom-code hashes, preserves all official stopping tokens, rejects incomplete generations, and writes JSONL evidence. **Genuine private pretrained inference has now been verified:** user-authorized T4 Colab run, 2026-10-29, one smoke sample and ten frozen Hindi cases. Raw generated outputs are withheld from public GitHub pending licensing clarity. The live model metadata and historical license information disagree; written clarification is necessary before publicly releasing weights or model outputs.
 
 The [GPU notebook](notebooks/BharatGen_Real_Smoke_Colab.ipynb) uses a separate Python 3.12 virtual environment and explicitly opts in to downloading pretrained weights and executing audited upstream Python. The notebook requires a user-authorized disposable GPU session. It should never be presented as already executed.
 
 ## Release and submission boundaries
 
 - The real IndicXlit→OPUS-MT browser flow was verified, but that translation model is **Helsinki OPUS**, not IndicTrans2.
-- Hindi grammar rewriting remains experimental and disabled; human review is not interchangeable with real model inference.
+- Hindi grammar rewriting through unrelated failed mT5 models remains disabled; private BharatGen inference succeeded but is available only through explicit loopback-only research opt-in, not public hosting.
 - Native Windows support, public deployment, and full accessibility conformance are not verified. Prefer the documented Python 3.10 Ubuntu/WSL2 classroom demo, which matches the executed Linux test environment.
 - The current 40-case evaluation uses authored references and is **not** an official Aksharantar leaderboard result.
+
+## Private BharatGen research mode (GPU only, never for public hosting)
+
+The authorizing student's **private** Colab evidence ZIP was inspected: official pinned Param-1-2.9B-Instruct, Python 3.12.16, Transformers 4.56.2, PyTorch 2.6.0 CUDA 12.4, T4 FP16. 1/1 smoke and 10/10 frozen test cases passed runtime/EOS checks; peak PyTorch allocation was approximately 6.31 GiB. These are model-runtime results, not claims of human-verified rewriting accuracy.
+
+For an approved local GPU environment, install the isolated `requirements-bharatgen.txt` and launch Streamlit binding **only to localhost** with three explicit acknowledgement flags:
+
+```bash
+INDICWRITE_PRIVATE_BHARATGEN=1 \
+INDICWRITE_REVIEWED_BHARATGEN_CODE=1 \
+INDICWRITE_ACKNOWLEDGE_BHARATGEN_LICENSE=1 \
+PYTHONPATH=src streamlit run app.py --server.address=127.0.0.1
+```
+
+A T4 or comparable GPU (~7+ GiB free VRAM) is required for FP16. The feature generates a *candidate only*: original text stays unchanged; changed numbers/English terms receive warnings and users must confirm review before download. No public model API, output database or silent substitution exists. **Do not enable these flags on Streamlit Community Cloud or other public servers.** No full private Streamlit GPU UI/browser run is claimed; only the underlying checkpoint inference is verified.

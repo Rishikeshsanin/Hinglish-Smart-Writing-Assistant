@@ -11,6 +11,7 @@ import streamlit as st
 from indicwrite.core import InputError, ModelOutputError, parse_preserve_terms, transliterate_text, validate_text, has_convertible_tokens
 from indicwrite.engine import load_indicxlit
 from indicwrite.language_services import generate_hindi_gec, generate_english
+from indicwrite.private_bharatgen import private_research_enabled, run_private_research
 
 st.set_page_config(page_title="IndicWrite • Hinglish to Hindi", page_icon="✍️", layout="wide")
 
@@ -54,6 +55,8 @@ def clear_result() -> None:
     st.session_state["english_text"] = ""
     st.session_state["human_edit"] = ""
     st.session_state["did_transliterate"] = False
+    st.session_state["private_bharatgen_suggestion"] = None
+    st.session_state["private_bharatgen_reviewed"] = False
 
 
 def choose_example(value: str) -> None:
@@ -74,6 +77,8 @@ st.session_state.setdefault("english_text", "")
 st.session_state.setdefault("human_edit", "")
 st.session_state.setdefault("did_transliterate", False)
 st.session_state.setdefault("preserve_raw", "")
+st.session_state.setdefault("private_bharatgen_suggestion", None)
+st.session_state.setdefault("private_bharatgen_reviewed", False)
 
 st.markdown(
     '<div class="hero"><div class="eyebrow">INDICWRITE / AI4BHARAT</div>'
@@ -192,6 +197,52 @@ with col2:
         else:
             st.caption("Optional grammar correction and English translation are off in this environment. They require separately installed language model dependencies and INDICWRITE_ENABLE_LANGUAGE_SERVICES=1.")
 
+    # This section is entirely opt-in and refuses non-loopback hosting.
+    research_requested = os.environ.get("INDICWRITE_PRIVATE_BHARATGEN") == "1"
+    if research_requested and st.session_state["converted_text"]:
+        bind_address = st.get_option("server.address")
+        enabled = private_research_enabled(server_address=bind_address)
+        st.divider()
+        st.markdown("### Private BharatGen research (T4 GPU required)")
+        st.caption(
+            "Experimental BharatGen Param-1-2.9B-Instruct (research license). "
+            "Private localhost only. Suggestions are NOT validated corrections, "
+            "and are never applied automatically. The ~6.3 GiB GPU model loads on demand."
+        )
+        if not enabled:
+            st.warning(
+                "Research mode locked: launch Streamlit on 127.0.0.1 and set all "
+                "three explicit acknowledgement environment flags. Never use this "
+                "mode in a public hosted deployment."
+            )
+        else:
+            if st.button("Generate private BharatGen suggestion", use_container_width=True):
+                st.session_state["private_bharatgen_suggestion"] = None
+                st.session_state["private_bharatgen_reviewed"] = False
+                try:
+                    with st.spinner("Loading verified pinned BharatGen checkpoint and generating…"):
+                        st.session_state["private_bharatgen_suggestion"] = run_private_research(
+                            st.session_state["converted_text"], server_address=bind_address
+                        )
+                except Exception:
+                    st.error("Private research inference failed; original text is unchanged. Review local console logs.")
+            suggestion = st.session_state["private_bharatgen_suggestion"]
+            if suggestion:
+                st.caption("Pretrained model suggestion — compare with the original before using.")
+                st.code(suggestion["candidate"], language=None, wrap_lines=True)
+                for warning in suggestion["warnings"]:
+                    st.warning(warning)
+                st.checkbox(
+                    "I have compared the original and suggestion for meaning, names and factual accuracy.",
+                    key="private_bharatgen_reviewed",
+                )
+                if st.session_state["private_bharatgen_reviewed"]:
+                    st.download_button(
+                        "Download reviewed suggestion (private)",
+                        suggestion["candidate"], file_name="indicwrite-private-suggestion.txt",
+                        mime="text/plain",
+                    )
+
     st.markdown(
         '<div class="panel"><span class="mini">MODEL</span><br>'
         '<strong>AI4Bharat IndicXlit · Hindi (hi)</strong>'
@@ -203,5 +254,5 @@ with col2:
 
 st.divider()
 st.markdown("## Model transparency")
-st.caption("Core: AI4Bharat IndicXlit (verified). Optional writing: independent Hindi mT5 grammar model and Helsinki OPUS-MT translation; enable separately. BharatGen Param-1 is a restricted academic research option, not integrated or model-verified. IndicTrans2 requires HF terms acceptance and is not integrated.")
+st.caption("Core: AI4Bharat IndicXlit (verified). Optional writing: independent Hindi mT5 grammar model and Helsinki OPUS-MT translation; enable separately. BharatGen Param-1 was genuinely executed in a private T4 Colab research run (1 smoke + 10 cases), and is only available through explicit local opt-in; not on public deployments. IndicTrans2 requires HF terms acceptance and is not integrated.")
 st.caption("CS3235 • Working with LLMs • Munnaluri Rishikesh • 1RVU23CSE291")
