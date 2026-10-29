@@ -1,0 +1,5 @@
+# The official model package has legacy fairseq dependencies.
+# Use Python 3.10 (ideally Ubuntu/WSL2) and a fresh virtual environment.
+# If pip rejects old fairseq metadata, try pip==23.3.2 before installing.
+streamlit>=1.37,<2
+ai4bharat-transliteration==1.1.3
