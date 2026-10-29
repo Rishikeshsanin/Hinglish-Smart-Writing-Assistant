@@ -1,0 +1,9 @@
+# EXPERIMENTAL, OPTIONAL. Do not install with baseline requirements.txt
+# BharatGen model card: https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct
+# Before installation, independently review the model's remote code, license,
+# disk/memory usage and access conditions.
+# Torch version subject to verified runtime compatibility; do not claim verified.
+transformers>=4.45,<5
+accelerate>=1,<2
+torch>=2.3,<3
+safetensors>=0.4,<1
