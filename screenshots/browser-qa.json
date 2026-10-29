@@ -1,0 +1,18 @@
+[
+  {
+    "viewport": "desktop",
+    "width": 1440,
+    "input": "kal mujhe college jana hai!",
+    "observed": "कल मुझे कॉलेज जाना है!",
+    "screenshot": "screenshots/desktop.png",
+    "horizontal_overflow": false
+  },
+  {
+    "viewport": "mobile",
+    "width": 390,
+    "input": "kal mujhe college jana hai!",
+    "observed": "कल मुझे कॉलेज जाना है!",
+    "screenshot": "screenshots/mobile.png",
+    "horizontal_overflow": false
+  }
+]
