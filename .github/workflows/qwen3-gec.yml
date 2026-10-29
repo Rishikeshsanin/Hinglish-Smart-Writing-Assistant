@@ -17,9 +17,9 @@ jobs:
         env:
           OMP_NUM_THREADS: '2'
           TOKENIZERS_PARALLELISM: 'false'
-        run: python scripts/qwen_gec_compare.py
+        run: python scripts/qwen3_gec_compare.py
       - uses: actions/upload-artifact@v4
         with:
-          name: qwen-hindi-editing-research-only
+          name: qwen3-0-6b-hindi-editing-research
           path: qwen3-research-results.json
           if-no-files-found: error
