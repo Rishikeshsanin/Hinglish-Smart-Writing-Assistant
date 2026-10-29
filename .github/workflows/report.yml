@@ -46,4 +46,6 @@ jobs:
           git add -f reports/IndicWrite_CS3235_Project_Report.pdf
           git diff --cached --exit-code && exit 0
           git commit -m "docs: publish evidence-based IndicWrite academic PDF report"
+          git fetch origin main
+          git rebase origin/main
           git push origin HEAD:main
