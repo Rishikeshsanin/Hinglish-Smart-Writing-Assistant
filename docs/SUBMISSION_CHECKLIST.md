@@ -60,3 +60,8 @@ The checkpoint's public license statements and history are inconsistent. The pin
 - [ ] Public internet deployment, **intentionally blocked** until a supported, accurate Python runtime and account authorization are available; Python3.10 has reached EOL.
 
 Use `docker compose -f compose.demo.yml up --build` in Docker Desktop on your Windows laptop, then visit http://127.0.0.1:8501. Do not publish port 8501 to 0.0.0.0 on the host.
+
+
+## Final delivery check (29 October 2026)
+
+The report has been regenerated after the Docker and CTranslate2 fidelity studies. The faculty ZIP should be downloaded from the **newest successful** [submission workflow run](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/workflows/submission-package.yml), not an older draft. Its manifest distinguishes verified private BharatGen T4 inference from unverified publication approval and private-GPU browser QA. Faculty Classroom upload is still a distinct student-controlled action, not automatically performed by publishing a GitHub ZIP.
