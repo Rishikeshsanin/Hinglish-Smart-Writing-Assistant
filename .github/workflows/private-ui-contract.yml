@@ -1,0 +1,25 @@
+name: Private BharatGen UI contract (fake GPU, no model weights)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'research/private_bharatgen_app.py'
+      - 'tests/test_private_ui_contract.py'
+      - '.github/workflows/private-ui-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'research/private_bharatgen_app.py'
+      - 'tests/test_private_ui_contract.py'
+      - '.github/workflows/private-ui-contract.yml'
+jobs:
+  private-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install 'streamlit>=1.42,<2' 'pytest>=8,<9'
+      - name: Exercise real Streamlit UI wiring without a GPU/model
+        run: python -m pytest -q tests/test_private_ui_contract.py
