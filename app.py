@@ -1,6 +1,7 @@
 """IndicWrite Streamlit application: genuine IndicXlit inference only."""
 
 from pathlib import Path
+import os
 import sys
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -9,6 +10,7 @@ import streamlit as st
 
 from indicwrite.core import InputError, ModelOutputError, parse_preserve_terms, transliterate_text
 from indicwrite.engine import load_indicxlit
+from indicwrite.language_services import generate_hindi_gec, generate_english
 
 st.set_page_config(page_title="IndicWrite • Hinglish to Hindi", page_icon="✍️", layout="wide")
 
@@ -36,6 +38,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+ENABLE_LANGUAGE_SERVICES = os.environ.get("INDICWRITE_ENABLE_LANGUAGE_SERVICES") == "1"
+
 EXAMPLES = (
     "kal mujhe college jana hai",
     "aaj mausam bahut accha hai!",
@@ -45,20 +49,24 @@ EXAMPLES = (
 
 def clear_result() -> None:
     st.session_state["converted_text"] = ""
+    st.session_state["improved_text"] = ""
+    st.session_state["english_text"] = ""
 
 
 def choose_example(value: str) -> None:
     st.session_state["source_text"] = value
-    st.session_state["converted_text"] = ""
+    clear_result()
 
 
 def reset() -> None:
     st.session_state["source_text"] = ""
-    st.session_state["converted_text"] = ""
+    clear_result()
 
 
 st.session_state.setdefault("source_text", "")
 st.session_state.setdefault("converted_text", "")
+st.session_state.setdefault("improved_text", "")
+st.session_state.setdefault("english_text", "")
 
 st.markdown(
     '<div class="hero"><div class="eyebrow">INDICWRITE / AI4BHARAT</div>'
@@ -95,6 +103,7 @@ with col1:
 with col2:
     st.markdown("#### Your Devanagari result")
     if convert:
+        clear_result()
         try:
             if not st.session_state["source_text"].strip():
                 raise InputError("Enter a Roman-Hindi sentence to continue.")
@@ -123,6 +132,39 @@ with col2:
         )
     else:
         st.info("Your generated Hindi text will appear here after conversion.")
+    if st.session_state["converted_text"]:
+        st.divider()
+        st.markdown("##### Smart writing tools")
+        if ENABLE_LANGUAGE_SERVICES:
+            st.caption("Optional real, locally running checkpoints: MIT Hindi mT5 grammar correction and Apache-2.0 OPUS-MT English translation. Neither is BharatGen or IndicTrans2. First load downloads weights; review all edits for accuracy.")
+            a, b = st.columns(2)
+            with a:
+                improve = st.button("Improve Hindi grammar", use_container_width=True)
+            with b:
+                translate = st.button("Translate to English", use_container_width=True)
+            if improve:
+                try:
+                    with st.spinner("Running the Hindi mT5 grammar model…"):
+                        st.session_state["improved_text"] = generate_hindi_gec(st.session_state["converted_text"])
+                except Exception as exc:
+                    st.session_state["improved_text"] = ""
+                    st.error(f"Hindi grammar model unavailable: {exc}")
+            if translate:
+                try:
+                    with st.spinner("Running the OPUS-MT translation model…"):
+                        st.session_state["english_text"] = generate_english(st.session_state["converted_text"])
+                except Exception as exc:
+                    st.session_state["english_text"] = ""
+                    st.error(f"English translation model unavailable: {exc}")
+            if st.session_state["improved_text"]:
+                st.caption("Hindi mT5 grammar model output — may change the meaning; compare before using")
+                st.code(st.session_state["improved_text"], language=None, wrap_lines=True)
+            if st.session_state["english_text"]:
+                st.caption("English output — Helsinki-NLP OPUS-MT, not IndicTrans2")
+                st.code(st.session_state["english_text"], language=None, wrap_lines=True)
+        else:
+            st.caption("Optional grammar correction and English translation are off in this environment. They require separately installed language model dependencies and INDICWRITE_ENABLE_LANGUAGE_SERVICES=1.")
+
     st.markdown(
         '<div class="panel"><span class="mini">MODEL</span><br>'
         '<strong>AI4Bharat IndicXlit · Hindi (hi)</strong>'
@@ -133,6 +175,6 @@ with col2:
     )
 
 st.divider()
-st.markdown("##### Upcoming research modules")
-st.caption("Grammar rewriting with BharatGen Param-1 and English translation via IndicTrans2 are planned, not yet integrated or tested.")
+st.markdown("##### Model transparency")
+st.caption("Core: AI4Bharat IndicXlit (verified). Optional writing: independent Hindi mT5 grammar model and Helsinki OPUS-MT translation; enable separately. BharatGen Param-1 is a restricted academic research option, not integrated or model-verified. IndicTrans2 requires HF terms acceptance and is not integrated.")
 st.caption("CS3235 • Working with LLMs • Munnaluri Rishikesh • 1RVU23CSE291")
