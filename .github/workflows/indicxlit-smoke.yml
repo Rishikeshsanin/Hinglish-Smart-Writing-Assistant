@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['.github/workflows/indicxlit-smoke.yml']
+    paths: ['.github/workflows/indicxlit-smoke.yml', 'src/indicwrite/engine.py']
 
 jobs:
   real-model:
