@@ -3,7 +3,7 @@
 # Before installation, independently review the model's remote code, license,
 # disk/memory usage and access conditions.
 # Torch version subject to verified runtime compatibility; do not claim verified.
-transformers>=4.45,<5
+transformers>=4.53.1,<5
 accelerate>=1,<2
 torch>=2.3,<3
 safetensors>=0.4,<1

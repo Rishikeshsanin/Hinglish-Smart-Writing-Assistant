@@ -2,11 +2,13 @@
 
 import pytest
 
-from indicwrite.param_rewrite import build_messages, MODEL_ID
+from indicwrite.param_rewrite import build_messages, MODEL_ID, MODEL_REVISION
 
 
 def test_model_identifier_is_real():
     assert MODEL_ID == "bharatgenai/Param-1-2.9B-Instruct"
+    assert len(MODEL_REVISION) == 40
+    assert all(char in "0123456789abcdef" for char in MODEL_REVISION)
 
 
 def test_hindi_prompt_preserves_meaning():

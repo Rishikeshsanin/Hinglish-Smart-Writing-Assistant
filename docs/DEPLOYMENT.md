@@ -29,6 +29,12 @@ insufficient for modern PyTorch+legacy Fairseq, and BharatGen ~5.8GB raw bf16
 weights certainly will not fit under that cap. Test actual peak RSS before
 choosing a service.
 
+Do **not** deploy BharatGen from this repository. Its Hugging Face license
+metadata and repository license history are inconsistent, and the historical
+BharatGen Research License requires written permission for a hosted service,
+even when free. A public rewriting deployment is blocked until the owner gives
+written clarification/permission and genuine inference passes quality review.
+
 If hosting is attempted, create only a **new, isolated** service pointing at
 this repository. Do not reuse or modify any other applications, databases, or
 GitHub configuration. Never select paid tiers without explicit cost approval.
@@ -43,3 +49,7 @@ genuine adapter **only when explicitly requested** and when checkpoint access,
 remote-code review, disk/RAM, and licensing permit. It is not enabled in the
 baseline Streamlit app; it has not yet been exercised. The model card advertises
 an early instruct checkpoint whose outputs may be unreliable.
+
+The optional IndicTrans2 Hindi→English checkpoint is also not a deployment
+dependency. Its Hugging Face files are gated behind user acceptance/contact
+sharing; no token may be committed or added to application configuration.

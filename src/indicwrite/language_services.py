@@ -81,9 +81,8 @@ def validate_rewrite_candidate(original: str, candidate: str) -> str:
     proportion = sum("\u0900" <= ch <= "\u097f" for ch in letters) / len(letters) if letters else 0.0
     if proportion < 0.85:
         raise LanguageModelError("Grammar model drifted into a different script; prediction rejected.")
-    for number in re.findall(r"[0-9]+", original):
-        if number not in re.findall(r"[0-9]+", candidate):
-            raise LanguageModelError("Grammar model changed or omitted a number; prediction rejected.")
+    if re.findall(r"[0-9]+", original) != re.findall(r"[0-9]+", candidate):
+        raise LanguageModelError("Grammar model changed, added, or omitted a number; prediction rejected.")
     return candidate
 
 def generate_hindi_gec(text: str, resources=None) -> str:

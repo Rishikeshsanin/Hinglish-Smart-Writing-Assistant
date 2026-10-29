@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from indicwrite.param_rewrite import BharatGenRewriter, MODEL_ID
+from indicwrite.param_rewrite import BharatGenRewriter, MODEL_ID, MODEL_REVISION
 
 
 def main() -> None:
@@ -32,7 +32,7 @@ def main() -> None:
     import torch
 
     print(f"Python={platform.python_version()} PyTorch={torch.__version__}", flush=True)
-    print(f"Loading genuine model: {MODEL_ID}", flush=True)
+    print(f"Loading genuine model: {MODEL_ID}@{MODEL_REVISION}", flush=True)
     engine = BharatGenRewriter.load()
     original = "मुझे कल कॉलेज में असाइनमेंट सबमिट करना है।"
     rewritten = engine.rewrite(original)

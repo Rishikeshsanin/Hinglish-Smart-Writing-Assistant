@@ -89,6 +89,12 @@ def test_changed_number_rejected():
         validate_rewrite_candidate("मेरे पास 2 किताब हैं।", "मेरे पास 3 किताब हैं।")
 
 
+def test_added_number_rejected():
+    from indicwrite.language_services import validate_rewrite_candidate
+    with pytest.raises(LanguageModelError, match="number"):
+        validate_rewrite_candidate("मेरे पास 2 किताब हैं।", "मेरे पास 2 या 3 किताबें हैं।")
+
+
 def test_valid_hindi_candidate_passes_safeguard():
     from indicwrite.language_services import validate_rewrite_candidate
     assert validate_rewrite_candidate("मैं स्कूल जाता है।", "मैं स्कूल जाता हूँ।") == "मैं स्कूल जाता हूँ।"

@@ -10,6 +10,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 MODEL_ID = "bharatgenai/Param-1-2.9B-Instruct"
+# Pin remote custom code and weights to an immutable repository revision. Update
+# only after reviewing the new model files and rerunning genuine inference.
+MODEL_REVISION = "2024ac968cf289ba1cb6fde112a9abb437813b79"
 MAX_INPUT_CHARS = 500
 MAX_NEW_TOKENS = 120
 
@@ -59,15 +62,24 @@ class BharatGenRewriter:
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
-        tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=False)
+        tokenizer = AutoTokenizer.from_pretrained(
+            MODEL_ID,
+            revision=MODEL_REVISION,
+            trust_remote_code=False,
+        )
         # T4 GPUs common in free notebooks do not support BF16; choose FP16 there.
         # BF16 is preferred when the CUDA device supports it.
-        dtype = (
-            torch.bfloat16 if (not torch.cuda.is_available() or torch.cuda.is_bf16_supported())
-            else torch.float16
-        )
+        if not torch.cuda.is_available():
+            # FP32 is the broadly supported CPU path. It needs substantially
+            # more RAM than the GPU path, so CPU execution is discouraged.
+            dtype = torch.float32
+        elif torch.cuda.is_bf16_supported():
+            dtype = torch.bfloat16
+        else:
+            dtype = torch.float16
         model = AutoModelForCausalLM.from_pretrained(
             MODEL_ID,
+            revision=MODEL_REVISION,
             trust_remote_code=True,
             torch_dtype=dtype,
             device_map="auto",

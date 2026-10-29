@@ -173,17 +173,14 @@ IndicWrite now provides an independently testable Indian-language AI translitera
 
 ## 11. Further real-model experiments and restrictions (October 29, 2026)
 
-The real BharatGen Param-1 checkpoint LICENSE is the **BharatGen Research License**, not merely the Apache-2.0 badge displayed in metadata. Academic non-commercial experiments are permitted, but public dissemination of the checkpoint or its outputs requires written approval. This project does not claim to have executed BharatGen or obtained publishing approval.
+The live BharatGen metadata currently advertises Apache-2.0, while repository history contains a restrictive BharatGen Research License and the license file has since changed. Because that state is inconsistent, public output or hosting remains blocked pending written clarification. This project does not claim to have executed BharatGen or obtained publishing approval.
 
 A real run of the independently authored, MIT-licensed Hindi mT5 grammar checkpoint `manavdhamecha77/GEC-mT5-Small-Hindi` yielded severe Bengali/mixed-script drift from Hindi prompts, including `আমি স্কুলে যাবে?` from `मैं स्कूल जाता है।`. It is a **failed model-quality experiment**, not a completed writing-improvement feature. Another model, `Rucha-Ambaliya/mt5-small-indic-gec`, had only 1/5 exact matches on five test sentences (same score with raw and instruction-prefixed input). The grammar UI is disabled by default to avoid misleading users.
 
+A third research-only candidate, `Qwen/Qwen2.5-0.5B-Instruct`, exactly corrected 2/5 screening cases but translated one case into English with changed meaning and made a severe noun substitution in another. This is also a failed quality experiment, not an integrated feature.
+
+`Qwen/Qwen3-0.6B` was also genuinely screened and exactly corrected 0/5 cases; one output removed a meaning-bearing word. It is likewise not integrated.
+
 A separately attributed, Apache-2.0 Helsinki-NLP OPUS-MT Hindi-English model was successfully executed on two sentences, returning `I have to go to college tomorrow.` and `Hello, how are you?`. This independent optional translation feature is **not AI4Bharat IndicTrans2**. The original 40-case IndicXlit CER/accuracy remains a transliteration-only result, not a measure of grammar or translation.
 
-Evidence: https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545 and https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876907788. The BharatGen license is https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct/blob/main/LICENSE.
-
-
-### 11.5 Final independent small-model screening
-
-The study also ran two additional Apache-2.0 instruction-tuned Qwen models as explicitly **non-sovereign research comparators**, not as replacements silently presented as BharatGen. `Qwen/Qwen2.5-0.5B-Instruct` produced 2/5 exact Hindi sentence matches, but also translated one input into unrelated English text and replaced a concrete noun with a different meaning. `Qwen/Qwen3-0.6B` produced 0/5 exact matches on the same reference examples. Neither was judged sufficiently reliable to release as an automatic grammar correction model.
-
-Both analyses executed actual pretrained model inference (and were not simulated) in GitHub Actions. Their failure to meet the task requirements reinforces the decision to keep rewriting disabled by default. Models were not integrated into the user's verified AI4Bharat conversion path.
+Evidence: https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545, https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876907788, https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40877372435, and https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40878109536. BharatGen license history: https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct/commits/main.
