@@ -1,4 +1,4 @@
-name: Experimental non-sovereign 0.5B Hindi rewrite quality
+name: Experimental non-sovereign 0.6B Hindi rewrite quality
 on:
   workflow_dispatch:
   push:
