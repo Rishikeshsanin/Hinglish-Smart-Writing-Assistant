@@ -2,6 +2,14 @@
 
 **As of 29 October 2026** · Student: **Munnaluri Rishikesh**, USN **1RVU23CSE291** · CS3235 CIE3, RV University · **Due 6 Nov 2026, 10:00 AM IST**.
 
+## Final repository verification — 29 October 2026
+
+The most recent completed offline CI run [40906533392](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40906533392) passed **93 tests with 8 optional skips**. The academic report was rebuilt successfully in [40906533300](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40906533300). The faculty ZIP workflow now independently checks every file against the SHA-256 manifest and rejects unsafe paths, model weights, credentials or private BharatGen outputs. [PR #15](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/15) additionally verified the actual Docker Compose loopback service health, beyond the prior raw-image check.
+
+**Private BharatGen runtime separation:** [PR #16](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/16) adds a standalone Python3.12 local-only research interface, isolated from the tested Python3.10 IndicXlit runtime. Its real Streamlit widgets were tested **with fake inference only**. [PR #17](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/17) supplies an opt-in private Colab T4 browser-QA notebook, **not yet executed**. [PR #18](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/18) supplies a gitignored 10-case human-review CSV and aggregate-only scorer; an independent reviewer has **not yet completed** those ratings.
+
+**External gate:** no public BharatGen hosting/output permission; no safe supported-runtime internet deployment; no Google Classroom submission. Private pinned BharatGen checkpoint inference of 11 generations was separately and genuinely verified in the earlier T4 evidence ZIP. A ready-to-review Gmail licensing inquiry is saved as a draft and **not sent**.
+
 ## Executed and verified
 
 | Component | Actual evidence |

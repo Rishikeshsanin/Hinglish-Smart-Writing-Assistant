@@ -79,3 +79,17 @@ The report has been regenerated after the Docker and CTranslate2 fidelity studie
 ### Academic honesty
 
 The final ZIP contains all public project artifacts, not private BharatGen generated sentences. The retained Colab evidence showed actual pretrained inference on 11 samples. It does not certify a public BharatGen rewrite service or linguistic accuracy. Classroom submission is still a separate authenticated action.
+
+
+## Final CI and submission integrity check (29 October 2026)
+
+- [x] Final offline suite [40906533392](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40906533392): **93 passed, 8 optional skipped**.
+- [x] Real Docker Compose configuration and loopback Streamlit health: [PR #15](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/15), CI passed.
+- [x] Private Python3.12 BharatGen UI widget flow checked with a **fake model**, clearly separate from proven pretrained inference: [PR #16](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/16).
+- [x] Private T4 real browser-test notebook and independent human-score workflow prepared; both still need their own genuine execution/reviewer.
+- [x] Latest faculty PDF regenerated from actual evidence in [40906533300](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40906533300).
+- [x] Independent ZIP SHA-256/path/privacy verification added to faculty-package workflow.
+- [ ] Final authenticated Google Classroom upload: **not done**. Due **6 Nov 2026 10:00 AM IST**.
+
+Download the **latest successful** ZIP from the [faculty package workflow](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/workflows/submission-package.yml), not an older copy. The private BharatGen ZIP/reviewer sheet must never be publicly uploaded.
+
