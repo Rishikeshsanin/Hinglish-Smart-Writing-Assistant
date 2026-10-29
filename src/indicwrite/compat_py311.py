@@ -21,7 +21,7 @@ def fairseq_py311_dataclass_context():
     original = dataclasses._get_field
 
     def guarded_get_field(cls, name, field_type, kw_only):
-        if cls.__module__.startswith(("fairseq.", "hydra.conf.")):
+        if cls.__module__.startswith("fairseq.") or cls.__module__ == "hydra.conf" or cls.__module__.startswith("hydra.conf."):
             value = cls.__dict__.get(name, dataclasses.MISSING)
             if value is not dataclasses.MISSING and dataclasses.is_dataclass(value) and not isinstance(value, type):
                 dataclasses_field = dataclasses.field(
