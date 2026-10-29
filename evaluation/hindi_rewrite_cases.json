@@ -1,0 +1,62 @@
+[
+  {
+    "id": "H01",
+    "input": "वह लड़की रोज़ स्कूल जाता है।",
+    "reference_target": "वह लड़की रोज़ स्कूल जाती है।",
+    "must_preserve": "explicit लड़की; रोज़; स्कूल; feminine habitual present"
+  },
+  {
+    "id": "H02",
+    "input": "राम ने दो किताब खरीदा।",
+    "reference_target": "राम ने दो किताबें खरीदीं।",
+    "must_preserve": "राम; exactly two books; completed purchase"
+  },
+  {
+    "id": "H03",
+    "input": "मैंने राहुल को पैसे नहीं दिया।",
+    "reference_target": "मैंने राहुल को पैसे नहीं दिए।",
+    "must_preserve": "speaker gave NO money to राहुल; negation mandatory"
+  },
+  {
+    "id": "H04",
+    "input": "शायद वे दोनों कल आएगा।",
+    "reference_target": "शायद वे दोनों कल आएँगे।",
+    "must_preserve": "both people; कल; uncertainty perhaps, not a promise"
+  },
+  {
+    "id": "H05",
+    "input": "अगर बारिश हुई तो हम बाहर नहीं जाएगा।",
+    "reference_target": "अगर बारिश हुई तो हम बाहर नहीं जाएँगे।",
+    "must_preserve": "conditional rain; we; future; not going outside"
+  },
+  {
+    "id": "H06",
+    "input": "आप कल बैठक में आया था।",
+    "reference_target": "आप कल बैठक में आए थे।",
+    "must_preserve": "respectful आप; past arrival; meeting; कल"
+  },
+  {
+    "id": "H07",
+    "input": "कल 3 बजे रीना ने 250 रुपये जमा किया था।",
+    "reference_target": "कल 3 बजे रीना ने 250 रुपये जमा किए थे।",
+    "must_preserve": "रीना; 3; 250; रुपये; past; no invented AM/PM"
+  },
+  {
+    "id": "H08",
+    "input": "मेरी API request बार-बार fail हो रहा है।",
+    "reference_target": "मेरी API request बार-बार fail हो रही है।",
+    "must_preserve": "API request; fail; repeated ongoing failure; no diagnosis"
+  },
+  {
+    "id": "H09",
+    "input": "मुझे कल कॉलेज में असाइनमेंट सबमिट करना है।",
+    "reference_target": "मुझे कल कॉलेज में असाइनमेंट सबमिट करना है।",
+    "must_preserve": "already acceptable; retain obligation, time, place, task"
+  },
+  {
+    "id": "H10",
+    "input": "उसने कहा कि वह कल आएगा।",
+    "reference_target": "उसने कहा कि वह कल आएगा।",
+    "must_preserve": "retain both unresolved pronouns; reported speech; कल; no invented identity"
+  }
+]

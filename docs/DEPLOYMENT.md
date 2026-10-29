@@ -44,11 +44,20 @@ without claiming a public deployment.
 
 ## Experimental rewrite
 
-`python scripts/smoke_bharatgen.py --allow-model-download` runs the optional
+`python scripts/smoke_bharatgen.py --allow-model-download --allow-remote-code` runs the optional
 genuine adapter **only when explicitly requested** and when checkpoint access,
 remote-code review, disk/RAM, and licensing permit. It is not enabled in the
 baseline Streamlit app; it has not yet been exercised. The model card advertises
 an early instruct checkpoint whose outputs may be unreliable.
+
+Use a separate Python 3.12 environment and `requirements-bharatgen.txt`.
+The pinned stack passed CPU tokenizer/tiny-random-architecture checks only;
+pretrained inference and CUDA are unverified. Follow
+`notebooks/BharatGen_Real_Smoke_Colab.ipynb` for the GPU experiment and preserve
+JSONL logs. The default device is CUDA with no automatic CPU offload. Explicit
+`--device cpu` uses FP32 and requires over 10.66 GiB for weights alone.
+Remote-code hashes and a fixed model revision identify reviewed code; they do
+not sandbox it. Do not add this optional environment to baseline deployment.
 
 The optional IndicTrans2 Hindi→English checkpoint is also not a deployment
 dependency. Its Hugging Face files are gated behind user acceptance/contact

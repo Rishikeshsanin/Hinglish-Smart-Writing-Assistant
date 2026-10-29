@@ -1,9 +1,9 @@
-# EXPERIMENTAL, OPTIONAL. Do not install with baseline requirements.txt
-# BharatGen model card: https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct
-# Before installation, independently review the model's remote code, license,
-# disk/memory usage and access conditions.
-# Torch version subject to verified runtime compatibility; do not claim verified.
-transformers>=4.53.1,<5
-accelerate>=1,<2
-torch>=2.3,<3
-safetensors>=0.4,<1
+# Optional isolated Python 3.12 environment. Do not include baseline requirements.
+# CPU architecture/tokenizer checked; full checkpoint and CUDA still unverified.
+# Install the selected CUDA/CPU torch wheel first; see the smoke notebook.
+torch==2.6.0
+transformers==4.56.2
+accelerate==1.10.1
+safetensors==0.6.2
+tokenizers==0.22.2
+huggingface-hub==0.36.2
