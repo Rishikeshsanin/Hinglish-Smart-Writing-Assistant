@@ -1,0 +1,25 @@
+name: Experimental non-sovereign 0.5B Hindi rewrite quality
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/qwen-gec.yml', 'scripts/qwen_gec_compare.py']
+jobs:
+  real-rewrite:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.10'}
+      - run: python -m pip install 'torch>=2.3,<3' 'transformers>=4.44,<5' safetensors
+      - name: Execute and assess real predictions
+        env:
+          OMP_NUM_THREADS: '2'
+          TOKENIZERS_PARALLELISM: 'false'
+        run: python scripts/qwen_gec_compare.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qwen-hindi-editing-research-only
+          path: qwen-research-results.json
+          if-no-files-found: error
