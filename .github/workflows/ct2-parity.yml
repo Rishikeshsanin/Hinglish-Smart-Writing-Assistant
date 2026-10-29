@@ -1,0 +1,29 @@
+name: Research converted IndicXlit CTranslate2 on supported Python
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['.github/workflows/ct2-parity.yml', 'src/indicwrite/ct2_engine.py', 'scripts/smoke_ct2_parity.py']
+jobs:
+  real-ct2-parity:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install lightweight converted model inference
+        run: python -m pip install 'ctranslate2==4.6.0' 'huggingface-hub==0.36.2' 'pytest==8.4.2'
+      - name: Run pure adapter unit tests
+        run: python -m pytest -q tests/test_ct2_engine.py
+      - name: Run actual 40-case parity research with public weights
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+          OMP_NUM_THREADS: '2'
+        run: python scripts/smoke_ct2_parity.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: research-converted-indicxlit-40-case-evidence
+          path: ct2-real-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
