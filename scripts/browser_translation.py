@@ -16,7 +16,8 @@ with sync_playwright() as play:
     source.fill("kal mujhe college jana hai!")
     source.press("Tab")
     page.get_by_role("button",name=re.compile("Convert to Hindi")).click()
-    expect(page.get_by_text("कल मुझे कॉलेज जाना है!",exact=False)).to_be_visible(timeout=180000)
+    hindi_result=page.locator("[data-testid='stCode']").filter(has_text="कल मुझे कॉलेज जाना है!").first
+    expect(hindi_result).to_be_visible(timeout=180000)
     # Poorly performing experimental Hindi model must never be offered as normal.
     grammar=page.get_by_role("button",name="Improve Hindi grammar (research)")
     expect(grammar).to_be_disabled()
