@@ -110,3 +110,8 @@ Run `INDICWRITE_ENABLE_LANGUAGE_SERVICES=1 PYTHONPATH=src streamlit run app.py` 
 **Grammar is intentionally disabled by default**, including in the optional environment. Two genuine MIT Hindi mT5 checkpoints failed quality review. Apache-2.0 Qwen2.5-0.5B and Qwen3-0.6B experiments scored 2/5 and 0/5 exact corrections respectively, with meaning loss or language drift. For controlled research only, set `INDICWRITE_ENABLE_GEC_EXPERIMENTAL=1`; outputs are checked for script drift and exact numeral preservation but still require human scrutiny. None of these models is BharatGen.
 
 The BharatGen repository history contains a restrictive Research License even though the live metadata currently advertises Apache-2.0 and the license file has changed. Public output/hosting therefore remains blocked pending written clarification. We do not publicly host it or claim to have executed it. The original 40-case IndicXlit evaluation remains unchanged and is not a grammar accuracy measure.
+
+
+### Input safety and provenance
+
+Preservation terms currently support **A–Z words only**. Unsupported entries such as `C++`, an email address, or `3d` show a validation warning rather than being silently ignored. Input length and token limits are checked before loading neural weights. If the input is already Hindi or every Roman token is protected, no model is loaded and the UI describes the result as unchanged rather than AI-generated. Changing preservation settings invalidates the previous output and downloads.
