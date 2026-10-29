@@ -8,14 +8,14 @@ Last reviewed: 2026-10-29. Real-model and browser evidence verified.
 | Hindi grammar rewriting | `bharatgenai/Param-1-2.9B-Instruct` at `f9b32a727458727ff515fea5d82df00ae9b7ad56` | **PRIVATE GPU pretrained inference VERIFIED**: 11 generations, full local-only UI end-to-end not yet tested; public use restricted |
 | Hindi → English translation | `ai4bharat/indictrans2-indic-en-dist-200M` | Correct direction identified; gated checkpoint not accessed or executed |
 
-## Why genuine inference is still pending
+## Historical IndicXlit inference verification
 
 The initial runner installed the package and downloaded the 121 MB checkpoint but failed due to PyTorch 2.6+ restricted legacy Fairseq checkpoint loading. Scoped allowlisting of the official checkpoint's `argparse.Namespace` resolved this. Follow-up GitHub Actions run **40870311669** passed real inference on three sample sentences; run **40870722731** executed forty genuine predictions; run **40871267464** passed Chromium desktop/mobile UI checks. No mock results were used for these executed checks.
 
 ## Model considerations
 
 - IndicXlit: ~11M transformer parameters, pretrained on Aksharantar, AI4Bharat repo MIT. Package release 1.1.3 uses legacy fairseq and may need a compatible Python/Linux stack; package metadata alone does not prove compatibility.
-- BharatGen Param-1-2.9B-Instruct: the live Hugging Face metadata currently says Apache-2.0, while repository history contains a BharatGen Research License and the license file was subsequently changed/deleted. That history restricted use to non-commercial research and required written permission for public hosting. This unresolved, mutable license state blocks public deployment without written clarification. The two weight shards are about **5.72 GB**, excluding runtime overhead. The adapter pins revision `2024ac968cf289ba1cb6fde112a9abb437813b79` so `trust_remote_code=True` cannot silently fetch a later implementation. Real loading and inference remain **unverified**.
+- BharatGen Param-1-2.9B-Instruct: the live Hugging Face metadata currently says Apache-2.0, while repository history contains a BharatGen Research License and the license file was subsequently changed/deleted. That history restricted use to non-commercial research and required written permission for public hosting. This unresolved, mutable license state blocks public deployment without written clarification. The two weight shards are about **5.72 GB**, excluding runtime overhead. The adapter pins revision `2024ac968cf289ba1cb6fde112a9abb437813b79` so `trust_remote_code=True` cannot silently fetch a later implementation. Private pretrained GPU model loading and 11 actual generations were subsequently verified on Colab T4 (2026-10-29).
 - IndicTrans2: the correct distilled Hindi→English checkpoint is `ai4bharat/indictrans2-indic-en-dist-200M` (`hin_Deva` → `eng_Latn`), not the English→Indic variant. Its model page is MIT-labelled but gated and requires an authenticated user to accept contact-sharing terms. No repository credential is configured or required for the core MVP, so download/inference remain **unverified**.
 
 ## Rewrite quality protocol
@@ -46,7 +46,7 @@ human review are committed as evidence.
 
 ## Updated optional-model verification and licensing
 
-The live BharatGen metadata says Apache-2.0, while repository history contains a restrictive BharatGen Research License and the license file has since changed. Public output/hosting remains blocked pending written clarification. No BharatGen inference is verified; a local research notebook exists.
+The live BharatGen metadata says Apache-2.0, while repository history contains a restrictive BharatGen Research License and the license file has since changed. Public output/hosting remains blocked pending written clarification. The pinned BharatGen model was subsequently loaded and executed privately on T4; no public outputs or checkpoint service have been released.
 
 A real test of MIT `manavdhamecha77/GEC-mT5-Small-Hindi` exposed severe script drift into Bengali, so it **failed quality review**. A second MIT checkpoint `Rucha-Ambaliya/mt5-small-indic-gec` ran on five Hindi sentences with two prompt variants and achieved 1/5 exact matches in either variant. Do not call either an effective grammar improvement module. The grammar UI is disabled by default.
 
