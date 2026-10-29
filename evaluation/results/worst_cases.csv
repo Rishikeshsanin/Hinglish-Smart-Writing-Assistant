@@ -1,0 +1,11 @@
+﻿id,category,roman_text,reference_hindi,preserve_english,predicted_hindi,cer,wer,word_accuracy,exact_sentence_match
+008,spelling_variation,ap kahan ho?,आप कहाँ हो?,,एपी कहन हो?,0.363636,0.666667,0.333333,False
+007,spelling_variation,mai theek hu.,मैं ठीक हूँ.,,माई ठीक हू.,0.25,0.666667,0.333333,False
+034,numbers,5 minute ruk jao!,5 मिनट रुक जाओ!,,5 मिन्यूट रुक जाओ!,0.2,0.25,0.75,False
+018,names,bengaluru se delhi jaunga.,बेंगलुरु से दिल्ली जाऊँगा.,,बेंगलुरु से देल्ही जौंगा.,0.192308,0.5,0.5,False
+025,punctuation,main aaunga; tum rukna.,मैं आऊँगा; तुम रुकना.,,मैन आऊंगा; टम रुकना.,0.190476,0.75,0.25,False
+031,numbers,kal 10 baje milte hain.,कल 10 बजे मिलते हैं.,,कल 10 बाजे मिल्टे हैं.,0.15,0.4,0.6,False
+009,spelling_variation,bahot accha laga.,बहुत अच्छा लगा.,,बहोत अच्छ लगा.,0.133333,0.666667,0.333333,False
+022,punctuation,kya tum aaoge?!,क्या तुम आओगे?!,,क्या टम आओगे?!,0.133333,0.333333,0.666667,False
+023,punctuation,haan... mujhe pata hai.,हाँ... मुझे पता है.,,हाँ... मुझे पाटा है.,0.105263,0.25,0.75,False
+040,ambiguous,tumhara message mila.,तुम्हारा मैसेज मिला.,,तुम्हरा मेसेज मिला.,0.1,0.666667,0.333333,False

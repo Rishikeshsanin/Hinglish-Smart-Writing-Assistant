@@ -1,0 +1,41 @@
+﻿id,category,roman_text,reference_hindi,preserve_english,predicted_hindi,cer,wer,word_accuracy,exact_sentence_match
+001,ordinary,namaste aap kaise ho?,नमस्ते आप कैसे हो?,,नमस्ते आप कैसे हो?,0.0,0.0,1.0,True
+002,ordinary,kal mujhe college jana hai.,कल मुझे कॉलेज जाना है.,,कल मुझे कॉलेज जाना है.,0.0,0.0,1.0,True
+003,ordinary,main ghar ja raha hoon.,मैं घर जा रहा हूँ.,,मैन घर जा रहा हूँ.,0.055556,0.2,0.8,False
+004,ordinary,aaj mausam bahut accha hai.,आज मौसम बहुत अच्छा है.,,आज मौसम बहुत अच्छ है.,0.045455,0.2,0.8,False
+005,ordinary,mujhe paani chahiye.,मुझे पानी चाहिए.,,मुझे पानी चाहिए.,0.0,0.0,1.0,True
+006,spelling_variation,muje tumse baat karni hai.,मुझे तुमसे बात करनी है.,,मुजे तुमसे बात करनी है.,0.043478,0.2,0.8,False
+007,spelling_variation,mai theek hu.,मैं ठीक हूँ.,,माई ठीक हू.,0.25,0.666667,0.333333,False
+008,spelling_variation,ap kahan ho?,आप कहाँ हो?,,एपी कहन हो?,0.363636,0.666667,0.333333,False
+009,spelling_variation,bahot accha laga.,बहुत अच्छा लगा.,,बहोत अच्छ लगा.,0.133333,0.666667,0.333333,False
+010,spelling_variation,kripya jaldi aana.,कृपया जल्दी आना.,,कृप्या जल्दी आना.,0.0625,0.333333,0.666667,False
+011,loanwords,mera phone naya hai.,मेरा फोन नया है.,,मेरा फोन नया है.,0.0,0.0,1.0,True
+012,loanwords,mujhe assignment submit karna hai.,मुझे असाइनमेंट सबमिट करना है.,,मुझे असाइनमेंट सबमिट करना है.,0.0,0.0,1.0,True
+013,loanwords,ye project complete hai.,ये प्रोजेक्ट कंप्लीट है.,,ये प्रोजेक्ट कंप्लीट है.,0.0,0.0,1.0,True
+014,loanwords,kal meeting hai.,कल मीटिंग है.,,कल मीटिंग है.,0.0,0.0,1.0,True
+015,loanwords,laptop ka charger kahan hai?,लैपटॉप का चार्जर कहाँ है?,,लैपटॉप का चार्जर कहन है?,0.08,0.2,0.8,False
+016,names,rishi kal aaega.,ऋषि कल आएगा.,,ऋषि कल आएगा.,0.0,0.0,1.0,True
+017,names,rahul aur priya dost hain.,राहुल और प्रिया दोस्त हैं.,,राहुल और प्रिय दोस्त हैं.,0.038462,0.2,0.8,False
+018,names,bengaluru se delhi jaunga.,बेंगलुरु से दिल्ली जाऊँगा.,,बेंगलुरु से देल्ही जौंगा.,0.192308,0.5,0.5,False
+019,names,amit ne pooja ko bulaya.,अमित ने पूजा को बुलाया.,,अमित ने पूजा को बुलाया.,0.0,0.0,1.0,True
+020,names,rishikesh ka project accha hai.,ऋषिकेश का प्रोजेक्ट अच्छा है.,,ऋषिकेश का प्रोजेक्ट अच्छ है.,0.034483,0.2,0.8,False
+021,punctuation,"namaste, kaise ho?","नमस्ते, कैसे हो?",,"नमस्ते, कैसे हो?",0.0,0.0,1.0,True
+022,punctuation,kya tum aaoge?!,क्या तुम आओगे?!,,क्या टम आओगे?!,0.133333,0.333333,0.666667,False
+023,punctuation,haan... mujhe pata hai.,हाँ... मुझे पता है.,,हाँ... मुझे पाटा है.,0.105263,0.25,0.75,False
+024,punctuation,shukriya!,शुक्रिया!,,शुक्रिया!,0.0,0.0,1.0,True
+025,punctuation,main aaunga; tum rukna.,मैं आऊँगा; तुम रुकना.,,मैन आऊंगा; टम रुकना.,0.190476,0.75,0.25,False
+026,code_mixing,kal Python class hai.,कल Python क्लास है.,Python,कल Python क्लास है.,0.0,0.0,1.0,True
+027,code_mixing,mujhe AI project banana hai.,मुझे AI प्रोजेक्ट बनाना है.,AI,मुझे AI प्रोजेक्ट बनाना है.,0.0,0.0,1.0,True
+028,code_mixing,email kal bhejna hai.,email कल भेजना है.,email,email कल भेजना है.,0.0,0.0,1.0,True
+029,code_mixing,aaj Zoom meeting hai.,आज Zoom मीटिंग है.,Zoom,आज Zoom मीटिंग है.,0.0,0.0,1.0,True
+030,code_mixing,mere laptop par VSCode hai.,मेरे लैपटॉप पर VSCode है.,VSCode,मेरे लैपटॉप पर VSCode है.,0.0,0.0,1.0,True
+031,numbers,kal 10 baje milte hain.,कल 10 बजे मिलते हैं.,,कल 10 बाजे मिल्टे हैं.,0.15,0.4,0.6,False
+032,numbers,mere paas 2 books hain.,मेरे पास 2 बुक्स हैं.,,मेरे पास 2 बुक्स हैं.,0.0,0.0,1.0,True
+033,numbers,ye 2026 ka plan hai.,ये 2026 का प्लान है.,,ये 2026 का प्लान है.,0.0,0.0,1.0,True
+034,numbers,5 minute ruk jao!,5 मिनट रुक जाओ!,,5 मिन्यूट रुक जाओ!,0.2,0.25,0.75,False
+035,numbers,mera score 95% hai.,मेरा स्कोर 95% है.,,मेरा स्कोर 95% है.,0.0,0.0,1.0,True
+036,ambiguous,kal ka kya plan hai?,कल का क्या प्लान है?,,कल का क्या प्लान है?,0.0,0.0,1.0,True
+037,ambiguous,mera naam aman hai.,मेरा नाम अमन है.,,मेरा नाम अमन है.,0.0,0.0,1.0,True
+038,ambiguous,wo bank gaya.,वो बैंक गया.,,वो बैंक गया.,0.0,0.0,1.0,True
+039,ambiguous,ham araam se karenge.,हम आराम से करेंगे.,,हम अराम से करेंगे.,0.055556,0.25,0.75,False
+040,ambiguous,tumhara message mila.,तुम्हारा मैसेज मिला.,,तुम्हरा मेसेज मिला.,0.1,0.666667,0.333333,False
