@@ -59,13 +59,13 @@ validate_report_against_metrics(md, j)
 assert "Not installed, integrated, or executed" in md, "Must disclose unimplemented features"
 content=markdown.markdown(md,extensions=["tables","fenced_code"])
 css="""
-@page {size:A4; margin:17mm 16mm 18mm; @bottom-right {content:"IndicWrite • CS3235  |  " counter(page);
+@page {size:A4; margin:16mm 16mm 17mm; @bottom-right {content:"IndicWrite • CS3235  |  " counter(page);
 font-size:8pt;color:#697493}}
-body {font-family:'DejaVu Sans','Noto Sans Devanagari',sans-serif;font-size:9.5pt;line-height:1.53;color:#252c46}
+body {font-family:'DejaVu Sans','Noto Sans Devanagari',sans-serif;font-size:9.5pt;line-height:1.47;color:#252c46}
 h1 {font-size:30pt;line-height:1.2;color:#292e72;margin:10mm 0 7mm}
-h2 {font-size:15pt;color:#333982;padding:6px 0;border-bottom:1px solid #d7dcf1;break-after:avoid}
+h2 {font-size:15pt;color:#333982;padding:4px 0;border-bottom:1px solid #d7dcf1;break-after:avoid}
 h3 {font-size:11pt;color:#333982;break-after:avoid}
-p {margin:8px 0}
+p {margin:6px 0}
 strong {color:#252e63}
 table {border-collapse:collapse;width:100%;font-size:8pt;margin:11px 0 17px}
 td,th {border:1px solid #dce0ef;padding:6px 8px;vertical-align:top;overflow-wrap:anywhere}
