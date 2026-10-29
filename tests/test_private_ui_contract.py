@@ -21,7 +21,7 @@ def test_research_ui_locked_without_explicit_local_authorization(monkeypatch):
     page = AppTest.from_file(APP).run()
     assert not page.exception
     assert page.error
-    assert "locked" in page.error[0].message
+    assert "locked" in page.error[0].value
     assert not page.button
 
 
