@@ -18,6 +18,16 @@ jobs:
       - name: Execute real pretrained model inside isolated image
         run: |
           docker run --rm --entrypoint python indicwrite-local-demo scripts/smoke_indicxlit.py
+      - name: Verify actual Compose file and its private loopback binding
+        run: |
+          docker compose -f compose.demo.yml config --quiet
+          docker compose -f compose.demo.yml up -d --no-build
+          trap 'docker compose -f compose.demo.yml logs; docker compose -f compose.demo.yml down -v' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:8501/_stcore/health; then break; fi
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:8501/_stcore/health
       - name: Run localhost-only Streamlit health test
         run: |
           docker run -d --name indicwrite-local-test -p 127.0.0.1:8501:8501 indicwrite-local-demo
