@@ -7,6 +7,7 @@ or fixed responses are returned as model predictions.
 from __future__ import annotations
 
 from functools import lru_cache
+from contextlib import nullcontext
 
 GEC_MODEL = "manavdhamecha77/GEC-mT5-Small-Hindi"
 TRANSLATION_MODEL = "Helsinki-NLP/opus-mt-hi-en"
@@ -60,10 +61,18 @@ def load_hi_en():
     return tokenizer, model, device
 
 
+def _inference_context():
+    # A fake model injected by unit tests does not need PyTorch installed.
+    # Production model loaders always import PyTorch and fail loudly without it.
+    try:
+        import torch
+    except ModuleNotFoundError:
+        return nullcontext()
+    return torch.inference_mode()
+
+
 def generate_hindi_gec(text: str, resources=None) -> str:
     """Run genuine MT5 generation. Do not claim output is always an improvement."""
-    import torch
-
     sentence = validate_hindi(text)
     tokenizer, model, device = resources if resources is not None else load_hindi_gec()
     # The model author's training uses the literal 'correct this: ' prefix.
@@ -74,7 +83,7 @@ def generate_hindi_gec(text: str, resources=None) -> str:
     if encoded["input_ids"].shape[-1] > 128:
         raise ValueError("Sentence is too long for the Hindi grammar model (128 tokens).")
     encoded = {k: v.to(device) for k, v in encoded.items()}
-    with torch.inference_mode():
+    with _inference_context():
         outputs = model.generate(**encoded, max_new_tokens=128, num_beams=4)
     candidate = tokenizer.batch_decode(outputs, skip_special_tokens=True)
     if not candidate or not candidate[0].strip():
