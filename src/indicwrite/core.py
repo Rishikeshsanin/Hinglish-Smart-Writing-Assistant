@@ -10,7 +10,12 @@ import re
 from typing import Protocol
 
 ROMAN_TOKEN = re.compile(r"[A-Za-z]+")
-TOKENIZER = re.compile(r"[A-Za-z]+|[^A-Za-z]+")
+TOKENIZER = re.compile(
+    r"https?://[^\s]+|www\.[^\s]+|[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}"
+    r"|[A-Za-z]{1,10}(?:\+\+|#)|[A-Za-z]+-\d+|\d+[A-Za-z]+"
+    r"|[^\W\d_][\w\u0300-\u036f\u0900-\u097f]*|\s+|.",
+    re.UNICODE,
+)
 MAX_CHARS = 500
 MAX_ROMAN_WORDS = 80
 
@@ -74,7 +79,7 @@ def transliterate_text(
 ) -> str:
     """Roman-Hindi → Devanagari using IndicXlit; never fake model results.
 
-    Non-ASCII text, spaces, numbers, and punctuation are retained byte-for-byte.
+    Whole Unicode words, URLs, emails, identifiers, spaces and punctuation are preserved.
     English words are inherently ambiguous: an explicit preserve list and
     all-uppercase acronyms (2–6 letters) stay in Latin script.
     """
