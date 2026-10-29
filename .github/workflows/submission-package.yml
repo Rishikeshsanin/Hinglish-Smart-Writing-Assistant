@@ -8,6 +8,10 @@ on:
       - 'scripts/build_submission_package.py'
       - 'reports/IndicWrite_CS3235_Project_Report.pdf'
       - 'docs/SUBMISSION_CHECKLIST.md'
+      - 'docs/REPORT.md'
+      - 'README.md'
+      - 'src/indicwrite/**'
+      - 'screenshots/**'
 jobs:
   submit-package:
     runs-on: ubuntu-latest
