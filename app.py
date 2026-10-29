@@ -43,6 +43,10 @@ EXAMPLES = (
 )
 
 
+def clear_result() -> None:
+    st.session_state["converted_text"] = ""
+
+
 def choose_example(value: str) -> None:
     st.session_state["source_text"] = value
     st.session_state["converted_text"] = ""
@@ -70,7 +74,7 @@ with col1:
     st.markdown("#### Your Hinglish text")
     st.text_area(
         "Roman Hindi", key="source_text",
-        height=190, max_chars=500,
+        height=190, max_chars=500, on_change=clear_result,
         placeholder="kal mujhe college jana hai...",
         label_visibility="collapsed",
     )
@@ -92,6 +96,8 @@ with col2:
     st.markdown("#### Your Devanagari result")
     if convert:
         try:
+            if not st.session_state["source_text"].strip():
+                raise InputError("Enter a Roman-Hindi sentence to continue.")
             with st.spinner("Loading AI4Bharat IndicXlit and converting…"):
                 model = load_indicxlit()
                 st.session_state["converted_text"] = transliterate_text(
