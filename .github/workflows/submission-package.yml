@@ -12,6 +12,10 @@ on:
       - 'README.md'
       - 'src/indicwrite/**'
       - 'screenshots/**'
+      - 'docs/DEPLOYMENT.md'
+      - 'docs/FINAL_RELEASE_STATUS.md'
+      - 'Dockerfile.demo'
+      - 'compose.demo.yml'
 jobs:
   submit-package:
     runs-on: ubuntu-latest
