@@ -33,8 +33,9 @@ jobs:
           for i in $(seq 1 80); do curl -fsS localhost:8501/_stcore/health && break || sleep 2; done
           python scripts/browser_translation.py
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: real-indicwrite-english-translation-screenshot
-          path: screenshots/actual-english-translation.png
-          if-no-files-found: error
+          path: screenshots/*.png
+          if-no-files-found: warn
           retention-days: 45

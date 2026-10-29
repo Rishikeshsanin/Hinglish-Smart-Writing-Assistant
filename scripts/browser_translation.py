@@ -21,7 +21,14 @@ with sync_playwright() as play:
     grammar=page.get_by_role("button",name="Improve Hindi grammar (research)")
     expect(grammar).to_be_disabled()
     page.get_by_role("button",name="Translate to English").click()
-    expect(page.get_by_text("I have to go to college tomorrow.",exact=False)).to_be_visible(timeout=180000)
+    try:
+        expect(page.get_by_text("I have to go to college tomorrow.",exact=False)).to_be_visible(timeout=180000)
+    except AssertionError:
+        print("PAGE_DEBUG_START", flush=True)
+        print(page.locator("body").inner_text()[-7000:], flush=True)
+        print("PAGE_DEBUG_END", flush=True)
+        page.screenshot(path=str(OUTPUT/"translation-debug.png"),full_page=True)
+        raise
     page.screenshot(path=str(OUTPUT/"actual-english-translation.png"),full_page=True)
     page.get_by_role("button",name="Clear",exact=True).click()
     expect(source).to_have_value("")
