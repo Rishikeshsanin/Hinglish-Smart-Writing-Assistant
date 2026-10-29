@@ -1,0 +1,46 @@
+name: Verified academic PDF report
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/report.yml'
+      - 'docs/REPORT.md'
+      - 'scripts/build_faculty_report.py'
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install PDF renderer and Devanagari fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-core
+          python -m pip install 'weasyprint==62.3' 'pydyf==0.10.0' 'Markdown==3.7'
+      - name: Render faculty report from executed evidence
+        run: |
+          python scripts/build_faculty_report.py
+          pdfinfo reports/IndicWrite_CS3235_Project_Report.pdf | grep -E 'Pages:|Page size:'
+      - name: Upload PDF evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: IndicWrite-CS3235-academic-report
+          path: reports/IndicWrite_CS3235_Project_Report.pdf
+          if-no-files-found: error
+          retention-days: 60
+      - name: Commit compiled PDF report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f reports/IndicWrite_CS3235_Project_Report.pdf
+          git diff --cached --exit-code && exit 0
+          git commit -m "docs: publish evidence-based IndicWrite academic PDF report"
+          git push origin HEAD:main
