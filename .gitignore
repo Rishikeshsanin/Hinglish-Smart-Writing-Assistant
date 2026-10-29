@@ -25,3 +25,9 @@ checkpoints/
 evaluation/results/
 .DS_Store
 .vscode/
+
+# BharatGen restricted research evidence — never push private generated outputs
+private_research/
+bharatgen-*.jsonl
+bharatgen-*.zip
+*BharatGen*Evidence*Review*
