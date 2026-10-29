@@ -40,3 +40,22 @@ def test_non_fairseq_types_not_modified():
         if sys.version_info >= (3, 11):
             with pytest.raises(ValueError, match="mutable default"):
                 dataclasses.dataclass(Normal)
+
+
+def test_exact_hydra_conf_module_is_covered():
+    if sys.version_info < (3, 11):
+        pytest.skip("Python 3.11+ legacy Hydra compatibility only")
+    @dataclasses.dataclass
+    class Nested:
+        x: int = 0
+    origin = dataclasses._get_field
+    Config = type(
+        "MockHydraConfig", (),
+        {"__module__": "hydra.conf",
+         "__annotations__": {"job": Nested},
+         "job": Nested()},
+    )
+    with fairseq_py311_dataclass_context():
+        Decorated = dataclasses.dataclass(Config)
+        assert Decorated().job == Nested()
+    assert dataclasses._get_field is origin
