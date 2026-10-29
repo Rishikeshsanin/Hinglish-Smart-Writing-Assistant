@@ -22,7 +22,12 @@ with sync_playwright() as play:
     expect(grammar).to_be_disabled()
     page.get_by_role("button",name="Translate to English").click()
     try:
-        expect(page.get_by_text("I have to go to college tomorrow.",exact=False)).to_be_visible(timeout=180000)
+        expect(page.get_by_text("English output — Helsinki-NLP OPUS-MT, not IndicTrans2")).to_be_visible(timeout=180000)
+        english=page.locator("[data-testid='stCode'] code").last
+        expect(english).to_be_visible(timeout=30000)
+        observed=english.inner_text().strip()
+        assert observed and re.search(r"[A-Za-z]",observed), f"No English model output: {observed!r}"
+        print("OPUS_BROWSER_OUTPUT",observed,flush=True)
     except AssertionError:
         print("PAGE_DEBUG_START", flush=True)
         print(page.locator("body").inner_text()[-7000:], flush=True)

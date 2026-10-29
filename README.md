@@ -11,11 +11,11 @@ Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an 
 - Real-model IndicXlit wrapper via the official `ai4bharat-transliteration` Python package (no hardcoded generated results).
 - Roman Hindi → Hindi script, preserving spaces, punctuation, digits, existing Devanagari, and explicitly preserved English terms.
 - Streamlit UI with sample inputs, validation, comparison, and copyable output.
-- Unit tests with a **fake engine**, clearly separate from an executable real-model smoke test.
+- 40 offline tests, clearly separate from executable real-model smoke tests.
 
 **Model execution status:** VERIFIED on Ubuntu 22.04 / Python 3.10 in [genuine IndicXlit smoke run #40870311669](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40870311669), with official downloaded neural weights. Unit tests remain distinct from real inference.
 
-**Not yet integrated:** BharatGen Param-1 rewriting and IndicTrans2 translation. Neither is represented as available or executed.
+**Optional-model evidence:** OPUS-MT Hindi→English ran successfully on two smoke cases. Four separate Hindi rewrite candidates were genuinely executed but failed the quality gate: one produced mixed-script output, one corrected only 1/5 cases, Qwen2.5-0.5B corrected 2/5 with severe drift elsewhere, and Qwen3-0.6B corrected 0/5. Grammar rewriting therefore remains disabled by default. A pinned BharatGen adapter and 12-case evaluation protocol exist, but no genuine BharatGen output has been recorded. IndicTrans2 remains an investigated, gated path rather than an executed feature.
 
 ## Quick start (Windows / PowerShell)
 
@@ -68,8 +68,8 @@ The engine loads once per Python process. Roman tokens are sent individually to 
 - [Official Python API](https://github.com/AI4Bharat/IndicXlit/tree/master/app)
 - [PyPI ai4bharat-transliteration 1.1.3](https://pypi.org/project/ai4bharat-transliteration/)
 - [Aksharantar dataset](https://huggingface.co/datasets/ai4bharat/Aksharantar)
-- [BharatGen Param-1-2.9B-Instruct](https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct) — **planned, not executed**
-- [AI4Bharat IndicTrans2](https://github.com/AI4Bharat/IndicTrans2) — **planned, not executed**
+- [BharatGen Param-1-2.9B-Instruct](https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct) — **experimental adapter; real inference not yet executed**
+- [AI4Bharat IndicTrans2](https://github.com/AI4Bharat/IndicTrans2) — **feasibility investigated; gated checkpoint not executed**
 
 ## Faculty deliverables tracker
 
@@ -86,6 +86,7 @@ The engine loads once per Python process. Roman tokens are sent individually to 
 ## Evidence links (executed, not simulated)
 
 - [Real model smoke run](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40870311669)
+- [Real IndicXlit → OPUS-MT browser run](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40879090261)
 - [40-case evaluated predictions](evaluation/results/predictions.csv) · [Metrics](evaluation/results/metrics.json) · [Failure examples](evaluation/results/worst_cases.csv)
 - [Real desktop screenshot](screenshots/desktop.png) · [Real mobile screenshot](screenshots/mobile.png) · [Browser QA trace](screenshots/browser-qa.json)
 
@@ -98,7 +99,7 @@ The engine loads once per Python process. Roman tokens are sent individually to 
 - [Reproducible report renderer](scripts/build_faculty_report.py)
 - [Report generation CI](.github/workflows/report.yml)
 
-**Scope disclosure:** The genuine transliteration MVP, evaluation, and browser QA are complete. BharatGen rewriting and optional IndicTrans2 translation are not yet integrated. This is not a claim that the entire original multi-model project is finished.
+**Scope disclosure:** The genuine transliteration MVP, evaluation, and browser QA are complete. BharatGen rewriting and optional IndicTrans2 translation are not verified or integrated. This is not a claim that the entire original multi-model project is finished.
 
 
 ## Additional real-model findings (October 29, 2026)
@@ -106,6 +107,6 @@ The engine loads once per Python process. Roman tokens are sent individually to 
 The optional language-service models can be installed with `python -m pip install -r requirements-language-services.txt`.
 Run `INDICWRITE_ENABLE_LANGUAGE_SERVICES=1 PYTHONPATH=src streamlit run app.py` to expose the separately attributed **Helsinki-NLP OPUS-MT Hindi-to-English** model. It is *not* IndicTrans2. The public Apache-2.0 checkpoint produced two coherent actual translations on GitHub Actions run [40876423545](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40876423545).
 
-**Grammar is intentionally disabled by default**, including in the optional environment. Two genuine MIT Hindi mT5 checkpoints were tested: the first produced mixed Bengali/Hindi, and the second corrected only 1 of 5 manually authored Hindi sentences. For controlled research only, set `INDICWRITE_ENABLE_GEC_EXPERIMENTAL=1`; outputs are checked for script drift and altered digits but still require human scrutiny. Neither model is BharatGen.
+**Grammar is intentionally disabled by default**, including in the optional environment. Two genuine MIT Hindi mT5 checkpoints failed quality review. Apache-2.0 Qwen2.5-0.5B and Qwen3-0.6B experiments scored 2/5 and 0/5 exact corrections respectively, with meaning loss or language drift. For controlled research only, set `INDICWRITE_ENABLE_GEC_EXPERIMENTAL=1`; outputs are checked for script drift and exact numeral preservation but still require human scrutiny. None of these models is BharatGen.
 
-The actual [BharatGen Research License](https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct/blob/main/LICENSE) requires written approval for publicly publishing model outputs or hosting the checkpoint. We do not publicly host it or claim to have executed it. The original 40-case IndicXlit evaluation remains unchanged and is not a grammar accuracy measure.
+The BharatGen repository history contains a restrictive Research License even though the live metadata currently advertises Apache-2.0 and the license file has changed. Public output/hosting therefore remains blocked pending written clarification. We do not publicly host it or claim to have executed it. The original 40-case IndicXlit evaluation remains unchanged and is not a grammar accuracy measure.
