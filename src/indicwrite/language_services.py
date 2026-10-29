@@ -71,6 +71,21 @@ def _inference_context():
     return torch.inference_mode()
 
 
+def validate_rewrite_candidate(original: str, candidate: str) -> str:
+    """Reject obvious wrong-script output and changed digit groups."""
+    import re
+    if not isinstance(candidate, str) or not candidate.strip():
+        raise LanguageModelError("Grammar model returned empty text.")
+    candidate = candidate.strip()
+    letters = [ch for ch in candidate if ch.isalpha()]
+    proportion = sum("\u0900" <= ch <= "\u097f" for ch in letters) / len(letters) if letters else 0.0
+    if proportion < 0.85:
+        raise LanguageModelError("Grammar model drifted into a different script; prediction rejected.")
+    for number in re.findall(r"[0-9]+", original):
+        if number not in re.findall(r"[0-9]+", candidate):
+            raise LanguageModelError("Grammar model changed or omitted a number; prediction rejected.")
+    return candidate
+
 def generate_hindi_gec(text: str, resources=None) -> str:
     """Run genuine MT5 generation. Do not claim output is always an improvement."""
     sentence = validate_hindi(text)
@@ -88,7 +103,7 @@ def generate_hindi_gec(text: str, resources=None) -> str:
     candidate = tokenizer.batch_decode(outputs, skip_special_tokens=True)
     if not candidate or not candidate[0].strip():
         raise LanguageModelError("Hindi GEC model returned an empty prediction.")
-    return candidate[0].strip()
+    return validate_rewrite_candidate(sentence, candidate[0])
 
 
 def generate_english(text: str, resources=None) -> str:
