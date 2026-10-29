@@ -100,7 +100,7 @@ def generate_english(text: str, resources=None) -> str:
     if encoded["input_ids"].shape[-1] > 256:
         raise ValueError("Sentence is too long for the translation model (256 tokens).")
     encoded = {k: v.to(device) for k, v in encoded.items()}
-    with torch.inference_mode():
+    with _inference_context():
         outputs = model.generate(**encoded, max_new_tokens=160, num_beams=4)
     candidate = tokenizer.batch_decode(outputs, skip_special_tokens=True)
     if not candidate or not candidate[0].strip():
