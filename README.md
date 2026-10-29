@@ -144,3 +144,11 @@ PYTHONPATH=src streamlit run app.py --server.address=127.0.0.1
 ```
 
 A T4 or comparable GPU (~7+ GiB free VRAM) is required for FP16. The feature generates a *candidate only*: original text stays unchanged; changed numbers/English terms receive warnings and users must confirm review before download. No public model API, output database or silent substitution exists. **Do not enable these flags on Streamlit Community Cloud or other public servers.** No full private Streamlit GPU UI/browser run is claimed; only the underlying checkpoint inference is verified.
+
+## Submission snapshot after private BharatGen verification
+
+The final academic report now includes the genuine **private T4 checkpoint experiment** as a separate research milestone: 1 real smoke generation, 10 research generations, FP16 runtime and an independently preserved local evidence ZIP. Its preliminary editorial assessment identifies a technical-term fidelity/grammar failure in one test case, so no broad model accuracy is claimed.
+
+For faculty submission, download the latest **IndicWrite-CS3235-CIE3-Faculty-Submission** artifact from [GitHub Actions](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/workflows/submission-package.yml). Keep the detailed BharatGen outputs/evidence ZIP **private** until output-publication permission is clarified. Never add model weights, generated BharatGen outputs or Hugging Face credentials to this public repository.
+
+The verified Streamlit conversion and independently attributed English translation remain available without a public BharatGen service. The optional local-only private GPU research UI is not yet browser-tested on a live GPU and should not be presented as a completed public deployment.
