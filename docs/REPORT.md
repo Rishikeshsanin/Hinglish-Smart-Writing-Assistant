@@ -11,7 +11,7 @@
 
 IndicWrite is an Indian-language writing application that converts Roman-script Hindi (Hinglish) to native Devanagari script. The initial end-to-end implementation uses the **genuine AI4Bharat IndicXlit pretrained neural model**, rather than hand-written mappings or simulated responses. It provides a Streamlit user interface with text validation, example inputs, protected English words, error handling, model attribution, and copyable/downloadable conversion results.
 
-In executed experiments on a **40-case manually authored evaluation dataset**, the system achieved a **macro-average character error rate (CER) of 5.58%**, **macro-average word accuracy of 82.67%**, and **55% exact sentence match**. Results demonstrate practical Roman-Hindi conversion while highlighting failure cases, particularly ambiguous shortened spellings. Model-based grammatical rewriting with BharatGen Param-1 and English translation with IndicTrans2 remain proposed improvements and are **not** represented as implemented.
+In executed experiments on a **40-case manually authored evaluation dataset**, the system achieved a **macro-average character error rate (CER) of 5.58%**, **macro-average word accuracy of 82.67%**, and **55% exact sentence match**. Results demonstrate practical Roman-Hindi conversion while highlighting failure cases, particularly ambiguous shortened spellings. After the initial transliteration MVP, genuine BharatGen Param-1 rewriting inference was verified privately on a Tesla T4 GPU (11 research generations). A separate, real Helsinki OPUS-MT Hindi-to-English option was also verified. Neither private BharatGen research nor OPUS-MT is misrepresented as a publicly deployed sovereign-model writing service; IndicTrans2 remains unexecuted.
 
 ## 1. Problem definition and relevance
 
@@ -28,7 +28,7 @@ This project aims to provide a usable Indian-language AI solution and evaluate i
 5. Keep actual model inference, unit-test stubs, and future features clearly separated.
 6. Document architecture, model attribution, limitations, and repeatable setup.
 
-The faculty's complete Option 4 describes transliteration, sentence improvement and optional translation. This version **completes and validates the transliteration application**, but **does not yet implement grammatical rewriting**. Translation is explicitly optional and likewise unimplemented.
+The faculty's complete Option 4 describes transliteration, sentence improvement and optional translation. This deliverable completes and validates the transliteration application, includes an **independently attributed optional English translator**, and demonstrates **real private BharatGen model-based rewriting** in a separately constrained GPU research runtime. The public app does not automatically improve Hindi sentences, and private BharatGen output quality has not passed independent expert assessment.
 
 ## 3. Model and dataset selection
 
@@ -36,8 +36,9 @@ The faculty's complete Option 4 describes transliteration, sentence improvement 
 |---|---|---|
 | Transliteration | AI4Bharat IndicXlit via `ai4bharat-transliteration==1.1.3` | **Pretrained model successfully executed** |
 | Frontend | Streamlit with Python 3.10 | **Ran and interacted in Chromium** |
-| Writing improvement | Candidate BharatGen Param-1-2.9B-Instruct | **Not installed, integrated, or executed** |
-| English translation | Candidate AI4Bharat IndicTrans2 | **Not installed, integrated, or executed** |
+| Writing improvement | BharatGen Param-1-2.9B-Instruct | **Real T4 FP16 pretrained inference verified privately (1 smoke + 10 research cases)**; local-only review UI is separate, and actual private GPU browser QA remains pending |
+| Optional English translation | Helsinki-NLP OPUS-MT Hindi→English | **Genuine model and browser inference verified**, independently attributed; not IndicTrans2 |
+| Optional sovereign translation | AI4Bharat IndicTrans2 | **Not installed, integrated, or executed** (HF checkpoint access still gated) |
 | Training/data attribution | AI4Bharat Aksharantar | Cited as an official model resource, **not** claimed as the source of our manually authored tests |
 
 IndicXlit is a multilingual transformer supporting 21 Indic languages. The application uses the Hindi (`hi`) path. The official repository is MIT-licensed. The package's legacy Fairseq checkpoint required special loading compatibility with modern PyTorch. The other candidate models require independent checks on licensing, access, runtime and task suitability before integration.
@@ -134,7 +135,7 @@ These are genuine model outputs, not examples synthesized to illustrate possible
 
 ## 8. Executed testing and verification
 
-- **Unit tests:** 14 tests passed on GitHub Actions. These test input handling, error propagation and metric calculations, and **use a fake engine** for deterministic text tests; their passing does not itself prove model inference.
+- **Initial MVP unit tests:** 14 tests passed at the original October 29 baseline. Subsequent isolated QA suites expanded the coverage (including private UI and ZIP-integrity checks); see the latest Actions run for current totals. Fake engines in deterministic unit tests are **not** evidence of pretrained-model execution.
 - **Actual neural model:** Ubuntu 22.04, Python 3.10, downloaded official checkpoint. Smoke run `40870311669` printed `REAL_INDICXLIT_SMOKE_TEST_PASSED`.
 - **Actual 40-case evaluation:** Run `40870722731` succeeded and committed authentic prediction/metric files. The JSON and CSV are retained in GitHub.
 - **Actual web UI/browser:** GitHub Actions Chromium Playwright run `40871267464` completed conversions and Clear actions on desktop at 1440px and mobile at 390px, with no detected page-level JavaScript errors or horizontal overflow. A follow-up run `40872355065` also passed and captured a mobile screenshot with the real result visible.
@@ -157,7 +158,7 @@ The next development phases would evaluate BharatGen Param-1 for grammatical rew
 
 ## 10. Conclusion
 
-IndicWrite now provides an independently testable Indian-language AI transliteration application, with a responsive Streamlit interface, genuine AI4Bharat IndicXlit inference, forty measured cases, transparent failure analysis and real desktop/mobile screenshots. The reported performance and implementation scope are grounded in saved logs and results, while rewriting/translation remain unimplemented and explicitly documented.
+IndicWrite now provides an independently testable Indian-language AI transliteration application, with a responsive Streamlit interface, genuine AI4Bharat IndicXlit inference, forty measured cases, transparent failure analysis and real desktop/mobile screenshots. The reported performance and implementation scope are grounded in saved logs and results, while BharatGen rewriting is explicitly limited to private GPU research and the optional OPUS translation is separately attributed. The public, production-quality BharatGen/IndicTrans2 pipeline remains unimplemented.
 
 ## References
 
@@ -212,3 +213,12 @@ For classroom use, a private Docker Compose configuration was added that binds t
 A public deployment was **not** claimed. The official model depends on a legacy Python 3.10/Fairseq stack, and Python 3.10 reached its security end of life on 1 October 2026. To assess a supported-Python option, an independently contributed CTranslate2 conversion was tested on all 40 authored reference examples under Python 3.12. It achieved **11.54%** mean CER, **67.83%** mean word accuracy and **6/40** exact reference matches; the genuine official runtime had **5.58%**, **82.67%**, and **22/40**, respectively. Only **8/40** converted predictions were identical to the saved official predictions. This is a concrete example of why technically executable alternatives must pass comparative evaluations before deployment. The inferior converted model was rejected without changing the application or its historical evaluation.
 
 **Consequently, deployment readiness is local-only.** The remaining independent requirements for an internet-facing release are a supported secure runtime with acceptable model fidelity, explicit hosting authorization, BharatGen public-output permission if that private research capability is exposed, and a real external-browser verification. No paid service or unrelated project infrastructure was used.
+
+
+## 15. Reproducible private-GPU interface and human-quality protocol
+
+The verified academic project uses deliberately **separate runtimes**: the official Python 3.10/Fairseq environment provides genuine Roman-Hindi transliteration; the pinned BharatGen FP16 research environment runs in Python 3.12 on a private CUDA GPU. There is no claim that both checkpoints work in one Python interpreter. The standalone `research/private_bharatgen_app.py` accepts Hindi text directly, requires explicit authorization and loopback-only service binding, and offers a suggested rewrite without auto-applying it. Real Streamlit widget behavior (review confirmation, invalidation and locked state) was tested with an **explicitly fake model**; a separate real-GPU browser experiment is prepared in `notebooks/BharatGen_Private_UI_GPU_QA.ipynb` but has not yet been executed.
+
+For controlled human review, `scripts/review_bharatgen_evidence.py` privately reads ten original genuine JSONL generations and creates a gitignored 0–2 rubric covering grammar, meaning, facts/entities and unnecessary edits. It rejects incomplete or unattributed reviews and produces only aggregate scores. **No independent linguist assessment has been completed**; the previously reported nine-of-ten review was a preliminary non-expert judgment. Raw outputs, private screenshots and private reviewer sheets are not included in the public repository or submission ZIP pending the BharatGen licensing decision.
+
+Final submission archives are built from documented source and genuine evidence, with per-file SHA-256 digests. A separate verifier checks every archive entry for digest mismatches, path traversal, embedded secrets/model weights and leaked private research outputs. The actual local Docker Compose service has also passed CI loopback health checks. No hosted production URL or Google Classroom submission is asserted.

@@ -20,7 +20,7 @@
 - **BharatGen license:** research-license history and conflicting public model metadata require explicit clarification/approval before public dissemination of weights/generated outputs or model hosting. Raw private model output ZIP is deliberately not committed.
 - **Private candidate UI:** exists behind explicit opt-ins and a loopback-only bind requirement; no real T4 Streamlit browser E2E has been performed. It never auto-applies edits and warns about changed numbers/English terms.
 - **IndicTrans2:** official gated checkpoint was not accessed; independently attributed Helsinki OPUS-MT is the optional verified translation path.
-- **Public deployment:** no reachable URL verified; Python 3.11 legacy Fairseq/Hydra compatibility experiment in draft PR #11 failed genuine model startup. Ubuntu/WSL2 Python 3.10 local demo remains the proven path.
+- **Public deployment:** no reachable URL verified; Python 3.11 legacy Fairseq/Hydra compatibility experiment in archived PR #11 failed genuine model startup. Ubuntu/WSL2 Python 3.10 local demo remains the proven path.
 - **Google Classroom submission:** not performed; requires student-controlled Classroom account and a final check of the faculty requirements.
 
 ## Where to verify
@@ -42,3 +42,12 @@
 The official AI4Bharat model was successfully exercised inside an isolated local-only Docker image ([run 40898600397](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40898600397)), including container build, pretrained smoke, and Streamlit localhost health. The private-GPU BharatGen UI still lacks real end-to-end browser testing and must not be served publicly pending license authorization.
 
 Public deployment is explicitly **blocked** rather than silently degraded. On Python3.12, a third-party CT2 IndicXlit conversion had 40-case mean CER 11.54% vs official 5.58%; word accuracy 67.83% vs 82.67%; exact reference matches 6/40 vs 22/40. It was rejected, and experimental PR #13 closed without merge. Python3.11/Fairseq experimental PR #11 was also closed after authentic startup failure. Python3.10 is EOL; do not host this exact legacy runtime on an internet-facing free Streamlit service.
+
+
+## Final technical handoff — protected research environments
+
+- **Normal IndicWrite:** official AI4Bharat IndicXlit in isolated Python3.10 or local-only Docker, real browser smoke passed. This uses no BharatGen checkpoint and never silently substitutes a lower-quality third-party model.
+- **Private rewriting study:** independent Python3.12/T4 Streamlit app, protected by all three opt-in flags and localhost binding, handles Hindi directly. Real pretrained BharatGen checkpoint inference previously succeeded in 11 private Colab generations; the **new UI widget tests use fake inference**, and **full real-GPU browser UI QA remains not executed**.
+- **Independent human-language review:** a private 10-case reviewer rubric and aggregate-only scoring script are prepared; no independently scored quality result is claimed.
+- **Release reproducibility:** the ZIP archive verifier now checks per-file SHA-256, required evidence and exclusion of unsafe/private content; Docker Compose loopback health has passed.
+- **External blockers:** public BharatGen approval, supported-runtime public deployment, optional gated IndicTrans2 access, private GPU UI execution and faculty Google Classroom upload remain outstanding.

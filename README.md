@@ -164,3 +164,10 @@ The verified Streamlit conversion and independently attributed English translati
 Run `docker compose -f compose.demo.yml up --build` and open **http://127.0.0.1:8501**. The exact isolated container build, official pretrained AI4Bharat inference, and loopback health check passed [GitHub Actions run 40898600397](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40898600397). [Step-by-step setup](docs/LOCAL_DOCKER_DEMO.md). **Local demonstration only:** this image uses end-of-life Python 3.10 for legacy Fairseq and is not approved for public hosting.
 
 A third-party CTranslate2 conversion was genuinely evaluated on all 40 cases (run 40898008792), but was rejected: 11.54% mean CER, 67.83% word accuracy, only 6/40 exact reference matches vs 5.58%, 82.67%, 22/40 for the official engine. It is not part of the app and was not merged.
+
+
+## Final private research workflow and release verification
+
+The two models require separate Python environments: the official Roman-Hindi IndicXlit converter is verified on Linux/Python 3.10; **private BharatGen research** is verified on Colab/T4/Python 3.12. The new [private GPU Streamlit interface](research/private_bharatgen_app.py) accepts Hindi directly and remains localhost-only. The [private Colab browser-QA notebook](notebooks/BharatGen_Private_UI_GPU_QA.ipynb) prepares a future genuine GPU UI check; it has **not** been executed and cannot substitute for it. See [private setup](docs/PRIVATE_BHARATGEN_UI.md).
+
+The [human-review rubric](docs/PRIVATE_HUMAN_REVIEW.md) enables qualified reviewers to score private real-model outputs without committing raw text. No independent expert review is claimed. Faculty ZIP archives have an [independent verifier](scripts/verify_submission_package.py) that checks the SHA-256 manifest, ZIP path safety and exclusion of model weights, credentials and private outputs. The isolated Docker Compose localhost service has passed actual CI health checks.

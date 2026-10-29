@@ -65,3 +65,17 @@ Use `docker compose -f compose.demo.yml up --build` in Docker Desktop on your Wi
 ## Final delivery check (29 October 2026)
 
 The report has been regenerated after the Docker and CTranslate2 fidelity studies. The faculty ZIP should be downloaded from the **newest successful** [submission workflow run](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/workflows/submission-package.yml), not an older draft. Its manifest distinguishes verified private BharatGen T4 inference from unverified publication approval and private-GPU browser QA. Faculty Classroom upload is still a distinct student-controlled action, not automatically performed by publishing a GitHub ZIP.
+
+
+## Additional completed engineering controls
+
+- [x] Independent faculty ZIP SHA-256, unsafe-path and private-output verifier with corruption regression tests.
+- [x] Actual loopback-only Docker Compose service health verified on disposable GitHub Actions runner.
+- [x] Separate Python3.12 localhost BharatGen research interface and fake-model Streamlit widget checks.
+- [x] Prepared private real-GPU browser test notebook (not executed as a GPU test).
+- [x] Prepared private human-language scoring rubric and aggregate-only script (no human ratings claimed).
+- [ ] Genuine *private GPU UI* browser run and independent Hindi meaning-preservation scores.
+
+### Academic honesty
+
+The final ZIP contains all public project artifacts, not private BharatGen generated sentences. The retained Colab evidence showed actual pretrained inference on 11 samples. It does not certify a public BharatGen rewrite service or linguistic accuracy. Classroom submission is still a separate authenticated action.

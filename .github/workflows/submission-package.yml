@@ -15,6 +15,11 @@ on:
       - 'docs/DEPLOYMENT.md'
       - 'docs/FINAL_RELEASE_STATUS.md'
       - 'scripts/verify_submission_package.py'
+      - 'research/**'
+      - 'notebooks/**'
+      - 'docs/PRIVATE_HUMAN_REVIEW.md'
+      - 'docs/PRIVATE_BHARATGEN_UI.md'
+      - 'scripts/review_bharatgen_evidence.py'
       - 'Dockerfile.demo'
       - 'compose.demo.yml'
 jobs:

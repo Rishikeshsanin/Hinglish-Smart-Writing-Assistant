@@ -19,9 +19,6 @@ assert all(x.is_file() for x in screenshots), "Real screenshots must exist"
 j=json.loads(metrics.read_text(encoding="utf-8"))
 assert j["overall"]["count"]==40, "Only generate final PDF after 40 cases"
 assert "IndicXlit" in j["model"]
-from pathlib import Path
-import re
-
 def validate_report_against_metrics(report_text: str, metrics: dict) -> None:
     """Fail closed if a revised report silently cites old measured scores."""
     overall = metrics["overall"]
@@ -56,7 +53,9 @@ def validate_report_against_metrics(report_text: str, metrics: dict) -> None:
 
 md=source.read_text(encoding="utf-8")
 validate_report_against_metrics(md, j)
-assert "Not installed, integrated, or executed" in md, "Must disclose unimplemented features"
+assert "BharatGen Param-1-2.9B-Instruct" in md and "private" in md.lower(), "Must disclose actual private BharatGen inference"
+assert "not a publicly deployed" in md.lower() or "No public BharatGen service" in md, "Must disclose public deployment limits"
+assert "Not installed, integrated, or executed" in md, "Must disclose unexecuted IndicTrans2 checkpoint"
 content=markdown.markdown(md,extensions=["tables","fenced_code"])
 css="""
 @page {size:A4; margin:16mm 16mm 17mm; @bottom-right {content:"IndicWrite • CS3235  |  " counter(page);
