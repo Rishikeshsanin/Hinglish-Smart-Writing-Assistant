@@ -1,6 +1,9 @@
 name: Genuine IndicXlit model smoke (manual)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/indicxlit-smoke.yml']
 
 jobs:
   real-model:
