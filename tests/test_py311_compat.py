@@ -1,10 +1,14 @@
 """Ensure Fairseq-only Python3.11 compatibility restores stdlib behavior."""
 from __future__ import annotations
 import dataclasses
+import sys
+import pytest
 from indicwrite.compat_py311 import fairseq_py311_dataclass_context
 
 
 def test_scoped_fairseq_default_factory_and_restore():
+    if sys.version_info < (3, 11):
+        pytest.skip("Python 3.10 allows these legacy defaults")
     original = dataclasses._get_field
 
     @dataclasses.dataclass
