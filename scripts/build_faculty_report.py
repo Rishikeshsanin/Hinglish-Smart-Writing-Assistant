@@ -6,6 +6,7 @@ Usage: python scripts/build_faculty_report.py
 from __future__ import annotations
 import json
 from pathlib import Path
+import re
 import markdown
 from weasyprint import HTML
 
@@ -18,7 +19,43 @@ assert all(x.is_file() for x in screenshots), "Real screenshots must exist"
 j=json.loads(metrics.read_text(encoding="utf-8"))
 assert j["overall"]["count"]==40, "Only generate final PDF after 40 cases"
 assert "IndicXlit" in j["model"]
+from pathlib import Path
+import re
+
+def validate_report_against_metrics(report_text: str, metrics: dict) -> None:
+    """Fail closed if a revised report silently cites old measured scores."""
+    overall = metrics["overall"]
+    assert overall["count"] == 40
+    required = [
+        f"{overall['mean_cer'] * 100:.2f}%",
+        f"{overall['mean_word_accuracy'] * 100:.2f}%",
+        f"{overall['exact_sentence_match_rate'] * 100:.0f}%",
+    ]
+    for number in required:
+        assert number in report_text, f"Report metric drift: missing {number}"
+    section = report_text.split("### 6.1 Performance by category", 1)[1].split("## 7.", 1)[0]
+    labels = {
+        "ordinary": "Ordinary Hinglish",
+        "spelling_variation": "Spelling variation",
+        "loanwords": "Loanwords",
+        "names": "Names",
+        "punctuation": "Punctuation",
+        "code_mixing": "Code mixing",
+        "numbers": "Numbers",
+        "ambiguous": "Ambiguous",
+    }
+    for key, label in labels.items():
+        row = metrics["by_category"][key]
+        expected = (
+            f"| {label} | {row['count']} | "
+            f"{row['mean_cer'] * 100:.2f}% | "
+            f"{row['mean_word_accuracy'] * 100:.2f}% | "
+            f"{row['exact_sentence_match_rate'] * 100:.0f}% |"
+        )
+        assert expected in section, f"Report category drift: {key}"
+
 md=source.read_text(encoding="utf-8")
+validate_report_against_metrics(md, j)
 assert "Not installed, integrated, or executed" in md, "Must disclose unimplemented features"
 content=markdown.markdown(md,extensions=["tables","fenced_code"])
 css="""

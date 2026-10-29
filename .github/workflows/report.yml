@@ -7,6 +7,9 @@ on:
       - '.github/workflows/report.yml'
       - 'docs/REPORT.md'
       - 'scripts/build_faculty_report.py'
+      - 'evaluation/results/metrics.json'
+      - 'screenshots/desktop.png'
+      - 'screenshots/mobile.png'
 
 permissions:
   contents: write
