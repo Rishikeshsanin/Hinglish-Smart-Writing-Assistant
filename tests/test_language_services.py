@@ -76,3 +76,19 @@ def test_gec_does_not_silently_truncate():
 def test_empty_model_reply_is_error():
     with pytest.raises(LanguageModelError):
         generate_english("मैं यहाँ हूँ।", (FakeTokenizer(""), FakeModel(), "cpu"))
+
+def test_wrong_script_correction_rejected():
+    from indicwrite.language_services import validate_rewrite_candidate
+    with pytest.raises(LanguageModelError, match="script"):
+        validate_rewrite_candidate("मैं स्कूल जाता है।", "আমি স্কুলে যাবে?")
+
+
+def test_changed_number_rejected():
+    from indicwrite.language_services import validate_rewrite_candidate
+    with pytest.raises(LanguageModelError, match="number"):
+        validate_rewrite_candidate("मेरे पास 2 किताब हैं।", "मेरे पास 3 किताब हैं।")
+
+
+def test_valid_hindi_candidate_passes_safeguard():
+    from indicwrite.language_services import validate_rewrite_candidate
+    assert validate_rewrite_candidate("मैं स्कूल जाता है।", "मैं स्कूल जाता हूँ।") == "मैं स्कूल जाता हूँ।"
