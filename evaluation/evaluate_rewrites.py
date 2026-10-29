@@ -80,9 +80,9 @@ def summarize_reviews(rows: list[dict[str, str]]) -> dict[str, object]:
     }
 
 
-def generate(cases_path: Path, output_path: Path) -> None:
+def generate(cases_path: Path, output_path: Path, device: str = "cuda:0") -> None:
     cases = load_cases(cases_path)
-    engine = BharatGenRewriter.load()
+    engine = BharatGenRewriter.load(allow_remote_code=True, device=device)
     rows = []
     for index, case in enumerate(cases, 1):
         started = time.perf_counter()
@@ -133,13 +133,15 @@ def main() -> None:
     mode.add_argument("--generate", action="store_true")
     mode.add_argument("--summarize", type=Path, metavar="REVIEWED_CSV")
     parser.add_argument("--allow-model-download", action="store_true")
+    parser.add_argument("--allow-remote-code", action="store_true")
+    parser.add_argument("--device", choices=["cuda:0", "cpu"], default="cuda:0")
     parser.add_argument("--cases", type=Path, default=ROOT / "evaluation/rewrite_cases.csv")
     parser.add_argument("--output", type=Path, default=ROOT / "evaluation/results/bharatgen_rewrites.csv")
     args = parser.parse_args()
     if args.generate:
-        if not args.allow_model_download:
-            parser.error("--generate requires --allow-model-download")
-        generate(args.cases, args.output)
+        if not (args.allow_model_download and args.allow_remote_code):
+            parser.error("--generate requires both --allow-model-download and --allow-remote-code")
+        generate(args.cases, args.output, args.device)
     else:
         summarize(args.summarize)
 
