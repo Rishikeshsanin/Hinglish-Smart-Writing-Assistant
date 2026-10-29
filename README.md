@@ -68,7 +68,7 @@ The engine is cached per Python process (concurrent cold starts require separate
 - [Official Python API](https://github.com/AI4Bharat/IndicXlit/tree/master/app)
 - [PyPI ai4bharat-transliteration 1.1.3](https://pypi.org/project/ai4bharat-transliteration/)
 - [Aksharantar dataset](https://huggingface.co/datasets/ai4bharat/Aksharantar)
-- [BharatGen Param-1-2.9B-Instruct](https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct) — **experimental adapter; real inference not yet executed**
+- [BharatGen Param-1-2.9B-Instruct](https://huggingface.co/bharatgenai/Param-1-2.9B-Instruct) — **private T4 pretrained inference executed (1 smoke + 10 cases); not a public hosted feature**
 - [AI4Bharat IndicTrans2](https://github.com/AI4Bharat/IndicTrans2) — **feasibility investigated; gated checkpoint not executed**
 
 ## Faculty deliverables tracker
@@ -99,7 +99,7 @@ The engine is cached per Python process (concurrent cold starts require separate
 - [Reproducible report renderer](scripts/build_faculty_report.py)
 - [Report generation CI](.github/workflows/report.yml)
 
-**Scope disclosure:** The genuine transliteration MVP, evaluation, and browser QA are complete. BharatGen rewriting and optional IndicTrans2 translation are not verified or integrated. This is not a claim that the entire original multi-model project is finished.
+**Scope disclosure:** The genuine transliteration MVP, evaluation, and browser QA are complete. Private BharatGen checkpoint inference is verified but reliable public rewriting/deployment and independent language-expert quality validation remain incomplete. Gated IndicTrans2 inference is not verified. This is not a claim that the entire original multi-model project is finished.
 
 
 ## Additional real-model findings (October 29, 2026)
@@ -126,7 +126,7 @@ The [GPU notebook](notebooks/BharatGen_Real_Smoke_Colab.ipynb) uses a separate P
 ## Release and submission boundaries
 
 - The real IndicXlit→OPUS-MT browser flow was verified, but that translation model is **Helsinki OPUS**, not IndicTrans2.
-- Hindi grammar rewriting remains experimental and disabled; human review is not interchangeable with real model inference.
+- Hindi grammar rewriting through unrelated failed mT5 models remains disabled; private BharatGen inference succeeded but is available only through explicit loopback-only research opt-in, not public hosting.
 - Native Windows support, public deployment, and full accessibility conformance are not verified. Prefer the documented Python 3.10 Ubuntu/WSL2 classroom demo, which matches the executed Linux test environment.
 - The current 40-case evaluation uses authored references and is **not** an official Aksharantar leaderboard result.
 
