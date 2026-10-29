@@ -79,7 +79,7 @@ The engine loads once per Python process. Roman tokens are sent individually to 
 - [x] 40 real-model cases, recorded predictions and error analysis (macro CER 5.58%, word accuracy 82.67%; handcrafted test set)
 - [ ] Verified smart rewriting and optional translation (if feasible)
 - [x] Actual Chromium desktop/mobile screenshots and browser QA
-- [ ] Academic PDF report (being prepared from measured evidence)
+- [x] Academic PDF report, generated from measured evidence and actual screenshots
 
 **Due:** November 6, 2026 at 10:00 AM IST.
 
@@ -90,3 +90,12 @@ The engine loads once per Python process. Roman tokens are sent individually to 
 - [Real desktop screenshot](screenshots/desktop.png) · [Real mobile screenshot](screenshots/mobile.png) · [Browser QA trace](screenshots/browser-qa.json)
 
 **Observed custom dataset metrics:** 40 test cases; macro CER 5.58%; macro word accuracy 82.67%; exact-match rate 55%. These figures are not official Aksharantar benchmark results. The worst category was spelling variation (49.33% mean word accuracy).
+
+## Faculty report
+
+- [Download the committed academic report (PDF)](reports/IndicWrite_CS3235_Project_Report.pdf)
+- [Read the academic report source](docs/REPORT.md)
+- [Reproducible report renderer](scripts/build_faculty_report.py)
+- [Report generation CI](.github/workflows/report.yml)
+
+**Scope disclosure:** The genuine transliteration MVP, evaluation, and browser QA are complete. BharatGen rewriting and optional IndicTrans2 translation are not yet integrated. This is not a claim that the entire original multi-model project is finished.
