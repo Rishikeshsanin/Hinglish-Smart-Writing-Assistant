@@ -1,0 +1,11 @@
+# IndicWrite — consistent public Streamlit theming; no credentials.
+[theme]
+base = "light"
+primaryColor = "#504AC4"
+backgroundColor = "#F8FAFF"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#24284F"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
