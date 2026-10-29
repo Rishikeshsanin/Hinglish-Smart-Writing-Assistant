@@ -49,4 +49,6 @@ jobs:
           git add -f screenshots/desktop.png screenshots/mobile.png screenshots/mobile-top.png screenshots/browser-qa.json
           git diff --cached --exit-code && exit 0
           git commit -m "test(ui): record real desktop and mobile IndicWrite screenshots"
+          git fetch origin main
+          git rebase origin/main
           git push origin HEAD:main
