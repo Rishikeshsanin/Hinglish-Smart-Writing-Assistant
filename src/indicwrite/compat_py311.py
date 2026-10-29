@@ -1,8 +1,8 @@
 """Narrow import-only compatibility for legacy Fairseq dataclass defaults.
 
 Python 3.11 rejects unhashable dataclass instances as field defaults, which
-fairseq==0.12.2 uses. This does not replace or emulate the pretrained neural
-model. It temporarily fixes only fairseq.* class declarations during the
+fairseq==0.12.2 and its Hydra dependency use. This does not replace or emulate the pretrained neural
+model. It temporarily fixes only fairseq.* and hydra.conf.* class declarations during the
 official model import. Python 3.10 never enters this compatibility path.
 """
 
@@ -21,7 +21,7 @@ def fairseq_py311_dataclass_context():
     original = dataclasses._get_field
 
     def guarded_get_field(cls, name, field_type, kw_only):
-        if cls.__module__.startswith("fairseq."):
+        if cls.__module__.startswith(("fairseq.", "hydra.conf.")):
             value = cls.__dict__.get(name, dataclasses.MISSING)
             if value is not dataclasses.MISSING and dataclasses.is_dataclass(value) and not isinstance(value, type):
                 dataclasses_field = dataclasses.field(
