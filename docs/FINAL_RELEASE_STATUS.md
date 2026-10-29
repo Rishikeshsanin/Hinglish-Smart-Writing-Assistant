@@ -35,3 +35,10 @@
 - [Faculty submission ZIP workflow](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/workflows/submission-package.yml)
 
 **Academic integrity:** submit only the demonstrated features and explicitly describe the remaining limitations. This is a completed and demonstrable transliteration application with substantial, genuine Indian-language model research, not a verified public BharatGen writing service.
+
+
+## Final safe hosting decision (2026-10-29)
+
+The official AI4Bharat model was successfully exercised inside an isolated local-only Docker image ([run 40898600397](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40898600397)), including container build, pretrained smoke, and Streamlit localhost health. The private-GPU BharatGen UI still lacks real end-to-end browser testing and must not be served publicly pending license authorization.
+
+Public deployment is explicitly **blocked** rather than silently degraded. On Python3.12, a third-party CT2 IndicXlit conversion had 40-case mean CER 11.54% vs official 5.58%; word accuracy 67.83% vs 82.67%; exact reference matches 6/40 vs 22/40. It was rejected, and experimental PR #13 closed without merge. Python3.11/Fairseq experimental PR #11 was also closed after authentic startup failure. Python3.10 is EOL; do not host this exact legacy runtime on an internet-facing free Streamlit service.
