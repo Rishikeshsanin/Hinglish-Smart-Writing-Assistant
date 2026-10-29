@@ -1,0 +1,40 @@
+name: Genuine IndicXlit and OPUS translation browser QA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/translation-browser.yml'
+      - 'scripts/browser_translation.py'
+
+jobs:
+  browser-real-translation:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.10'}
+      - name: Install model and browser runtime
+        run: |
+          python -m pip install 'pip==23.3.2' 'setuptools<70' wheel
+          python -m pip install -r requirements.txt -r requirements-language-services.txt
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Run genuine neural user journey
+        env:
+          INDICWRITE_ENABLE_LANGUAGE_SERVICES: '1'
+          TOKENIZERS_PARALLELISM: 'false'
+          OMP_NUM_THREADS: '2'
+        run: |
+          python -m streamlit run app.py --server.headless=true --server.address=127.0.0.1 --server.port=8501 >/tmp/indicwrite-extra.log 2>&1 &
+          pid=$!
+          trap 'kill $pid 2>/dev/null || true; tail -n 40 /tmp/indicwrite-extra.log' EXIT
+          for i in $(seq 1 80); do curl -fsS localhost:8501/_stcore/health && break || sleep 2; done
+          python scripts/browser_translation.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: real-indicwrite-english-translation-screenshot
+          path: screenshots/actual-english-translation.png
+          if-no-files-found: error
+          retention-days: 45
