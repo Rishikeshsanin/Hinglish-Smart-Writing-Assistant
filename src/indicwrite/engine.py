@@ -2,10 +2,14 @@
 
 import argparse
 from functools import lru_cache
+from threading import RLock
+
+
+_LOAD_LOCK = RLock()
 
 
 @lru_cache(maxsize=1)
-def load_indicxlit():
+def _load_indicxlit_cached():
     """Load the pretrained model only when a user converts text.
 
     First call may download official weights; errors intentionally propagate.
@@ -19,3 +23,13 @@ def load_indicxlit():
 
     with torch.serialization.safe_globals([argparse.Namespace]):
         return XlitEngine("hi", beam_width=4, rescore=False)
+
+
+def load_indicxlit():
+    """Serialize cold starts so simultaneous sessions cannot load duplicate weights.
+
+    The lock must wrap the cached function, not only its body: concurrent cache
+    misses can otherwise initialize more than one model.
+    """
+    with _LOAD_LOCK:
+        return _load_indicxlit_cached()
