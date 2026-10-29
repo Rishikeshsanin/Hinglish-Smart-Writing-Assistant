@@ -26,3 +26,7 @@ def test_rewrite_request_not_a_hardcoded_prediction():
     messages = build_messages("मेरा नाम राहुल है।")
     assert "मेरा नाम राहुल है।" in messages[1]["content"]
     assert "सुधरा हुआ हिंदी वाक्य" in messages[0]["content"]
+
+def test_model_has_explicit_experimental_loader():
+    from indicwrite.param_rewrite import BharatGenRewriter
+    assert callable(BharatGenRewriter.load)

@@ -60,10 +60,16 @@ class BharatGenRewriter:
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=False)
+        # T4 GPUs common in free notebooks do not support BF16; choose FP16 there.
+        # BF16 is preferred when the CUDA device supports it.
+        dtype = (
+            torch.bfloat16 if (not torch.cuda.is_available() or torch.cuda.is_bf16_supported())
+            else torch.float16
+        )
         model = AutoModelForCausalLM.from_pretrained(
             MODEL_ID,
             trust_remote_code=True,
-            torch_dtype=torch.bfloat16,
+            torch_dtype=dtype,
             device_map="auto",
             low_cpu_mem_usage=True,
         )
