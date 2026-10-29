@@ -20,10 +20,10 @@ docker compose -f compose.demo.yml down
 To run a genuine pretrained smoke within the built container:
 
 ```powershell
-docker run --rm --entrypoint python indicwrite-local-demo scripts/smoke_indicxlit.py
+docker compose -f compose.demo.yml run --rm --entrypoint python indicwrite scripts/smoke_indicxlit.py
 ```
 
-If using Compose instead of `docker build`, use `docker compose -f compose.demo.yml run --rm --entrypoint python indicwrite scripts/smoke_indicxlit.py`.
+The Compose command ensures the model runs inside the same isolated service with its cached weights and localhost-only policy.
 
 The Docker image does not include BharatGen, OPUS or IndicTrans2. It neither creates nor queries any database and has no access to other repositories or services. `INDICWRITE_PRIVATE_BHARATGEN=0` explicitly disables the private research mode.
 

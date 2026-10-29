@@ -1,6 +1,7 @@
 # Local demonstration only. The host port is bound exclusively to loopback.
 services:
   indicwrite:
+    image: indicwrite-local-demo
     build:
       context: .
       dockerfile: Dockerfile.demo

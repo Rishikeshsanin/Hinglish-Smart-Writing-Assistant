@@ -14,6 +14,7 @@ on:
       - 'screenshots/**'
       - 'docs/DEPLOYMENT.md'
       - 'docs/FINAL_RELEASE_STATUS.md'
+      - 'scripts/verify_submission_package.py'
       - 'Dockerfile.demo'
       - 'compose.demo.yml'
 jobs:
@@ -29,6 +30,8 @@ jobs:
         run: python -m pytest -q
       - name: Create audited submission archive (no weights or secrets)
         run: python scripts/build_submission_package.py
+      - name: Independently check every ZIP hash and exclude private outputs
+        run: python scripts/verify_submission_package.py submission/IndicWrite_CS3235_CIE3_Submission.zip
       - uses: actions/upload-artifact@v4
         with:
           name: IndicWrite-CS3235-CIE3-Faculty-Submission
