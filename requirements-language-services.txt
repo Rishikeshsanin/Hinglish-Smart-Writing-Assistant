@@ -1,0 +1,8 @@
+# Optional real Hindi grammar correction and alternate English translation.
+# Baseline IndicXlit runs without these. Installed only when the user wants
+# the extended language services, including the genuine model smoke workflow.
+# Not BharatGen or IndicTrans2 checkpoints.
+transformers>=4.44,<5
+sentencepiece>=0.2,<1
+protobuf>=4,<7
+safetensors>=0.4,<1
