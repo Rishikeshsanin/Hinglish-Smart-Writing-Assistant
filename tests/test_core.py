@@ -101,3 +101,21 @@ def test_preflight_skips_model_for_unmodified_hindi_and_protected_terms():
 def test_noop_with_no_model_is_not_an_inference_claim():
     assert transliterate_text("हिंदी 123!", None) == "हिंदी 123!"
     assert transliterate_text("Python AI", None, {"python"}) == "Python AI"
+
+
+@pytest.mark.parametrize("source", [
+    "café", "cafe\u0301", "naïve", "Zoë", "namस्ते",
+    "user@example.com", "https://example.com/a?q=1",
+    "www.example.org", "C++", "C#", "GPT-4", "3d",
+])
+def test_unicode_and_structured_tokens_bypass_model_entirely(source):
+    engine = FakeEngine()
+    assert transliterate_text(source, engine) == source
+    assert engine.calls == []
+
+
+def test_structured_identifiers_and_normal_hinglish_coexist():
+    engine = FakeEngine()
+    result = transliterate_text("kal C++ aur user@example.com hai!", engine)
+    assert result == "कल C++ अज्ञात user@example.com है!"
+    assert [word for word, _ in engine.calls] == ["kal", "aur", "hai"]
