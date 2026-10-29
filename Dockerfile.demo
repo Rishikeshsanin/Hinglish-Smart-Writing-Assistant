@@ -1,0 +1,21 @@
+# PRIVATE CLASSROOM DEMO ONLY: Python 3.10 reached EOL 2026-10-01.
+# Not approved for public internet exposure. The legacy Fairseq dependency
+# prevents using this as a supported production image.
+FROM python:3.10-slim-bookworm
+ENV PIP_NO_CACHE_DIR=1 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential gcc g++ libgomp1 git ca-certificates curl \
+  && rm -rf /var/lib/apt/lists/*
+RUN python -m pip install 'pip==23.3.2' 'setuptools<70' wheel
+# Preinstall CPU-only PyTorch so pip does not pull multi-GB CUDA dependencies.
+RUN python -m pip install 'torch==2.6.0+cpu' --index-url https://download.pytorch.org/whl/cpu
+COPY requirements.txt .
+RUN python -m pip install -r requirements.txt
+COPY app.py ./
+COPY src/ ./src/
+COPY scripts/smoke_indicxlit.py ./scripts/smoke_indicxlit.py
+COPY .streamlit/config.toml ./.streamlit/config.toml
+ENV INDICWRITE_PRIVATE_BHARATGEN=0 INDICWRITE_ENABLE_LANGUAGE_SERVICES=0
+EXPOSE 8501
+CMD ["python","-m","streamlit","run","app.py","--server.address=0.0.0.0","--server.port=8501","--server.headless=true"]

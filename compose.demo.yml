@@ -1,0 +1,20 @@
+# Local demonstration only. The host port is bound exclusively to loopback.
+services:
+  indicwrite:
+    build:
+      context: .
+      dockerfile: Dockerfile.demo
+    ports:
+      - "127.0.0.1:8501:8501"
+    environment:
+      INDICWRITE_PRIVATE_BHARATGEN: "0"
+      INDICWRITE_ENABLE_LANGUAGE_SERVICES: "0"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+    volumes:
+      # Official public model weights cached locally, never checked into Git.
+      - indicwrite-cache:/root/.cache
+    restart: "no"
+volumes:
+  indicwrite-cache:

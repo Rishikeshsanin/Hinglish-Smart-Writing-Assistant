@@ -1,0 +1,29 @@
+name: Verify isolated local Docker demo using real IndicXlit
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'Dockerfile.demo'
+      - 'compose.demo.yml'
+      - '.dockerignore'
+      - '.github/workflows/docker-demo.yml'
+jobs:
+  local-demo:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Python 3.10 local-only demo image
+        run: docker build -f Dockerfile.demo -t indicwrite-local-demo .
+      - name: Execute real pretrained model inside isolated image
+        run: |
+          docker run --rm --entrypoint python indicwrite-local-demo scripts/smoke_indicxlit.py
+      - name: Run localhost-only Streamlit health test
+        run: |
+          docker run -d --name indicwrite-local-test -p 127.0.0.1:8501:8501 indicwrite-local-demo
+          trap 'docker logs indicwrite-local-test; docker rm -f indicwrite-local-test' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:8501/_stcore/health; then exit 0; fi
+            sleep 2
+          done
+          exit 1
