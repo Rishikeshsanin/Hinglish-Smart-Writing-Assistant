@@ -11,6 +11,7 @@ import json
 import sys
 import time
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from indicwrite.ct2_engine import load_converted_indicxlit
