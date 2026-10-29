@@ -23,7 +23,7 @@ included=[]
 for pattern in (
  "app.py","README.md","AGENTS.md","requirements*.txt",".python-version",
  "Dockerfile.demo","compose.demo.yml",".dockerignore",
- "src/**/*.py","scripts/**/*.py","tests/**/*.py","evaluation/*.py","evaluation/*.csv",
+ "src/**/*.py","research/**/*.py","scripts/**/*.py","tests/**/*.py","evaluation/*.py","evaluation/*.csv",
  "evaluation/*.md","evaluation/results/*.json","evaluation/results/*.csv",
  "docs/*.md","screenshots/*.png","screenshots/*.json","reports/*.pdf",
  "notebooks/*.ipynb",".github/workflows/*.yml",".streamlit/*.toml",
