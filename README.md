@@ -152,3 +152,8 @@ The final academic report now includes the genuine **private T4 checkpoint exper
 For faculty submission, download the latest **IndicWrite-CS3235-CIE3-Faculty-Submission** artifact from [GitHub Actions](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/workflows/submission-package.yml). Keep the detailed BharatGen outputs/evidence ZIP **private** until output-publication permission is clarified. Never add model weights, generated BharatGen outputs or Hugging Face credentials to this public repository.
 
 The verified Streamlit conversion and independently attributed English translation remain available without a public BharatGen service. The optional local-only private GPU research UI is not yet browser-tested on a live GPU and should not be presented as a completed public deployment.
+
+
+### Final evidence and submission status
+
+[Read the verified release checkpoint, academic-integrity limitations, and faculty handoff](docs/FINAL_RELEASE_STATUS.md).
