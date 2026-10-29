@@ -39,6 +39,7 @@ st.markdown(
 )
 
 ENABLE_LANGUAGE_SERVICES = os.environ.get("INDICWRITE_ENABLE_LANGUAGE_SERVICES") == "1"
+ENABLE_GEC_EXPERIMENTAL = os.environ.get("INDICWRITE_ENABLE_GEC_EXPERIMENTAL") == "1"
 
 EXAMPLES = (
     "kal mujhe college jana hai",
@@ -139,9 +140,11 @@ with col2:
             st.caption("Optional real, locally running checkpoints: MIT Hindi mT5 grammar correction and Apache-2.0 OPUS-MT English translation. Neither is BharatGen or IndicTrans2. First load downloads weights; review all edits for accuracy.")
             a, b = st.columns(2)
             with a:
-                improve = st.button("Improve Hindi grammar", use_container_width=True)
+                improve = st.button("Improve Hindi grammar (research)", use_container_width=True, disabled=not ENABLE_GEC_EXPERIMENTAL)
             with b:
                 translate = st.button("Translate to English", use_container_width=True)
+            if not ENABLE_GEC_EXPERIMENTAL:
+                st.caption("Grammar model is disabled pending quality verification: the first checkpoint produced Bengali/mixed-script predictions.")
             if improve:
                 try:
                     with st.spinner("Running the Hindi mT5 grammar model…"):
