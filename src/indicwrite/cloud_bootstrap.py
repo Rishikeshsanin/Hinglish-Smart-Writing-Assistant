@@ -25,11 +25,19 @@ LIB = ROOT / "lib" / "python3.12" / "site-packages"
 
 
 def _run(*argv: str) -> None:
-    subprocess.run(
+    try:
+        subprocess.run(
         list(argv), check=True, timeout=1050, stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True,
         env={**os.environ, "PIP_DISABLE_PIP_VERSION_CHECK": "1", "PIP_NO_CACHE_DIR": "1"},
-    )
+        )
+    except subprocess.CalledProcessError as exc:
+        # Avoid printing paths or input text in public Cloud UI; CI can inspect
+        # the captured dependency error without leaking private user input.
+        raise RuntimeError(
+            f"Isolated-model dependency command failed (exit {exc.returncode}): "
+            + (exc.stderr or "")[-1600:]
+        ) from exc
 
 
 def prepare_official_model() -> Path:
@@ -50,7 +58,7 @@ def prepare_official_model() -> Path:
              "import sys; sys.path.insert(0, %r); "
              "from indicwrite.fairseq_compat_loader import enable_compatibility; "
              "enable_compatibility(); import torch, fairseq, ai4bharat.transliteration;"
-             "print('Official model dependencies loaded')" % str(Path(__file__).resolve().parents[2])) 
+             "print('Official model dependencies loaded')" % str(Path(__file__).resolve().parents[1])) 
         STAMP.write_text(VERSION, encoding="ascii")
     if not LIB.is_dir():
         raise RuntimeError("Isolated official-model site-packages are unavailable")
