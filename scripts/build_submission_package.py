@@ -21,8 +21,8 @@ pdf=(ROOT/"reports/IndicWrite_CS3235_Project_Report.pdf").read_bytes()
 assert pdf.startswith(b"%PDF-"), "Academic report is not a real PDF"
 included=[]
 for pattern in (
- "app.py","README.md","AGENTS.md","requirements*.txt",".python-version",
- "Dockerfile.demo","compose.demo.yml",".dockerignore",
+ "app.py","cloud_app.py","README.md","AGENTS.md","requirements*.txt","environment.yml",".python-version",
+ "Dockerfile.demo","Dockerfile.cloud","compose.demo.yml",".dockerignore",
  "src/**/*.py","research/**/*.py","scripts/**/*.py","tests/**/*.py","evaluation/*.py","evaluation/*.csv",
  "evaluation/*.md","evaluation/results/*.json","evaluation/results/*.csv",
  "docs/*.md","screenshots/*.png","screenshots/*.json","reports/*.pdf",
@@ -50,7 +50,8 @@ manifest={
     "End-to-end private-GPU Streamlit browser QA",
     "Independent expert assessment of Hindi rewriting quality",
     "Gated AI4Bharat IndicTrans2 model inference",
-    "Public hosted URL and Google Classroom upload"
+    "Account-created and browser-verified Streamlit Community Cloud public URL",
+    "Google Classroom upload"
  ],
  "files":{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in included}
 }
