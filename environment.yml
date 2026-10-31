@@ -2,6 +2,7 @@
 # pip 23.3.2: doing that caused open_rich_spinner ImportError on real Cloud.
 # No 'pip:' subsection. The original pretrained model is installed into
 # an isolated clean venv by cloud_app.py on first use.
+# 2026-10-31: request a fresh Cloud dependency build after the old pip-overlay crash.
 name: indicwrite-community
 channels:
   - conda-forge

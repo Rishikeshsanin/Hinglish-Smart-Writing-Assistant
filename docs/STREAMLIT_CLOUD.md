@@ -20,8 +20,9 @@ GitHub and deploy:
 - Main file: `cloud_app.py`
 - Python: **3.12**, if manually selectable
 - Secrets: **none**
-- Dependency spec: root `environment.yml` pins Python 3.12 and pip 23.3.2
-  to install legacy Fairseq metadata on this runtime.
+- Dependency spec: root `environment.yml` installs **only Python 3.12 and Streamlit**.
+  `cloud_app.py` creates an isolated model venv with pip 23.3.2, leaving
+  Community Cloud's host pip untouched.
 
 The project also has root `requirements.txt` for the old local demo;
 Community Cloud prioritizes `environment.yml` over that requirements file
@@ -41,3 +42,22 @@ compatibility, **not** that Community Cloud's Conda environment installs every
 dependency, that the service stays under memory limits, or that the public site
 is available. No URL or production-readiness claim is made until those steps
 pass. Do not enable paid tiers or use a cloud account with billing credits.
+
+## Live deployment incident (31 October 2026)
+
+The first public build failed **before the app started**: Conda overlaid
+`pip==23.3.2` on Community Cloud's newer pip implementation, producing
+`ImportError: cannot import name 'open_rich_spinner'`. The fix on `main`
+at commit `0983fea8` keeps the host Conda installation clean and installs
+legacy AI4Bharat dependencies into a separate venv. CI verified the original
+checkpoint and all 40 prior predictions, but **the public site must still pass
+an actual browser conversion** before being described as working.
+
+If the original failed build remains cached, use **Manage app → ⋮ → Reboot app**
+(or the app overflow menu at `share.streamlit.io`). The harmless dated comment
+in `environment.yml` requests a fresh dependency build from GitHub. New
+bootstrap exceptions are logged server-side; end users see a generic error
+without sensitive input. Do not switch models, enable private BharatGen, or
+activate paid services to recover this deployment.
+
+Public app: https://hinglish-smart-writing-assistant-indicwrite-rishi.streamlit.app/
