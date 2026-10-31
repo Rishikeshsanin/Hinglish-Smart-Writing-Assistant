@@ -1,0 +1,36 @@
+name: IndicWrite public Vercel external smoke
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'web/**'
+      - '.github/workflows/indicwrite-web-live-smoke.yml'
+jobs:
+  external:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify actual public HTML, JS, and official API upstream
+        env:
+          BASE_URL: https://indicwrite-public-web.vercel.app
+        run: |
+          python - <<'PY'
+          import json,os,urllib.request,urllib.error
+          base=os.environ['BASE_URL']
+          for path,needle in [('/',b'IndicWrite'),('/app.js',b'AI4Bharat'),('/styles.css',b'.workspace')]:
+              with urllib.request.urlopen(base+path,timeout=25) as r:
+                  body=r.read()
+                  assert r.status==200 and needle in body,(path,r.status,body[:120])
+              print("PUBLIC_STATIC_PASSED",path,flush=True)
+          try:
+              with urllib.request.urlopen(base+'/api/transliterate?word=namaste',timeout=25) as r:
+                  payload=json.load(r)
+                  assert r.status==200
+                  assert payload['provider']=='AI4Bharat IndicXlit hosted API'
+                  assert any('\u0900'<=c<='\u097f' for c in payload['result'])
+                  print("REAL_OFFICIAL_EXTERNAL_API_PASSED",flush=True)
+          except (urllib.error.URLError,AssertionError,KeyError) as exc:
+              print("UPSTREAM_API_UNVERIFIED",repr(exc),flush=True)
+              raise
+          PY
