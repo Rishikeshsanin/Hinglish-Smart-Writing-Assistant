@@ -3,6 +3,7 @@
 Cloud provides Streamlit and Python 3.12 with no broken pip overlay. The model
 dependencies are installed in a clean isolated venv only on first launch.
 """
+import logging
 import os
 import runpy
 from pathlib import Path
@@ -17,6 +18,9 @@ try:
     # Do not emit any Streamlit UI before app.py calls st.set_page_config.
     prepare_official_model()
 except Exception:
+    # Private input is never included in this exception: this runs before UI.
+    # Log the actual bootstrap exception for Community Cloud troubleshooting.
+    logging.exception("IndicWrite: isolated official-model bootstrap failed")
     st.error("The official model environment could not be prepared. Check Cloud logs; no substitute model is used.")
     st.stop()
 runpy.run_path(str(Path(__file__).with_name("app.py")), run_name="__main__")
