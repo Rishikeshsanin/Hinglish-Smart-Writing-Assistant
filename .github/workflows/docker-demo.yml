@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'Dockerfile.demo'
+      - 'requirements-local.txt'
       - 'compose.demo.yml'
       - '.dockerignore'
       - '.github/workflows/docker-demo.yml'
