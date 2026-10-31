@@ -1,0 +1,28 @@
+name: Validate supported Python 3.12 public Docker image (official IndicXlit)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'Dockerfile.cloud'
+      - '.github/workflows/docker-cloud.yml'
+      - 'src/indicwrite/fairseq_compat_loader.py'
+      - 'src/indicwrite/engine.py'
+jobs:
+  smoke:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build supported-Python CPU-only official model image
+        run: docker build -f Dockerfile.cloud -t indicwrite-cloud-py312 .
+      - name: Execute actual pretrained IndicXlit smoke in final image
+        run: docker run --rm --entrypoint python indicwrite-cloud-py312 scripts/smoke_indicxlit.py
+      - name: Verify Streamlit localhost health in final image
+        run: |
+          docker run -d --name indicwrite-cloud-smoke -p 127.0.0.1:8502:8501 indicwrite-cloud-py312
+          trap 'docker logs indicwrite-cloud-smoke; docker rm -f indicwrite-cloud-smoke' EXIT
+          for i in $(seq 1 50); do
+            if curl -fsS http://127.0.0.1:8502/_stcore/health; then exit 0; fi
+            sleep 2
+          done
+          exit 1
