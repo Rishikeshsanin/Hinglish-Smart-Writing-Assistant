@@ -1,0 +1,44 @@
+name: Reproduce Streamlit mixed pip installer safely
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'sitecustomize.py'
+      - 'environment.yml'
+      - '.github/workflows/cloud-pip-overlay.yml'
+jobs:
+  mixed-pip-bootstrap:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Reproduce pip 26 to pip 23 Conda file overlay
+        run: |
+          python -m venv /tmp/mixed-pip
+          /tmp/mixed-pip/bin/python -m pip install --upgrade pip==26.0
+          python -m pip download --only-binary=:all: --no-deps pip==23.3.2 --dest /tmp
+          python - <<'PY'
+          import pathlib, subprocess, sys, zipfile
+          venv=pathlib.Path('/tmp/mixed-pip')
+          site=next((venv/'lib').glob('python*/site-packages'))
+          pip23=next(pathlib.Path('/tmp').glob('pip-23.3.2-*.whl'))
+          # Reproduce the platform's non-uninstalling Conda replacement.
+          # Pip 26's obsolete build_env/ package remains beside pip23's file.
+          with zipfile.ZipFile(pip23) as z: z.extractall(site)
+          assert (site/'pip/_internal/build_env/__init__.py').exists()
+          assert (site/'pip/_internal/build_env.py').exists()
+          PY
+      - name: Prove pinned pip's build_env wins over stale newer package
+        run: |
+          /tmp/mixed-pip/bin/python - <<'PY'
+          import pip
+          from pip._internal import build_env
+          print('pip version',pip.__version__)
+          print('resolved build_env', build_env.__file__)
+          assert pip.__version__=='23.3.2'
+          assert build_env.__file__.endswith('/build_env.py')
+          PY
+          /tmp/mixed-pip/bin/python -m pip --version
+          /tmp/mixed-pip/bin/python -m pip --help > /dev/null
