@@ -1,0 +1,21 @@
+name: IndicWrite online public API proxy contract
+on:
+  pull_request:
+    paths:
+      - 'web/**'
+      - '.github/workflows/indicwrite-web.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/indicwrite-web.yml'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: cd web && npm test
+      - run: node --check web/public/app.js

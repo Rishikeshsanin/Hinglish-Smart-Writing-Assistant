@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#f7f5ff"/>
+<meta name="description" content="IndicWrite — Roman Hindi to Devanagari using AI4Bharat's official hosted IndicXlit transliteration service."/>
+<title>IndicWrite — Write Hindi, Your Way</title>
+<link rel="stylesheet" href="/styles.css"/>
+</head><body>
+<div class="page">
+  <header class="header"><a class="logo" href="/" aria-label="IndicWrite home"><span class="mark">इ</span><span>Indic<span class="accent">Write</span></span></a><span class="header-note">An Indian-language AI project</span></header>
+  <main>
+    <section class="hero"><div class="eyebrow"><span class="dot"></span> Powered by AI4Bharat IndicXlit · Online edition</div>
+      <h1>Your words, <em>beautifully</em> written in Hindi.</h1>
+      <p>Type naturally in Hinglish. Convert to Devanagari in a click—while keeping technical terms, punctuation and numbers intact.</p>
+    </section>
+    <section class="workspace" aria-label="Transliteration workspace">
+      <div class="panel">
+        <div class="panel-top"><div><span class="micro">01 · INPUT</span><h2>Your Hinglish</h2></div><span id="count" class="count">0 / 500</span></div>
+        <label class="sr-only" for="source">Roman Hindi text</label>
+        <textarea id="source" maxlength="500" spellcheck="false" placeholder="kal mujhe college jana hai!"></textarea>
+        <div class="hints"><button class="hint" data-example="kal mujhe college jana hai!">College day</button><button class="hint" data-example="namaste dosto, aap kaise ho?">Say hello</button><button class="hint" data-example="kal Python ka project hai.">Code-mixed</button></div>
+        <label for="preserve" class="label">Preserve English words <span>(optional, comma-separated)</span></label>
+        <input id="preserve" placeholder="Python, project" autocomplete="off" spellcheck="false"/>
+        <div class="actions"><button class="primary" id="convert">Convert to Hindi <span aria-hidden="true">→</span></button><button class="plain" id="clear">Clear all</button></div>
+      </div>
+      <div class="panel output-panel">
+        <div class="panel-top"><div><span class="micro">02 · OUTPUT</span><h2>Devanagari</h2></div><span class="result-symbol" aria-hidden="true">अ</span></div>
+        <div id="result" class="output" aria-live="polite" aria-atomic="true"><span class="placeholder">आपका हिंदी टेक्स्ट यहाँ दिखेगा</span></div>
+        <div id="status" class="status" role="status" aria-live="polite">Ready when you are.</div>
+        <div class="actions"><button class="secondary" id="copy" disabled>Copy result</button><button class="secondary" id="download" disabled>Download .txt</button></div>
+      </div>
+    </section>
+    <section class="trust"><div class="trust-title">Made for real writing, backed by real models.</div>
+      <p>This free online edition calls <a href="https://github.com/AI4Bharat/IndicXlit" target="_blank" rel="noopener noreferrer">AI4Bharat's public IndicXlit API</a>. Text is sent to that external provider to generate suggestions. It is <strong>not</strong> the self-hosted checkpoint used for IndicWrite's 40-case evaluation, and its live quality/availability may differ. BharatGen private research is deliberately not available on this public site.</p>
+    </section>
+  </main>
+  <footer><span>IndicWrite · RV University academic project</span><a href="https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant" target="_blank" rel="noopener noreferrer">View source ↗</a></footer>
+</div>
+<script type="module" src="/app.js"></script>
+</body></html>
