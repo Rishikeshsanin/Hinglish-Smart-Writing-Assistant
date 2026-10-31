@@ -6,7 +6,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.12
-  - pip=23.3.2
+  - pip=25.3
   - setuptools<70
   - wheel
   - pip:
