@@ -3,8 +3,9 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'environment.yml'
+      - 'requirements.txt'
       - 'cloud_app.py'
+      - 'requirements-local.txt'
       - 'src/indicwrite/cloud_bootstrap.py'
       - '.github/workflows/cloud-isolated-venv.yml'
 jobs:

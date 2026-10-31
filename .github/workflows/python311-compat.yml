@@ -16,7 +16,7 @@ jobs:
       - name: Install documented legacy IndicXlit package in fresh Python 3.11
         run: |
           python -m pip install 'pip==23.3.2' 'setuptools<70' wheel
-          python -m pip install -r requirements.txt
+          python -m pip install -r requirements-local.txt
           python -m pip check
       - name: Execute genuine official IndicXlit 3.11 smoke and measure process RSS
         env:

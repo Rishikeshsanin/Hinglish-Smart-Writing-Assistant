@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'Dockerfile.cloud'
+      - 'requirements-local.txt'
       - '.github/workflows/docker-cloud.yml'
       - 'src/indicwrite/fairseq_compat_loader.py'
       - 'src/indicwrite/engine.py'

@@ -21,7 +21,7 @@ pdf=(ROOT/"reports/IndicWrite_CS3235_Project_Report.pdf").read_bytes()
 assert pdf.startswith(b"%PDF-"), "Academic report is not a real PDF"
 included=[]
 for pattern in (
- "app.py","cloud_app.py","README.md","AGENTS.md","requirements*.txt","environment.yml",".python-version",
+ "app.py","cloud_app.py","README.md","AGENTS.md","requirements*.txt","docs/legacy-conda-environment.yml",".python-version",
  "Dockerfile.demo","Dockerfile.cloud","compose.demo.yml",".dockerignore",
  "src/**/*.py","research/**/*.py","scripts/**/*.py","tests/**/*.py","evaluation/*.py","evaluation/*.csv",
  "evaluation/*.md","evaluation/results/*.json","evaluation/results/*.csv",

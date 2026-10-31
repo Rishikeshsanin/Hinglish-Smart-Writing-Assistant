@@ -1,3 +1,5 @@
+# ARCHIVED Streamlit Cloud Conda deployment spec; NOT selected for live hosting.
+# See docs/STREAMLIT_CLOUD.md. The cloud provider installed this but failed to start Streamlit.
 # Streamlit's managed Conda prefix must NOT overlay its pip 26 files with
 # pip 23.3.2: doing that caused open_rich_spinner ImportError on real Cloud.
 # No 'pip:' subsection. The original pretrained model is installed into

@@ -20,7 +20,7 @@ jobs:
       - name: Install official IndicXlit dependencies
         run: |
           python -m pip install 'pip==23.3.2' 'setuptools<70' wheel
-          python -m pip install -r requirements.txt
+          python -m pip install -r requirements-local.txt
       - name: Verify real neural inference
         run: python scripts/smoke_indicxlit.py
       - name: Generate 40 real predictions and metrics

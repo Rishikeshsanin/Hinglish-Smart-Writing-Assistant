@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - 'cloud_app.py'
-      - 'environment.yml'
+      - 'requirements.txt'
       - 'scripts/check_public_streamlit.py'
       - '.github/workflows/public-streamlit-smoke.yml'
 

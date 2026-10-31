@@ -17,6 +17,10 @@ Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an 
 
 **Optional-model evidence:** OPUS-MT Hindi→English ran successfully on two smoke cases. Four separate Hindi rewrite candidates were genuinely executed but failed the quality gate: one produced mixed-script output, one corrected only 1/5 cases, Qwen2.5-0.5B corrected 2/5 with severe drift elsewhere, and Qwen3-0.6B corrected 0/5. Grammar rewriting therefore remains disabled by default. A pinned BharatGen adapter and 12-case evaluation protocol exist, but no genuine BharatGen output has been recorded. IndicTrans2 remains an investigated, gated path rather than an executed feature.
 
+## Deployment dependency split (1 November 2026)
+
+The **existing free Streamlit Community Cloud app** uses root `requirements.txt` for Streamlit only on Python 3.12. Its `cloud_app.py` installs the **same official AI4Bharat IndicXlit model** into an isolated pip23 environment at first launch. For the proven Python 3.10 local/WSL2 and Docker demos, install `requirements-local.txt` instead. The old Cloud Conda spec is retained for incident history at `docs/legacy-conda-environment.yml` but is not used for production. **Public browser conversion remains unverified until a real successful hosted smoke test.**
+
 ## Quick start (Windows / PowerShell)
 
 Install Python 3.10 (not the system Python 3.14) and create an isolated environment:
@@ -25,7 +29,7 @@ Install Python 3.10 (not the system Python 3.14) and create an isolated environm
 py -3.10 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install 'pip==23.3.2' 'setuptools<70' wheel
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-local.txt
 $env:PYTHONPATH="src"
 python scripts/smoke_indicxlit.py
 streamlit run app.py
@@ -39,7 +43,7 @@ On Linux/macOS use:
 python3.10 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-local.txt
 PYTHONPATH=src python scripts/smoke_indicxlit.py
 PYTHONPATH=src streamlit run app.py
 ```

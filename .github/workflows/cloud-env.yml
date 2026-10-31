@@ -1,34 +1,32 @@
-name: Verify clean Conda-only Streamlit Python 3.12 environment
+name: Verify pip-only Streamlit Community Cloud host environment
 on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'environment.yml'
+      - 'requirements.txt'
+      - 'requirements-local.txt'
+      - '.python-version'
       - 'cloud_app.py'
-      - 'src/indicwrite/fairseq_compat_loader.py'
+      - 'tests/test_cloud_venv_isolation.py'
       - '.github/workflows/cloud-env.yml'
 jobs:
-  cloud-env:
+  cloud-host:
     runs-on: ubuntu-22.04
-    timeout-minutes: 45
-    defaults:
-      run:
-        shell: bash -el {0}
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: actions/setup-python@v5
         with:
-          activate-environment: indicwrite-community
-          environment-file: environment.yml
-          auto-activate-base: false
-          miniforge-version: latest
-          use-mamba: true
-      - name: Verify pure Conda Streamlit environment (model installed separately)
+          python-version: '3.12'
+      - name: Install exactly the Streamlit host requirements using pip
         run: |
+          python -m pip install -r requirements.txt
           python - <<'PY'
-          import sys, streamlit, pip
+          import sys, streamlit
+          print('PIP_ONLY_STREAMLIT_HOST', sys.version, streamlit.__version__)
           assert sys.version_info[:2] == (3, 12)
-          print('CONDA_BASE_ONLY',sys.version,streamlit.__version__,pip.__version__)
           PY
-          # Actual checkpoint installation, smoke and 40-case parity run in
-          # cloud-isolated-venv.yml: pip23 is never installed into this prefix.
+      - name: Assert original-model dependency isolation and valid cloud launcher
+        run: |
+          python -m pip install pytest
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_cloud_venv_isolation.py tests/test_cloud_entrypoint.py

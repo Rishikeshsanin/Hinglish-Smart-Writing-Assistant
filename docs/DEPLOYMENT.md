@@ -12,7 +12,7 @@ produce genuine Hindi predictions.
 python3.10 -m venv .venv
 source .venv/bin/activate
 python -m pip install 'pip==23.3.2' 'setuptools<70' wheel
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-local.txt
 python scripts/smoke_indicxlit.py
 PYTHONPATH=src streamlit run app.py
 ```
