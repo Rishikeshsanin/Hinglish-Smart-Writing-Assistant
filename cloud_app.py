@@ -14,8 +14,8 @@ os.environ["INDICWRITE_ENABLE_LANGUAGE_SERVICES"] = "0"
 
 try:
     from src.indicwrite.cloud_bootstrap import prepare_official_model
-    with st.spinner("Preparing verified AI4Bharat model dependencies on first launch…"):
-        prepare_official_model()
+    # Do not emit any Streamlit UI before app.py calls st.set_page_config.
+    prepare_official_model()
 except Exception:
     st.error("The official model environment could not be prepared. Check Cloud logs; no substitute model is used.")
     st.stop()
