@@ -59,3 +59,10 @@ Public deployment is explicitly **blocked** rather than silently degraded. On Py
 - **Independent human-language review:** a private 10-case reviewer rubric and aggregate-only scoring script are prepared; no independently scored quality result is claimed.
 - **Release reproducibility:** the ZIP archive verifier now checks per-file SHA-256, required evidence and exclusion of unsafe/private content; Docker Compose loopback health has passed.
 - **External blockers:** public BharatGen approval, supported-runtime public deployment, optional gated IndicTrans2 access, private GPU UI execution and faculty Google Classroom upload remain outstanding.
+
+
+## October 31, 2026 deployment-readiness milestone (newer than entries above)
+
+Previously recorded Python3.11/Fairseq failures were overcome with a separately opted-in and version-pinned Fairseq/Hydra compatibility shim on **Python3.12**, without substituting model weights. The actual official model reproduced **40 of 40** saved case outputs exactly ([run 41210696882](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41210696882)); the exact Conda-based free Streamlit Cloud environment did so again ([run 41211428287](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41211428287)). The supported Python3.12 Docker image also built, executed genuine inference, and passed local HTTP health ([run 41211613516](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41211613516)). The supported-runtime **code blocker has been cleared**, but the app is **not yet publicly deployed**; owner-authorized free Streamlit Cloud app creation and browser verification remain. See [deployment guide](STREAMLIT_CLOUD.md).
+
+A separate new Vercel Hobby pilot was created to evaluate AI4Bharat's public hosted API, but the real provider endpoint returned HTTP 503; the Vercel pilot was restricted and PR20 closed without merging. This does not affect the native model, private BharatGen, or existing sites.

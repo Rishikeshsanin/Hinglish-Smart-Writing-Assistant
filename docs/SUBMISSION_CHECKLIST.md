@@ -93,3 +93,12 @@ The final ZIP contains all public project artifacts, not private BharatGen gener
 
 Download the **latest successful** ZIP from the [faculty package workflow](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/workflows/submission-package.yml), not an older copy. The private BharatGen ZIP/reviewer sheet must never be publicly uploaded.
 
+
+
+## October 31, 2026 hosting addendum
+
+- [x] Original official IndicXlit real inference on Python3.12 with 40/40 byte-perfect parity [41210696882](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41210696882).
+- [x] Exact Conda environment for free Streamlit Cloud installed and generated all 40 official predictions identically [41211428287](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41211428287).
+- [x] Python3.12 supported Docker image built and genuinely checked on localhost [41211613516](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41211613516).
+- [ ] Free Streamlit Community Cloud **actual site creation and external browser checks** still need authenticated GitHub owner access. There is no validated public link yet.
+- [ ] Faculty Google Classroom submission remains a separate student-controlled action. No BharatGen public release permission has been granted.
