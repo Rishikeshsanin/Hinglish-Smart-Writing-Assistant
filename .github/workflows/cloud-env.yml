@@ -1,0 +1,33 @@
+name: Verify exact free Streamlit Cloud Python 3.12 environment
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'environment.yml'
+      - 'cloud_app.py'
+      - 'src/indicwrite/fairseq_compat_loader.py'
+      - '.github/workflows/cloud-env.yml'
+jobs:
+  cloud-env:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: indicwrite-community
+          environment-file: environment.yml
+          auto-activate-base: false
+          miniforge-version: latest
+          use-mamba: true
+      - name: Verify exact supported environment and real official pretrained inference
+        env:
+          INDICWRITE_PY312_COMPAT: '1'
+          OMP_NUM_THREADS: '2'
+        run: |
+          python -c 'import sys,torch,streamlit; print(sys.version,torch.__version__,streamlit.__version__)'
+          python scripts/smoke_indicxlit.py
+          python scripts/verify_py312_official_parity.py
