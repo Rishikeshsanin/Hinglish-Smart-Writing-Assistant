@@ -1,14 +1,22 @@
-"""Supported Python 3.12 entrypoint for free Streamlit Community Cloud.
+"""Free Streamlit Cloud launcher for the genuine AI4Bharat IndicXlit model.
 
-Uses official AI4Bharat IndicXlit weights. The pinned, attributed compatibility
-patch is only for obsolete Fairseq/Hydra imports. It is not a substitute model.
-BharatGen remains unavailable on this public service.
+Cloud provides Streamlit and Python 3.12 with no broken pip overlay. The model
+dependencies are installed in a clean isolated venv only on first launch.
 """
-from __future__ import annotations
-import os,runpy
+import os
+import runpy
 from pathlib import Path
+import streamlit as st
 
-os.environ["INDICWRITE_PY312_COMPAT"]="1"
-os.environ["INDICWRITE_PRIVATE_BHARATGEN"]="0"
-os.environ["INDICWRITE_ENABLE_LANGUAGE_SERVICES"]="0"
-runpy.run_path(str(Path(__file__).with_name("app.py")),run_name="__main__")
+os.environ["INDICWRITE_PY312_COMPAT"] = "1"
+os.environ["INDICWRITE_PRIVATE_BHARATGEN"] = "0"
+os.environ["INDICWRITE_ENABLE_LANGUAGE_SERVICES"] = "0"
+
+try:
+    from src.indicwrite.cloud_bootstrap import prepare_official_model
+    with st.spinner("Preparing verified AI4Bharat model dependencies on first launch…"):
+        prepare_official_model()
+except Exception:
+    st.error("The official model environment could not be prepared. Check Cloud logs; no substitute model is used.")
+    st.stop()
+runpy.run_path(str(Path(__file__).with_name("app.py")), run_name="__main__")

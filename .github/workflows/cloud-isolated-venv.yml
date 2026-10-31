@@ -1,0 +1,51 @@
+name: Verify isolated legacy pip model bootstrap under modern Python 3.12
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'environment.yml'
+      - 'cloud_app.py'
+      - 'src/indicwrite/cloud_bootstrap.py'
+      - '.github/workflows/cloud-isolated-venv.yml'
+jobs:
+  genuine-model:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Simulate Streamlit's newer platform pip
+        run: |
+          python -m pip install --upgrade pip==26.0
+          python -m pip --version
+      - name: Install official model into a clean pip23 Python venv
+        env:
+          OMP_NUM_THREADS: '2'
+        run: |
+          python - <<'PY'
+          from src.indicwrite.cloud_bootstrap import prepare_official_model
+          import pip
+          folder=prepare_official_model()
+          print("MODEL_VENV_READY",folder,"HOST_PIP_UNCHANGED",pip.__version__,flush=True)
+          assert pip.__version__=="26.0"
+          PY
+      - name: Real official pretrained model smoke and historical parity
+        env:
+          OMP_NUM_THREADS: '2'
+          INDICWRITE_PY312_COMPAT: '1'
+        run: |
+          python - <<'PY'
+          import runpy
+          from src.indicwrite.cloud_bootstrap import prepare_official_model
+          prepare_official_model()
+          runpy.run_path("scripts/verify_py312_official_parity.py",run_name="__main__")
+          PY
+      - name: Repeat bootstrap without reinstalling
+        run: |
+          python - <<'PY'
+          from src.indicwrite.cloud_bootstrap import prepare_official_model, STAMP
+          prepare_official_model()
+          assert STAMP.is_file()
+          print("CACHED_BOOTSTRAP_VERIFIED")
+          PY
