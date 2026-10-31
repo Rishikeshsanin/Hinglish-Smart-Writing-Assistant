@@ -1,4 +1,4 @@
-name: Verify exact free Streamlit Cloud Python 3.12 environment
+name: Verify clean Conda-only Streamlit Python 3.12 environment
 on:
   workflow_dispatch:
   pull_request:
@@ -23,11 +23,12 @@ jobs:
           auto-activate-base: false
           miniforge-version: latest
           use-mamba: true
-      - name: Verify exact supported environment and real official pretrained inference
-        env:
-          INDICWRITE_PY312_COMPAT: '1'
-          OMP_NUM_THREADS: '2'
+      - name: Verify pure Conda Streamlit environment (model installed separately)
         run: |
-          python -c 'import sys,torch,streamlit; print(sys.version,torch.__version__,streamlit.__version__)'
-          python scripts/smoke_indicxlit.py
-          python scripts/verify_py312_official_parity.py
+          python - <<'PY'
+          import sys, streamlit, pip
+          assert sys.version_info[:2] == (3, 12)
+          print('CONDA_BASE_ONLY',sys.version,streamlit.__version__,pip.__version__)
+          PY
+          # Actual checkpoint installation, smoke and 40-case parity run in
+          # cloud-isolated-venv.yml: pip23 is never installed into this prefix.
