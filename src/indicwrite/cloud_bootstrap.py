@@ -46,8 +46,11 @@ def prepare_official_model() -> Path:
         _run(str(PYTHON), "-m", "pip", "install", "ai4bharat-transliteration==1.1.3",
              "codemix-restore-shunyalabs==0.4.0")
         # Smoke-import the exact official checkpoint dependencies, not a dummy.
-        _run(str(PYTHON), "-c", "import torch, fairseq, ai4bharat.transliteration;"
-             "print('Official model dependencies loaded')") 
+        _run(str(PYTHON), "-c",
+             "import sys; sys.path.insert(0, %r); "
+             "from indicwrite.fairseq_compat_loader import enable_compatibility; "
+             "enable_compatibility(); import torch, fairseq, ai4bharat.transliteration;"
+             "print('Official model dependencies loaded')" % str(Path(__file__).resolve().parents[2])) 
         STAMP.write_text(VERSION, encoding="ascii")
     if not LIB.is_dir():
         raise RuntimeError("Isolated official-model site-packages are unavailable")
