@@ -1,6 +1,8 @@
 """Lazy loading of genuine official AI4Bharat IndicXlit weights."""
 
 import argparse
+import os
+import sys
 from functools import lru_cache
 from threading import RLock
 
@@ -18,6 +20,11 @@ def _load_indicxlit_cached():
     this standard-library type while loading the official pretrained model.
     No untrusted user-supplied checkpoint paths are supported.
     """
+    # Explicitly opt in to the independently audited Python >=3.11 compatibility
+    # experiment. This is not a substitute model or a default application path.
+    if sys.version_info >= (3, 11) and os.environ.get("INDICWRITE_PY312_COMPAT") == "1":
+        from .fairseq_compat_loader import enable_compatibility
+        enable_compatibility()
     import torch
     from ai4bharat.transliteration import XlitEngine
 
