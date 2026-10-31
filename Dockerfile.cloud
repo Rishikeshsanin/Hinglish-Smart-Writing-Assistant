@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 RUN python -m pip install 'pip==23.3.2' 'setuptools<70' wheel
 RUN python -m pip install 'torch==2.6.0' --index-url https://download.pytorch.org/whl/cpu
-COPY requirements.txt ./
-RUN python -m pip install -r requirements.txt \
+COPY requirements-local.txt ./
+RUN python -m pip install -r requirements-local.txt \
  && python -m pip install 'codemix-restore-shunyalabs==0.4.0' --no-deps
 COPY app.py ./
 COPY src/ ./src/
