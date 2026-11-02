@@ -5,4 +5,6 @@ def test_cloud_entrypoint_is_separate_and_keeps_private_model_off():
     assert 'INDICWRITE_PY312_COMPAT"] = "1"' in source
     assert 'INDICWRITE_PRIVATE_BHARATGEN"] = "0"' in source
     assert 'INDICWRITE_ENABLE_LANGUAGE_SERVICES"] = "0"' in source
+    assert 'INDICWRITE_CLOUD_LAZY_BOOTSTRAP"] = "1"' in source
+    assert "prepare_official_model()" not in source
     compile(source,"cloud_app.py","exec")
