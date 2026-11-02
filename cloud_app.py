@@ -1,26 +1,16 @@
-"""Free Streamlit Cloud launcher for the genuine AI4Bharat IndicXlit model.
+"""Cloud entrypoint: show Streamlit UI before initializing official neural weights.
 
-Cloud provides Streamlit and Python 3.12 with no broken pip overlay. The model
-dependencies are installed in a clean isolated venv only on first launch.
+Model packages are installed into an isolated venv ON FIRST CONVERSION, not
+on every page visit. This avoids blocking Streamlit startup/health checks.
+The official AI4Bharat checkpoint remains mandatory for any conversion.
 """
-import logging
 import os
 import runpy
 from pathlib import Path
-import streamlit as st
 
 os.environ["INDICWRITE_PY312_COMPAT"] = "1"
 os.environ["INDICWRITE_PRIVATE_BHARATGEN"] = "0"
 os.environ["INDICWRITE_ENABLE_LANGUAGE_SERVICES"] = "0"
+os.environ["INDICWRITE_CLOUD_LAZY_BOOTSTRAP"] = "1"
 
-try:
-    from src.indicwrite.cloud_bootstrap import prepare_official_model
-    # Do not emit any Streamlit UI before app.py calls st.set_page_config.
-    prepare_official_model()
-except Exception:
-    # Private input is never included in this exception: this runs before UI.
-    # Log the actual bootstrap exception for Community Cloud troubleshooting.
-    logging.exception("IndicWrite: isolated official-model bootstrap failed")
-    st.error("The official model environment could not be prepared. Check Cloud logs; no substitute model is used.")
-    st.stop()
 runpy.run_path(str(Path(__file__).with_name("app.py")), run_name="__main__")
