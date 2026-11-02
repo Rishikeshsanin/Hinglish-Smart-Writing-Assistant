@@ -30,3 +30,8 @@ Streamlit's official [dependency selection docs](https://docs.streamlit.io/deplo
 5. Verify mobile layout, copy/download and attribution, then update the faculty report and submission package with **only demonstrated public results**.
 
 **Never** delete/recreate the user's existing app, enable billing, touch another repository, expose raw BharatGen output, or substitute an inferior transliteration model. If public deployment remains impossible, the already tested isolated Docker/local demo is an honest fallback for academic submission.
+
+
+## 2 November 2026: defer Cloud model installation until first conversion
+
+Previously, the Cloud launcher synchronously installed large neural packages **before** Streamlit could render UI or serve health checks. The Cloud-only entrypoint now sets `INDICWRITE_CLOUD_LAZY_BOOTSTRAP=1` so the UI can load immediately. Only a genuine conversion triggers the same isolated official AI4Bharat model installer and pretrained weights. This is **not** a substitute model. Real Cloud RAM/CPU, storage and cold-start inference still require external testing: a successful UI alone does **not** count as real Hindi conversion.

@@ -36,4 +36,7 @@ def test_cloud_entrypoint_keeps_private_model_disabled():
     script = (ROOT/"cloud_app.py").read_text()
     ast.parse(script)
     assert 'INDICWRITE_PRIVATE_BHARATGEN"] = "0"' in script
-    assert "prepare_official_model()" in script
+    assert 'INDICWRITE_CLOUD_LAZY_BOOTSTRAP"] = "1"' in script
+    engine = (ROOT/"src/indicwrite/engine.py").read_text()
+    assert "prepare_official_model()" in engine
+    assert "INDICWRITE_CLOUD_LAZY_BOOTSTRAP" in engine

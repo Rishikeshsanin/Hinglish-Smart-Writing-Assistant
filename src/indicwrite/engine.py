@@ -20,8 +20,15 @@ def _load_indicxlit_cached():
     this standard-library type while loading the official pretrained model.
     No untrusted user-supplied checkpoint paths are supported.
     """
-    # Explicitly opt in to the independently audited Python >=3.11 compatibility
-    # experiment. This is not a substitute model or a default application path.
+    # The Cloud host has ONLY Streamlit installed. Prepare the isolated genuine
+    # IndicXlit environment before trying to import its compatibility patch.
+    # This is invoked only when a user actually requests conversion, so the
+    # public UI/health checks never block on heavy pip/model downloads.
+    if os.environ.get("INDICWRITE_CLOUD_LAZY_BOOTSTRAP") == "1":
+        from .cloud_bootstrap import prepare_official_model
+        prepare_official_model()
+    # Explicit opt-in to the audited Python >=3.11 Fairseq compatibility shim.
+    # The actual model remains the original official AI4Bharat checkpoint.
     if sys.version_info >= (3, 11) and os.environ.get("INDICWRITE_PY312_COMPAT") == "1":
         from .fairseq_compat_loader import enable_compatibility
         enable_compatibility()
