@@ -25,6 +25,11 @@ def _load_indicxlit_cached():
     if sys.version_info >= (3, 11) and os.environ.get("INDICWRITE_PY312_COMPAT") == "1":
         from .fairseq_compat_loader import enable_compatibility
         enable_compatibility()
+    # Do not block Cloud UI/health while downloading model dependencies.
+    # Only real conversions trigger the unchanged genuine-model installer.
+    if os.environ.get("INDICWRITE_CLOUD_LAZY_BOOTSTRAP") == "1":
+        from .cloud_bootstrap import prepare_official_model
+        prepare_official_model()
     import torch
     from ai4bharat.transliteration import XlitEngine
 
