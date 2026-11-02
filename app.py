@@ -123,7 +123,7 @@ with col2:
             preserve_terms = parse_preserve_terms(protected)
             requires_model = has_convertible_tokens(tokens, preserve_terms)
             if requires_model:
-                with st.spinner("Loading AI4Bharat IndicXlit and converting…"):
+                with st.spinner("Initializing genuine AI4Bharat IndicXlit (first cloud conversion may install dependencies and download official weights)…"):
                     model = load_indicxlit()
                     result = transliterate_text(text, model, preserve_terms=preserve_terms)
             else:
