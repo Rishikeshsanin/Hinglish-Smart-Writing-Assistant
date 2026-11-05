@@ -192,7 +192,7 @@ def validate_rewrite_candidate(original: str, candidate: str) -> str:
     if not isinstance(candidate, str) or not candidate.strip():
         raise LanguageModelError("Grammar model returned empty text.")
     candidate = candidate.strip()
-    letters = [ch for ch in candidate if ch.isalpha()]
+    letters = [ch for ch in candidate if ch.isalpha() and not ("a" <= ch.lower() <= "z")]
     proportion = (
         sum(chr(0x0900) <= ch <= chr(0x097f) for ch in letters) / len(letters)
         if letters else 0.0
