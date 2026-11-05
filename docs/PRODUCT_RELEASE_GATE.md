@@ -147,3 +147,33 @@ Since that baseline, Agents B/C/A merged as PRs #38/#40/#37 and the genuine-lang
 The latest QA branch reuses Agent A's sleep/wake control and embedded `iframe[title="streamlitApp"]` selector. Its pull-request CI runs a **genuine ten-distinct-input public Chromium test**, plus protected English terms, blank-input handling, UTF-8 download and manual edit, clipboard, responsive 320/390/768/1440 screenshots and errors. These are **attempted QA gates, not passes** until the branch's real CI logs establish them.
 
 **Still not certified:** all expanded acceptance gates, repeatable uptime, comprehensive screen-reader/accessibility review, and optional-language model quality/license clearance. The most recent successful public evidence covers three actual sentences; it does not on its own prove ten sentences or full product release.
+
+
+## Final integrated public acceptance evidence — 5 November 2026
+
+On the fresh branch created from integrated `main` at `3bf2baa`,
+[GitHub Actions run 42070624090](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42070624090)
+passed **both** offline acceptance and real, external public Chromium acceptance.
+The public artifact `product-acceptance-public-browser` records `browser_smoke: PASS`
+with 10 DISTINCT official-model Roman Hindi cases plus a real preservation case (11 total).
+The original model was not replaced, mocked, or rewritten. This run explicitly tested:
+
+- Student-visible public Roman Hindi -> Hindi conversion and accurate UTF-8 original download
+- Manual Hindi editing and reviewed UTF-8 TXT download, clipboard copy
+- English `Python`, uppercase `AI`, `42`, HTTPS URL, pre-existing Hindi and emoji preserved
+- Empty input and unsupported protected-term rejection, clear-state recovery
+- No exposed private BharatGen or enabled unsupported grammar feature
+- Responsive public Streamlit UI at **320, 390, 768, 1440 px**: no horizontal overflow or JavaScript exceptions
+
+Actual 10-case outputs include original-model errors such as `main` -> `मैन`,
+`aaj mausam bahut accha hai!` -> `आज मौसम बहुत अच्छ है!`, and `ap kahan ho?`
+-> `एपी कहन हो?`; these are genuine model limitations, not fabricated outputs.
+The test collected external wall-clock cold UI load 6.8 seconds, first conversion 7.33 seconds
+(in this warm site session), and one subsequent conversion 1.82 seconds; **these are NOT measured model-only latency nor server uptime/RAM evidence**.
+
+**Acceptance distinction:** the supported original-model IndicWrite transliteration application now
+has independently passing end-to-end browser QA on its existing public URL.
+This evidence does **not** imply 24/7 uptime, complete WCAG/screen-reader certification,
+or readiness of optional grammar, BharatGen public rewriting, and gated IndicTrans2.
+Those remain deliberately disabled/blocked pending real model quality, rights, and resources.
+The merged-main post-release acceptance workflow must be checked separately; no future run is assumed successful.
