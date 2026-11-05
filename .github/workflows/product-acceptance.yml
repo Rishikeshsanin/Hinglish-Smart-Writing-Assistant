@@ -53,8 +53,8 @@ jobs:
           retention-days: 7
 
   canonical-public-browser:
-    name: Real public Streamlit Chromium smoke (manual only)
-    if: github.event_name == 'workflow_dispatch'
+    name: Real public Streamlit Chromium acceptance
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -68,7 +68,7 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Visit canonical public app and exercise real inference
         env:
-          TEN_REAL_CASES: ${{ inputs.ten_real_cases }}
+          TEN_REAL_CASES: ${{ github.event_name == 'pull_request' && 'true' || inputs.ten_real_cases }}
         run: |
           if [ "$TEN_REAL_CASES" = "true" ]; then
             python scripts/qa_product_release.py --mode browser --target public --ten-cases
