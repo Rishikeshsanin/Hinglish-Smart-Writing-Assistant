@@ -44,6 +44,8 @@ def classify_page(body: str, buttons: list[str], http_status: int | None) -> str
     lower = body.lower()
     if http_status is not None and http_status >= 400:
         return "http_unavailable"
+    if "this app has gone to sleep" in lower:
+        return "provider_asleep"
     if any(phrase in lower for phrase in ERROR_PATTERNS):
         return "provider_or_app_error"
     if "convert to hindi" in lower or any("convert to hindi" in b.lower() for b in buttons):
@@ -150,7 +152,19 @@ def check() -> None:
                 try:
                     response = page.goto(URL, wait_until="domcontentloaded", timeout=45000)
                     status = response.status if response else None
-                    page.get_by_role("button", name=BUTTON).wait_for(state="visible", timeout=70000)
+                    initial_body = page.locator("body").inner_text(timeout=12000)
+                    if "this app has gone to sleep" in initial_body.lower():
+                        # Confirmed by the 5 Nov 2026 CI screenshot: public
+                        # visitors must explicitly wake the sleeping free app.
+                        screenshot(page, f"provider-asleep-{attempt}.png")
+                        print(f"PUBLIC_STREAMLIT_ASLEEP attempt={attempt} requesting_wake", flush=True)
+                        page.get_by_text("Yes, get this app back up!", exact=False).first.click(timeout=20000)
+                        report["wake_requested"] = True
+                        # Cold server start and WebSocket handshake may take minutes.
+                        page.get_by_role("button", name=BUTTON).wait_for(state="visible", timeout=240000)
+                        print(f"PUBLIC_STREAMLIT_WAKE_SUCCEEDED attempt={attempt}", flush=True)
+                    else:
+                        page.get_by_role("button", name=BUTTON).wait_for(state="visible", timeout=70000)
                     report["attempts"].append({
                         "attempt": attempt, "http_status": status,
                         "classification": "conversion_control_visible",
