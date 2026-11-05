@@ -57,6 +57,11 @@ def test_public_browser_checks_multiple_distinct_inputs(monkeypatch):
     script = (ROOT / "scripts/check_public_streamlit.py").read_text()
     assert "PUBLIC_STREAMLIT_WAKE_SUCCEEDED" in script
     assert "Yes, get this app back up!" in script
+    # A Cloud URL can show a loaded native app in an iframe despite an
+    # empty top-level document. The QA must use the embedded frame.
+    assert 'iframe[title="streamlitApp"]' in script
+    assert "view = wait_for_app_control(page, 240)" in script
+    assert "convert(\n                        view" in script
     workflow = (ROOT / ".github/workflows/public-streamlit-smoke.yml").read_text()
     assert "pull_request:" in workflow and "workflow_dispatch:" in workflow
     assert "if: always()" in workflow and "public-qa/" in workflow
