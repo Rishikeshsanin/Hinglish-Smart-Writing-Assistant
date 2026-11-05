@@ -1,10 +1,10 @@
-# IndicWrite — consistent public Streamlit theming; no credentials.
+# Canonical native UI theme. The Python model and hosted URL are unchanged.
 [theme]
 base = "light"
-primaryColor = "#504AC4"
-backgroundColor = "#F8FAFF"
+primaryColor = "#745AD3"
+backgroundColor = "#FAF9FF"
 secondaryBackgroundColor = "#FFFFFF"
-textColor = "#24284F"
+textColor = "#292440"
 font = "sans serif"
 
 [browser]
