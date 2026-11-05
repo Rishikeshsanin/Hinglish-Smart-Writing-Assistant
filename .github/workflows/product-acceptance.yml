@@ -1,0 +1,85 @@
+name: Product acceptance (independent QA)
+
+on:
+  pull_request:
+    paths:
+      - 'tests/test_product_acceptance.py'
+      - 'scripts/qa_product_release.py'
+      - 'docs/PRODUCT_RELEASE_GATE.md'
+      - '.github/workflows/product-acceptance.yml'
+      - 'src/indicwrite/**'
+      - 'app.py'
+      - 'cloud_app.py'
+      - 'evaluation/**'
+  workflow_dispatch:
+    inputs:
+      ten_real_cases:
+        description: 'Run ten genuine public Hindi conversions (slower, no mocking)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  offline-product-contract:
+    name: Offline regression and evidence integrity (NOT live AI)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install unit runner only
+        run: python -m pip install 'pytest==8.4.2'
+      - name: Run product and existing offline tests
+        run: |
+          mkdir -p qa-artifacts
+          set -o pipefail
+          python -m pytest -q 2>&1 | tee qa-artifacts/pytest.log
+      - name: Compile new QA scripts
+        run: python -m compileall -q scripts/qa_product_release.py tests/test_product_acceptance.py
+      - name: Record offline inventory without pretending model inference
+        run: python scripts/qa_product_release.py --mode inventory --artifacts qa-artifacts
+      - name: Preserve offline results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-acceptance-offline
+          path: qa-artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  canonical-public-browser:
+    name: Real public Streamlit Chromium acceptance
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Chromium and browser runner
+        run: |
+          python -m pip install 'playwright==1.56.0'
+          python -m playwright install --with-deps chromium
+      - name: Visit canonical public app and exercise real inference
+        env:
+          TEN_REAL_CASES: ${{ github.event_name == 'pull_request' && 'true' || inputs.ten_real_cases }}
+        run: |
+          if [ "$TEN_REAL_CASES" = "true" ]; then
+            python scripts/qa_product_release.py --mode browser --target public --ten-cases
+          else
+            python scripts/qa_product_release.py --mode browser --target public
+          fi
+      - name: Preserve independent real-browser evidence (including failures)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-acceptance-public-browser
+          path: qa-artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
