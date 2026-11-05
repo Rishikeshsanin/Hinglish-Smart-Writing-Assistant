@@ -294,12 +294,17 @@ def browser_smoke(url, target, output_dir, ten_cases=False):
                     view, "kal Python AI 42 https://example.org/a?q=1 हिंदी 🚀",
                     preserve="Python",
                 )
-                assert "कल" in preserved
-                assert "Python AI 42 https://example.org/a?q=1 हिंदी 🚀" in preserved
+                # Record the genuine result BEFORE any assertions, so a
+                # preservation defect is independently diagnosable in CI.
                 evidence["conversions"].append({
                     "input": "kal Python AI 42 https://example.org/a?q=1 हिंदी 🚀",
                     "preserve": "Python", "output": preserved,
                 })
+                print("QA_MIXED_INPUT_REAL_OUTPUT", repr(preserved), flush=True)
+                assert "कल" in preserved, f"Roman 'kal' not transliterated: {preserved!r}"
+                assert "Python AI 42 https://example.org/a?q=1 हिंदी 🚀" in preserved, (
+                    f"Protected English/number/URL/Hindi/emoji changed: {preserved!r}"
+                )
                 evidence["checks"]["english_urls_numbers_unicode_preserved"] = True
                 evidence["warm_convert_seconds"] = round(time.monotonic() - started, 2)
 
