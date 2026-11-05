@@ -4,5 +4,7 @@
 # Not BharatGen or IndicTrans2 checkpoints.
 transformers>=4.44,<5
 sentencepiece>=0.2,<1
-protobuf>=4,<7
+# SentencePiece's shipped Python proto gencode is 7.36.1; runtime must not be older.
+# Limit to the supported Python 3.10 7.36.x line to avoid future major upgrades.
+protobuf>=7.36.1,<7.37
 safetensors>=0.4,<1
