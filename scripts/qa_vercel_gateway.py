@@ -44,6 +44,12 @@ def run():
                     assert response and response.status == 200, (
                         f"{label}: live Vercel returned HTTP {response.status if response else 'no response'}"
                     )
+                    report.setdefault("observed_pages", []).append({
+                        "viewport": label, "url": page.url, "title": page.title(),
+                        "headings": page.get_by_role("heading").all_inner_texts()[:8],
+                        "body_excerpt": page.locator("body").inner_text()[:1200]
+                    })
+                    page.screenshot(path=str(OUTPUT / f"{label}-initial.png"), full_page=True)
                     expect(page.get_by_role("heading", name="Your words, beautifully written in Hindi.")).to_be_visible(timeout=20000)
                     link = page.get_by_role("link", name="Open native IndicWrite converter, hosted on Streamlit")
                     expect(link).to_be_visible()
