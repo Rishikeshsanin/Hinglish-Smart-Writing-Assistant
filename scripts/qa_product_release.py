@@ -269,18 +269,25 @@ def browser_smoke(url, target, output_dir, ten_cases=False):
                 evidence["checks"]["manual_edit_download"] = True
 
                 # The native Streamlit code component provides a copy action.
-                copy_button = view.locator('[data-testid="stCode"]').first.locator("button").first
-                if copy_button.count():
-                    copy_button.click()
-                    try:
-                        copied = view.locator("html").evaluate("(el) => el.ownerDocument.defaultView.navigator.clipboard.readText()")
-                        assert copied == output, f"Clipboard mismatch: {copied!r}"
-                        evidence["checks"]["clipboard_copy"] = True
-                    except Exception as exc:
-                        evidence["checks"]["clipboard_copy"] = False
-                        evidence["clipboard_error"] = repr(exc)
-                else:
+                code_widget = view.locator('[data-testid="stCode"]').first
+                # Streamlit hides its Copy toolbar until the code block is
+                # hovered. Reproduce a real user's hover instead of forcing
+                # an invisible click or bypassing the clipboard UX.
+                code_widget.hover(timeout=15000)
+                copy_button = code_widget.get_by_role(
+                    "button", name=re.compile("Copy to clipboard", re.I)
+                )
+                try:
+                    expect(copy_button).to_be_visible(timeout=10000)
+                    copy_button.click(timeout=10000)
+                    copied = view.locator("html").evaluate(
+                        "(el) => el.ownerDocument.defaultView.navigator.clipboard.readText()"
+                    )
+                    assert copied == output, f"Clipboard mismatch: {copied!r}"
+                    evidence["checks"]["clipboard_copy"] = True
+                except Exception as exc:
                     evidence["checks"]["clipboard_copy"] = False
+                    evidence["clipboard_error"] = repr(exc)
 
                 started = time.monotonic()
                 preserved = _convert(
