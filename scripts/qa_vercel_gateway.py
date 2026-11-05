@@ -81,6 +81,28 @@ def run():
                         link.click(timeout=20000)
                         page.wait_for_url(NATIVE + "*", wait_until="domcontentloaded", timeout=60000)
                         report["native_link_navigation"] = page.url.startswith(NATIVE)
+                        # Only on merged main: the actual production Vercel build
+                        # must retire the legacy API; PR previews still point to
+                        # an older production API until merged.
+                        if os.getenv("GITHUB_REF") == "refs/heads/main":
+                            legacy_url = URL + "api/transliterate?word=namaste"
+                            seen_status = None
+                            for _ in range(9):
+                                response_api = page.request.get(legacy_url, timeout=15000)
+                                seen_status = response_api.status
+                                if seen_status == 410:
+                                    body = response_api.json()
+                                    assert body.get("canonical_url") == NATIVE
+                                    assert "access-control-allow-origin" not in response_api.headers, (
+                                        "Retired API must not publish wildcard CORS"
+                                    )
+                                    report["legacy_api_retired"] = True
+                                    break
+                                time.sleep(8)
+                            else:
+                                raise AssertionError(
+                                    f"Production legacy API not retired after retries; last HTTP={seen_status}"
+                                )
                     context.close()
                 assert not report["page_errors"], report["page_errors"]
                 assert report.get("native_link_navigation"), "Native CTA navigation was not verified"
