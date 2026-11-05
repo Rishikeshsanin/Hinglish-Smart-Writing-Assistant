@@ -115,3 +115,8 @@ Download the **latest successful** ZIP from the [faculty package workflow](https
 - [ ] Independently verified student Google Classroom **Turned in** receipt / final upload. Required before 6 Nov 2026, 10:00 AM IST.
 
 **Submission guidance:** Use the newest green GitHub Actions submission package artifact, not October's archived package, and submit both the current academic report and the November deployment addendum if faculty permits supporting evidence. Private BharatGen outputs must stay private.
+
+
+### 5 November 2026 — compiled PDF/package ordering gate
+
+The updated evidence-based academic report was compiled into `reports/IndicWrite_CS3235_Project_Report.pdf` by successful GitHub Actions [run 42050130958](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42050130958) and committed as `c2a5012`. The first November faculty ZIP was produced *before* this generated PDF commit, so a new successful submission-package workflow run **after** `c2a5012` is required as the final source+PDF handoff. Download only that newer artifact and verify its internal SHA-256 manifest; keep the private human/research outputs excluded.
