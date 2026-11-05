@@ -105,10 +105,14 @@ python scripts/qa_product_release.py --mode gate \
 ```
 
 The integration JSON needs independently verifiable booleans for
-`agents_a_b_c_merged_into_main`, `all_required_ci_green`,
-`enabled_model_quality_and_license_review`, and
-`production_stability_review`, **with linked supporting evidence provided
-outside this tool**. Passing the programmatic gate means only
+`agents_a_b_c_merged_into_main`, `integrated_main_sha`,
+`all_required_ci_green`, `official_model_parity_green`,
+`no_unresolved_p0_p1`, `enabled_model_quality_and_license_review`,
+and `production_stability_review`, **with linked supporting evidence provided
+outside this tool**. The real public-browser artifact must contain ten independently executed cases,
+a GitHub Actions run URL and a 40-character commit SHA matching the integrated
+main SHA. These are auditable evidence pointers, not automatic truth guarantees.
+Passing the programmatic gate means only
 `READY_FOR_COORDINATOR_REVIEW` — the lead still approves deployment. Missing
 evidence returns `BLOCKED` with exit code 2.
 
