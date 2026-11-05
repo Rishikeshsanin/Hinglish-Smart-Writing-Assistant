@@ -8,6 +8,10 @@ from __future__ import annotations
 
 from functools import lru_cache
 from contextlib import nullcontext
+from collections import Counter
+import os
+import re
+from typing import Mapping
 
 GEC_MODEL = "manavdhamecha77/GEC-mT5-Small-Hindi"
 TRANSLATION_MODEL = "Helsinki-NLP/opus-mt-hi-en"
@@ -16,6 +20,115 @@ MAX_TEXT_CHARS = 500
 
 class LanguageModelError(RuntimeError):
     """Requested model is unavailable or failed to generate usable output."""
+
+
+class LanguageFeatureDisabled(LanguageModelError):
+    """A feature cannot be exposed because its opt-in or release gate is closed."""
+
+
+def capability_status(
+    feature: str, environment: Mapping[str, str] | None = None,
+) -> dict[str, str | bool]:
+    """Metadata-only public contract: never downloads weights or implies quality."""
+    env = os.environ if environment is None else environment
+    if feature == "opus_hi_en":
+        enabled = env.get("INDICWRITE_ENABLE_LANGUAGE_SERVICES") == "1"
+        return {
+            "feature": feature, "enabled": enabled,
+            "model_id": TRANSLATION_MODEL, "provider": "Helsinki-NLP",
+            "model_family": "OPUS-MT",
+            "evidence": "Two real-model smoke sentences and one browser flow; NOT a quality benchmark.",
+            "reason": "Opt-in OPUS-MT Hindi to English; quality requires human review."
+                      if enabled else "Set INDICWRITE_ENABLE_LANGUAGE_SERVICES=1 in a supported local environment.",
+        }
+    if feature == "hindi_gec":
+        return {
+            "feature": feature, "enabled": False, "model_id": GEC_MODEL,
+            "provider": "Independent research checkpoint",
+            "reason": "Known grammar checkpoint failed real-output quality review; research-only API is not a product feature.",
+        }
+    if feature == "indictrans2":
+        return {
+            "feature": feature, "enabled": False,
+            "model_id": "ai4bharat/indictrans2-indic-en-dist-200M",
+            "provider": "AI4Bharat",
+            "reason": "Gated model access not granted or tested; no unauthorized checkpoint download or substitute.",
+        }
+    if feature == "bharatgen_public":
+        return {
+            "feature": feature, "enabled": False,
+            "model_id": "bharatgenai/Param-1-2.9B-Instruct",
+            "provider": "BharatGen",
+            "reason": "Conflicting historical license terms, no public-output permission or independent quality review.",
+        }
+    raise ValueError(f"Unknown optional language feature: {feature}")
+
+
+_LATIN_TERM = re.compile(r"[A-Za-z][A-Za-z0-9_+.#-]*")
+_DIGIT_GROUP = re.compile(r"\\d+", flags=re.UNICODE)
+_MEANING_CUES = ("नहीं", "शायद", "अगर", "बिना", "मत")
+
+
+def preservation_warnings(
+    source: str, candidate: str, *, translation: bool = False,
+) -> list[str]:
+    """Conservative string-level alerts, NOT an automatic semantic certification.
+
+    This can miss paraphrased negation, changed roles, dates in words, omitted
+    entities, hallucinations and word-sense errors. Human review is mandatory.
+    """
+    if not isinstance(source, str) or not isinstance(candidate, str):
+        raise TypeError("Source and candidate must be text.")
+    warnings: list[str] = []
+    if Counter(_DIGIT_GROUP.findall(source)) != Counter(_DIGIT_GROUP.findall(candidate)):
+        warnings.append("Digits or numeric quantities changed; verify facts manually.")
+    before = Counter(x.casefold() for x in _LATIN_TERM.findall(source))
+    after = Counter(x.casefold() for x in _LATIN_TERM.findall(candidate))
+    if any(after[term] < count for term, count in before.items()):
+        warnings.append("An English name or technical term changed or disappeared.")
+    if not translation:
+        for cue in _MEANING_CUES:
+            if cue in source and cue not in candidate:
+                warnings.append(f"Meaning-bearing cue {cue!r} was removed.")
+    if source.strip() == candidate.strip():
+        warnings.append("The model returned the text unchanged; no correction was needed or made.")
+    return warnings
+
+
+def translate_optional(
+    text: str, *, environment: Mapping[str, str] | None = None, resources=None,
+) -> dict[str, object]:
+    """Agent-facing opt-in contract. No model download while disabled.
+
+    Use generate_english() only in already-authorized research smoke tests or
+    the legacy opt-in UI. A successful generation is NOT proven translation quality.
+    """
+    capability = capability_status("opus_hi_en", environment)
+    if not capability["enabled"]:
+        raise LanguageFeatureDisabled(str(capability["reason"]))
+    source = validate_hindi(text)
+    output = generate_english(source, resources)
+    return {
+        "source": source,
+        "candidate": output,
+        "model_id": TRANSLATION_MODEL,
+        "model_family": "OPUS-MT (not IndicTrans2)",
+        "warnings": preservation_warnings(source, output, translation=True),
+        "meaning_preservation": "REQUIRES_HUMAN_REVIEW",
+        "auto_apply": False,
+    }
+
+
+def rewrite_optional(text: str, *, environment: Mapping[str, str] | None = None) -> str:
+    """Fail closed: unsuccessful mT5/Qwen candidates must not be product features."""
+    capability = capability_status("hindi_gec", environment)
+    raise LanguageFeatureDisabled(str(capability["reason"]))
+
+
+def translate_indictrans2(text: str, *, environment: Mapping[str, str] | None = None) -> str:
+    """Never relabel the real Helsinki model as gated AI4Bharat IndicTrans2."""
+    capability = capability_status("indictrans2", environment)
+    raise LanguageFeatureDisabled(str(capability["reason"]))
 
 
 def validate_hindi(text: str) -> str:
@@ -72,18 +185,30 @@ def _inference_context():
 
 
 def validate_rewrite_candidate(original: str, candidate: str) -> str:
-    """Reject obvious wrong-script output and changed digit groups."""
-    import re
+    """Research-only hard reject for obvious script and preservation failures.
+
+    Passing these checks never certifies grammar or meaning preservation.
+    """
     if not isinstance(candidate, str) or not candidate.strip():
         raise LanguageModelError("Grammar model returned empty text.")
     candidate = candidate.strip()
     letters = [ch for ch in candidate if ch.isalpha()]
-    proportion = sum("\u0900" <= ch <= "\u097f" for ch in letters) / len(letters) if letters else 0.0
+    proportion = (
+        sum("\\u0900" <= ch <= "\\u097f" for ch in letters) / len(letters)
+        if letters else 0.0
+    )
     if proportion < 0.85:
         raise LanguageModelError("Grammar model drifted into a different script; prediction rejected.")
-    if re.findall(r"[0-9]+", original) != re.findall(r"[0-9]+", candidate):
-        raise LanguageModelError("Grammar model changed, added, or omitted a number; prediction rejected.")
+    warnings = preservation_warnings(original, candidate)
+    for warning in warnings:
+        if "numeric" in warning:
+            raise LanguageModelError("Grammar model changed, added, or omitted a number; prediction rejected.")
+        if "technical term" in warning:
+            raise LanguageModelError("Grammar model changed an English term; prediction rejected.")
+        if "Meaning-bearing cue" in warning:
+            raise LanguageModelError("Grammar model removed a meaning-bearing cue; prediction rejected.")
     return candidate
+
 
 def generate_hindi_gec(text: str, resources=None) -> str:
     """Run genuine MT5 generation. Do not claim output is always an improvement."""
@@ -119,4 +244,7 @@ def generate_english(text: str, resources=None) -> str:
     candidate = tokenizer.batch_decode(outputs, skip_special_tokens=True)
     if not candidate or not candidate[0].strip():
         raise LanguageModelError("Translation model returned an empty prediction.")
-    return candidate[0].strip()
+    output = candidate[0].strip()
+    if not re.search(r"[A-Za-z]", output):
+        raise LanguageModelError("Translation model did not return English text.")
+    return output
