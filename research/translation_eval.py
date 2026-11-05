@@ -56,7 +56,9 @@ def generate_real_predictions(cases: Path, output: Path) -> dict[str, object]:
     """The caller must explicitly opt in; only a real pretrained model is used."""
     output = private_path(output)
     fixed = read_cases(cases)
+    load_start = time.perf_counter()
     resources = load_hi_en()  # real checkpoint or loud failure: no synthetic fallback
+    load_seconds = time.perf_counter() - load_start
     result_rows = []
     for case in fixed:
         start = time.perf_counter()
@@ -90,6 +92,10 @@ def generate_real_predictions(cases: Path, output: Path) -> dict[str, object]:
         "generation": "real_pretrained_inference",
         "human_review": "PENDING",
         "quality_claim": "NONE",
+        "checkpoint_revision": getattr(resources[1].config, "_commit_hash", None),
+        "load_seconds": round(load_seconds, 3),
+        "total_generation_ms": round(sum(float(row["latency_ms"]) for row in result_rows), 2),
+        "warning_case_ids": [row["id"] for row in result_rows if row["automatic_warnings"]],
     }
     output.with_suffix(".metadata.json").write_text(
         json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8"

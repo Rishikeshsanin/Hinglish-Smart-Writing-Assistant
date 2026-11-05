@@ -1,0 +1,31 @@
+name: Real OPUS-MT twelve-case evaluation
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evaluate:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated translation runtime
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.6.0
+          python -m pip install transformers==4.56.2 sentencepiece==0.2.0 sacremoses==0.1.1
+      - name: Execute actual checkpoint on all fixed cases
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+          TOKENIZERS_PARALLELISM: 'false'
+          OMP_NUM_THREADS: '2'
+        run: python research/translation_eval.py --generate --allow-model-download
+      - name: Publish metadata only, without generated sentences or review scores
+        uses: actions/upload-artifact@v4
+        with:
+          name: opus-twelve-case-runtime-metadata
+          path: private_research/opus-mt-translation-review.metadata.json
+          retention-days: 7
+          if-no-files-found: error
