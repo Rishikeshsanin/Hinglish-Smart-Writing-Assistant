@@ -98,3 +98,75 @@ def test_added_number_rejected():
 def test_valid_hindi_candidate_passes_safeguard():
     from indicwrite.language_services import validate_rewrite_candidate
     assert validate_rewrite_candidate("मैं स्कूल जाता है।", "मैं स्कूल जाता हूँ।") == "मैं स्कूल जाता हूँ।"
+
+
+def test_public_optional_gates_fail_closed_even_when_env_is_set(monkeypatch):
+    from indicwrite.language_services import (
+        capability_status, rewrite_optional, translate_indictrans2,
+        LanguageFeatureDisabled,
+    )
+    assert not capability_status("opus_hi_en", {})["enabled"]
+    assert capability_status("opus_hi_en", {"INDICWRITE_ENABLE_LANGUAGE_SERVICES": "1"})["enabled"]
+    assert not capability_status("indictrans2", {"INDICWRITE_ENABLE_LANGUAGE_SERVICES": "1"})["enabled"]
+    assert not capability_status("hindi_gec", {"INDICWRITE_ENABLE_GEC_EXPERIMENTAL": "1"})["enabled"]
+    assert not capability_status("bharatgen_public", {})["enabled"]
+    with pytest.raises(LanguageFeatureDisabled):
+        rewrite_optional("मैं यहाँ हूँ।", environment={"INDICWRITE_ENABLE_GEC_EXPERIMENTAL": "1"})
+    with pytest.raises(LanguageFeatureDisabled):
+        translate_indictrans2("मैं यहाँ हूँ।")
+    with pytest.raises(ValueError, match="Unknown"):
+        capability_status("not_a_real_model", {})
+
+
+def test_optional_translation_never_loads_when_disabled(monkeypatch):
+    from indicwrite import language_services as service
+    monkeypatch.setattr(service, "load_hi_en", lambda: (_ for _ in ()).throw(AssertionError("download attempted")))
+    with pytest.raises(service.LanguageFeatureDisabled):
+        service.translate_optional("मैं यहाँ हूँ।", environment={})
+
+
+def test_optional_translation_returns_real_model_attribution_not_a_quality_claim():
+    from indicwrite.language_services import translate_optional
+    tokenizer = FakeTokenizer("I am learning Python 4.")
+    model = FakeModel()
+    record = translate_optional(
+        "मैं Python 3 सीख रहा हूँ।",
+        environment={"INDICWRITE_ENABLE_LANGUAGE_SERVICES": "1"},
+        resources=(tokenizer, model, "cpu"),
+    )
+    assert record["model_id"] == TRANSLATION_MODEL
+    assert record["model_family"] == "OPUS-MT (not IndicTrans2)"
+    assert record["meaning_preservation"] == "REQUIRES_HUMAN_REVIEW"
+    assert not record["auto_apply"]
+    assert len(model.calls) == 1
+    assert any("numeric" in warning for warning in record["warnings"])
+
+
+def test_unicode_digits_english_terms_and_negation_are_monitored():
+    from indicwrite.language_services import preservation_warnings
+    alerts = preservation_warnings(
+        "मैं Python ३ सीखना नहीं चाहता।",
+        "मैं Java ४ सीखना चाहता।",
+    )
+    assert any("numeric" in warning for warning in alerts)
+    assert any("technical" in warning for warning in alerts)
+    assert any("नहीं" in warning for warning in alerts)
+
+
+def test_code_mixed_hindi_rewrite_preserving_term_is_allowed():
+    from indicwrite.language_services import validate_rewrite_candidate
+    source = "मैं Python सीखता है।"
+    assert validate_rewrite_candidate(source, "मैं Python सीखता हूँ।") == "मैं Python सीखता हूँ।"
+
+
+def test_dropped_english_term_or_negation_rejected():
+    from indicwrite.language_services import validate_rewrite_candidate
+    with pytest.raises(LanguageModelError, match="English term"):
+        validate_rewrite_candidate("मैं Python सीखता है।", "मैं पायथन सीखता हूँ।")
+    with pytest.raises(LanguageModelError, match="cue"):
+        validate_rewrite_candidate("मैं नहीं जाता है।", "मैं जाता हूँ।")
+
+
+def test_non_english_translation_output_is_rejected():
+    with pytest.raises(LanguageModelError, match="English"):
+        generate_english("मैं यहाँ हूँ।", (FakeTokenizer("मैं यहाँ हूँ।"), FakeModel(), "cpu"))
