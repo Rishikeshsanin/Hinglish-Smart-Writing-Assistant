@@ -1,18 +1,32 @@
 name: Public Streamlit live IndicXlit conversion
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'cloud_app.py'
+      - 'src/indicwrite/cloud_bootstrap.py'
+      - 'src/indicwrite/engine.py'
+      - 'scripts/check_public_streamlit.py'
+      - 'tests/test_cloud_public_qa.py'
+      - '.github/workflows/public-streamlit-smoke.yml'
   push:
     branches: [main]
     paths:
       - 'cloud_app.py'
-      - 'requirements.txt'
+      - 'src/indicwrite/cloud_bootstrap.py'
+      - 'src/indicwrite/engine.py'
       - 'scripts/check_public_streamlit.py'
       - '.github/workflows/public-streamlit-smoke.yml'
+
+# Checks the EXISTING publicly deployed main branch, not an unmerged PR preview.
+# A green PR run cannot prove PR backend code has deployed to Streamlit.
+permissions:
+  contents: read
 
 jobs:
   public-live-conversion:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 38
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -22,13 +36,16 @@ jobs:
         run: |
           python -m pip install 'playwright==1.56.0'
           python -m playwright install --with-deps chromium
-      - name: Open actual public website and convert Roman Hindi
+      - name: Open EXISTING public website and perform 3 genuine conversions
+        env:
+          PYTHONUNBUFFERED: '1'
+          INDICWRITE_PUBLIC_QA_DIR: public-qa
         run: python scripts/check_public_streamlit.py
-      - name: Keep independent public screenshot (pass or failure)
+      - name: Preserve independent browser evidence, errors and trace
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: indicwrite-public-qa-screenshot
-          path: public-indicwrite.png
-          if-no-files-found: ignore
+          name: indicwrite-public-browser-evidence
+          path: public-qa/
+          if-no-files-found: warn
           retention-days: 7
