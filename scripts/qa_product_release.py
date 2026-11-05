@@ -253,9 +253,19 @@ def browser_smoke(url, target, output_dir, ten_cases=False):
                 expect(edited).to_be_visible(timeout=10000)
                 edited.fill("नमस्ते 🚀 हिंदी")
                 edited.press("Tab")
+                expect(edited).to_have_value("नमस्ते 🚀 हिंदी", timeout=15000)
+                # A Streamlit text-area blur reruns its widget tree; read the
+                # download from the refreshed button, not the prior result.
+                view.get_by_role("button", name="Download reviewed Hindi (.txt)").wait_for(
+                    state="visible", timeout=15000
+                )
+                page.wait_for_timeout(1200)
                 with page.expect_download(timeout=30000) as transfer:
                     view.get_by_role("button", name="Download reviewed Hindi (.txt)").click()
-                assert transfer.value.path().read_bytes().decode("utf-8-sig") == "नमस्ते 🚀 हिंदी"
+                actual_review = transfer.value.path().read_bytes().decode("utf-8-sig")
+                assert actual_review == "नमस्ते 🚀 हिंदी", (
+                    f"Manual edit download mismatch; saved={actual_review!r}"
+                )
                 evidence["checks"]["manual_edit_download"] = True
 
                 # The native Streamlit code component provides a copy action.
