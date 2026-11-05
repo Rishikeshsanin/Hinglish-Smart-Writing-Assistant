@@ -4,7 +4,7 @@ The free Vercel web build is now an accessible, responsive **landing page** that
 
 ## Why it no longer converts text on Vercel
 
-The previous `web/public/app.js` made requests to `web/api/transliterate.js`, which depends on an external hosted AI4Bharat endpoint that has not been reliable in public browser verification. A successful Vercel build is **not** evidence of successful real-model conversion. The proxy file remains untouched for coordinator review but is **not called by the page**.
+The previous `web/public/app.js` made requests to `web/api/transliterate.js`, which depended on an external hosted AI4Bharat endpoint that was not reliable in public browser verification. A successful Vercel build is **not** evidence of successful real-model conversion. The unused proxy endpoint is **retired** (HTTP 410 with a link to the native app); it never calls a provider, and no wildcard cross-origin access is advertised. The public landing page does not call any proxy.
 
 The **only canonical conversion UI** is `app.py`, launched through the existing `cloud_app.py` deployment. Its calls flow through `src/indicwrite/core.py` and `src/indicwrite/engine.py` to the official pretrained AI4Bharat IndicXlit checkpoint. No mock text, alternative model, API key, open CORS proxy, or new hosting service is introduced.
 
@@ -17,7 +17,7 @@ The **only canonical conversion UI** is `app.py`, launched through the existing 
 
 ## Tests
 
-`cd web && npm test` validates the old proxy **with mocked upstream responses** and the new static landing-page contract. A mock proxy test is not evidence that the provider is available. For a **real** native-model Chromium flow, follow `scripts/browser_smoke.py` and the existing `browser-qa.yml` workflow, which must be run in an environment with official neural weights. No production deployment is triggered by this branch or a draft PR.
+`cd web && npm test` asserts the legacy proxy always returns HTTP 410 without external calls and validates the static landing-page contract. A mock proxy test is not evidence that the provider is available. For a **real** native-model Chromium flow, follow `scripts/browser_smoke.py` and the existing `browser-qa.yml` workflow, which must be run in an environment with official neural weights. Vercel's existing Git integration deploys changes to the existing project; the standalone live-gateway Chromium workflow verifies the actual production URL on supported release commits. Never confuse an offline test with public conversion evidence.
 
 ### Local visual browser QA (static gateway only)
 
