@@ -177,3 +177,26 @@ This evidence does **not** imply 24/7 uptime, complete WCAG/screen-reader certif
 or readiness of optional grammar, BharatGen public rewriting, and gated IndicTrans2.
 Those remain deliberately disabled/blocked pending real model quality, rights, and resources.
 The merged-main post-release acceptance workflow must be checked separately; no future run is assumed successful.
+
+
+## Release coordinator verified post-merge main result (5 November 2026)
+
+The full ten-distinct-case external Chromium suite subsequently **PASSED on
+merged `main`** at exact commit `3567aa1b9f36b91db0030626856d0b3f6d769606`:
+[public QA run 42073053397](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42073053397).
+Both unit and offline QA jobs had **154 passed, 8 skipped**, with original
+40-case evidence still present. The real browser artifact (13436298212)
+contains 11 conversions including the protected mixed-script case, genuine
+copy and UTF-8 downloads, four viewport screenshots, and no page errors.
+Wall-clock load 7.07s, first conversion 7.02s (not a controlled cold model
+install), mixed-case subsequent conversion 1.85s. Do NOT interpret these as
+uptime/SLA or server RAM measurement.
+
+The [supported-public-release evidence](LIVE_RELEASE_EVIDENCE_2026-11-05.md)
+separates this verified native Streamlit scope from the unverified optional
+rewrite/IndicTrans2/BharatGen features. Vercel is a static frontend gateway,
+not a second AI engine; the separate gateway hardening must pass public
+Vercel Chromium and Node tests before its own release. This addendum
+supersedes the original early-5-November BLOCKED matrix **for the canonical
+IndicXlit core only**; long-term availability, full WCAG and public optional
+AI-model claims remain unverified.
