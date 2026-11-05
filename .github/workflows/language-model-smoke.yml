@@ -1,6 +1,13 @@
 name: Genuine Hindi grammar + English translation model smoke
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/language-model-smoke.yml'
+      - 'requirements-language-services.txt'
+      - 'requirements-language-services.txt'
+      - 'src/indicwrite/language_services.py'
+      - 'scripts/smoke_language_models.py'
   push:
     branches: [main]
     paths:
