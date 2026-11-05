@@ -73,3 +73,34 @@ def test_invalid_model_candidate_does_not_leak():
             return {"runtime_candidate_ok": False, "candidate": "partial"}
     with pytest.raises(RuntimeError, match="Incomplete"):
         run_private_research("मैं घर जाता हूँ।", engine=Fake(), environment=env_flags(), server_address="127.0.0.1")
+
+
+def test_private_review_detects_devanagari_digit_changes():
+    messages = review_candidate("मुझे ३ किताबें चाहिए।", "मुझे ४ किताबें चाहिए।")
+    assert any("numeric" in message for message in messages)
+
+
+def test_private_review_rejects_non_hindi_candidate():
+    with pytest.raises(ValueError, match="non-Hindi"):
+        review_candidate("मैं यहाँ हूँ।", "English-only answer")
+
+
+def test_fake_private_record_cannot_override_runtime_success_with_truthy_text():
+    class Fake:
+        def generate_record(self, original):
+            return {"runtime_candidate_ok": "true", "candidate": "मैं गया।"}
+    with pytest.raises(RuntimeError, match="Incomplete"):
+        run_private_research(
+            "मैं यहाँ हूँ।", engine=Fake(), environment=env_flags(),
+            server_address="127.0.0.1",
+        )
+
+
+def test_private_permission_denied_before_any_model_load(monkeypatch):
+    import indicwrite.private_bharatgen as private
+    monkeypatch.setattr(private, "_load_private_engine",
+                        lambda: (_ for _ in ()).throw(AssertionError("model loaded")))
+    with pytest.raises(PermissionError):
+        private.run_private_research(
+            "मैं यहाँ हूँ।", environment=env_flags(), server_address="0.0.0.0"
+        )
