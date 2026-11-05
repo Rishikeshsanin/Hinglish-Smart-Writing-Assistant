@@ -5,7 +5,6 @@ on:
     paths:
       - '.github/workflows/language-model-smoke.yml'
       - 'requirements-language-services.txt'
-      - 'requirements-language-services.txt'
       - 'src/indicwrite/language_services.py'
       - 'scripts/smoke_language_models.py'
   push:
