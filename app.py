@@ -13,27 +13,122 @@ from indicwrite.engine import load_indicxlit
 from indicwrite.language_services import generate_hindi_gec, generate_english
 from indicwrite.private_bharatgen import private_research_enabled, run_private_research
 
-st.set_page_config(page_title="IndicWrite • Hinglish to Hindi", page_icon="✍️", layout="wide")
+st.set_page_config(page_title="IndicWrite • Write Hindi, Your Way", page_icon="इ", layout="wide")
 
 st.markdown(
     """
     <style>
-    :root {color-scheme: light;}
-    .stApp {background: radial-gradient(circle at 86% 8%, #e6ebff 0, transparent 26%),
-                        linear-gradient(150deg, #f8faff 0%, #f7f5ff 100%); color: #1b2140;}
-    .block-container {max-width: 1100px; padding-top: 2.5rem; padding-bottom: 4rem;}
-    .hero {padding: 1.5rem 0 1.35rem;}
-    .eyebrow {letter-spacing: .18em; font-size: .76rem; font-weight: 800; color: #5d55c5;}
-    .hero h1 {font-size: clamp(2.5rem, 6vw, 4.5rem); line-height:1.07; color: #222a54; margin: .65rem 0;}
-    .hero p {font-size: 1.08rem; color: #525b78; max-width: 740px; line-height:1.7;}
-    .panel {border-radius: 18px; padding: 1.15rem 1.45rem; background: #ffffffd9;
-            border: 1px solid #dde1f1; box-shadow: 0 10px 25px #27305b0c;}
-    .mini {font-size: .76rem; color: #526082; font-weight: 650; letter-spacing: .06em;}
-    .info {color: #515d78; font-size:.88rem; line-height:1.6;}
-    div.stButton > button[kind="primary"] {background: #504ac4; border-color: #504ac4;
-             border-radius: 10px; min-height: 2.8rem; font-weight: 700;}
-    div[data-testid="stTextArea"] textarea {background: white; border-radius: 12px; font-size: 1.04rem;}
-    @media (max-width: 700px) {.block-container {padding-top: 1rem;} .hero {padding-top: 0.3rem;}}
+    :root { color-scheme: light; }
+    .stApp {
+        color: #27243e;
+        background:
+            radial-gradient(ellipse 44% 36% at 96% 3%, #e8e0ff 0%, transparent 100%),
+            radial-gradient(ellipse 42% 28% at 0% 30%, #f0ecff 0%, transparent 100%),
+            #faf9ff;
+    }
+    header[data-testid="stHeader"] { background: transparent; }
+    .block-container { max-width: 1240px; padding: 1.25rem 2rem 4rem; }
+    .brandbar { display: flex; align-items: center; justify-content: space-between;
+        gap: 1rem; padding: .45rem 0 1.2rem; border-bottom: 1px solid #e9e4f3; }
+    .brand { display: flex; align-items: center; gap: .8rem; font-size: 1.28rem;
+        font-weight: 850; letter-spacing: -.055em; color: #27233e; }
+    .brandmark { width: 42px; height: 42px; border-radius: 13px; display: grid;
+        place-items: center; background: #7359d0; color: white; font-size: 1.5rem;
+        font-weight: 700; letter-spacing: 0; box-shadow: 0 5px 16px #7259cb36; }
+    .brand-accent { color: #7259ce; }
+    .brand-status { font-size: .75rem; color: #655d81; font-weight: 700;
+        border: 1px solid #e5def6; background: #ffffffca; padding: .52rem .8rem;
+        border-radius: 999px; white-space: nowrap; }
+    .brand-status::before { content: ""; display: inline-block; width: 7px;
+        height: 7px; border-radius: 50%; margin-right: 7px; background: #4b987f; }
+    .hero { text-align: center; max-width: 810px; margin: 3.25rem auto 2.5rem; }
+    .eyebrow { display: inline-flex; padding: .53rem .9rem; border-radius: 999px;
+        border: 1px solid #e5def5; background: #ffffffda; color: #6755aa;
+        letter-spacing: .11em; font-size: .68rem; font-weight: 850; }
+    .hero h1 { font-size: clamp(2.45rem, 5.8vw, 4.35rem);
+        line-height: 1.12; letter-spacing: -.055em;
+        color: #292440; font-weight: 850; margin: 1.15rem auto .95rem; }
+    .hero h1 em { font-style: normal; color: #795dcf; }
+    .hero p { font-size: 1rem; line-height: 1.8; color: #645e7a;
+        max-width: 650px; margin: 0 auto; }
+    .hero-points { display: flex; flex-wrap: wrap; justify-content: center;
+        gap: .55rem; margin-top: 1.25rem; }
+    .hero-points span { font-size: .72rem; font-weight: 750; color: #645c85;
+        background: #f0ecfc; border: 1px solid #e9e2fa;
+        border-radius: 999px; padding: .37rem .75rem; }
+    /* Target only the workspace pair; keep nested action buttons unboxed. */
+    div[data-testid="stHorizontalBlock"]:has(> div[data-testid="stColumn"] h2)
+      > div[data-testid="stColumn"] {
+        min-width: 0; padding: 1.25rem 1.4rem 1.5rem;
+        background: #fff; border: 1px solid #e9e5f1;
+        border-radius: 22px; box-shadow: 0 13px 34px #3324570d;
+    }
+    div[data-testid="stColumn"] h2 { font-size: 1.34rem;
+        color: #2f2947; letter-spacing: -.035em; margin-bottom: 1rem; }
+    div[data-testid="stColumn"] h3 { font-size: 1.1rem; color: #302847; }
+    div[data-testid="stColumn"] [data-testid="stCaptionContainer"] p {
+        color: #6c6480; font-size: .78rem; line-height: 1.55; }
+    div[data-testid="stTextArea"] textarea {
+        border-radius: 13px; background: #fcfbff;
+        border: 1px solid #ddd6ee; font-size: 1.05rem;
+        line-height: 1.7; color: #29243f; }
+    div[data-testid="stTextInput"] input {
+        border-radius: 11px; background: #fcfbff; border-color: #ddd6ee; }
+    div[data-testid="stTextArea"] textarea:focus,
+    div[data-testid="stTextInput"] input:focus {
+        border-color: #7560cf; box-shadow: 0 0 0 3px #7964ca24; }
+    div.stButton button { min-height: 2.65rem; border-radius: 10px;
+        font-weight: 720; white-space: normal; border-color: #e6e0f2;
+        color: #55468b; background: #f9f7ff; }
+    div.stButton button:hover { border-color: #927ce4; color: #4e3a9a; }
+    div.stButton button[kind="primary"] {
+        background: #745ad3; border-color: #745ad3; color: #fff;
+        font-weight: 800; box-shadow: 0 5px 14px #735ad02b; }
+    div.stButton button[kind="primary"]:hover {
+        background: #6347c0; border-color: #6347c0; color: #fff; }
+    div.stButton button:focus-visible, div[data-testid="stDownloadButton"] button:focus-visible {
+        outline: 3px solid #947bea; outline-offset: 3px; }
+    div[data-testid="stDownloadButton"] button { min-height: 2.55rem;
+        border-radius: 10px; font-weight: 700; }
+    div[data-testid="stCode"] pre { background: #f8f6ff;
+        border: 1px solid #ebe5fa; border-radius: 13px;
+        font-size: 1.15rem; line-height: 1.8; white-space: pre-wrap;
+        overflow-wrap: anywhere; }
+    div[data-testid="stAlert"] { border-radius: 12px; }
+    .panel { border-radius: 15px; padding: 1rem 1.15rem;
+        background: #f7f4ff; border: 1px solid #e7e0f8; margin-top: 1rem; }
+    .mini { font-size: .7rem; font-weight: 850; letter-spacing: .12em;
+        color: #6655aa; }
+    .info { color: #605879; font-size: .8rem; line-height: 1.65;
+        margin: .4rem 0 0; }
+    .footer-note { text-align: center; font-size: .78rem;
+        color: #756d8a; padding: .45rem 0 1rem; }
+    @media (max-width: 800px) {
+        .block-container { padding: 1rem 1rem 2.5rem; }
+        .hero { margin: 2rem auto 1.75rem; }
+        div[data-testid="stHorizontalBlock"]:has(> div[data-testid="stColumn"] h2) {
+            flex-wrap: wrap; flex-direction: column; gap: 1rem !important;
+        }
+        div[data-testid="stHorizontalBlock"]:has(> div[data-testid="stColumn"] h2)
+          > div[data-testid="stColumn"] {
+            width: 100% !important; flex: 1 1 100% !important;
+        }
+    }
+    @media (max-width: 390px) {
+        .block-container { padding-left: .65rem; padding-right: .65rem; }
+        .brand { font-size: 1.12rem; }
+        .brandmark { width: 35px; height: 35px; }
+        .brand-status { font-size: .63rem; padding: .42rem .55rem; }
+        .hero { margin: 1.55rem auto 1.45rem; }
+        .hero h1 { font-size: 2.35rem; }
+        .hero p { font-size: .89rem; }
+        div[data-testid="stHorizontalBlock"]:has(> div[data-testid="stColumn"] h2)
+          > div[data-testid="stColumn"] { padding: 1rem .85rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important;
+            transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -81,22 +176,30 @@ st.session_state.setdefault("private_bharatgen_suggestion", None)
 st.session_state.setdefault("private_bharatgen_reviewed", False)
 
 st.markdown(
-    '<div class="hero"><div class="eyebrow">INDICWRITE / AI4BHARAT</div>'
-    '<h1>Express yourself.<br>In your own script.</h1>'
-    '<p>Write naturally in Roman Hindi and convert to Devanagari with the '
-    '<b>real IndicXlit neural transliteration model</b>. '
-    'No simulated AI responses, no hidden cloud API.</p></div>',
+    '<div class="brandbar"><div class="brand"><span class="brandmark" aria-hidden="true">इ</span>'
+    '<span>Indic<span class="brand-accent">Write</span></span></div>'
+    '<span class="brand-status">Official checkpoint · Native app</span></div>'
+    '<section class="hero" aria-label="About IndicWrite">'
+    '<span class="eyebrow">AI4BHARAT INDICXLIT · ROMAN HINDI → देवनागरी</span>'
+    '<h1>Your words, <em>beautifully</em><br> written in Hindi.</h1>'
+    '<p>Type naturally in Hinglish. Convert to Devanagari with the genuine '
+    'pretrained AI4Bharat IndicXlit model — keeping punctuation, numbers, '
+    'and the English words you choose intact.</p>'
+    '<div class="hero-points"><span>✦ Genuine neural inference</span>'
+    '<span>✓ Editable &amp; copyable</span><span>↓ UTF-8 downloads</span></div>'
+    '</section>',
     unsafe_allow_html=True,
 )
 
 col1, col2 = st.columns(2, gap="large")
 with col1:
-    st.markdown("## Your Hinglish text")
+    st.caption("01 · INPUT")
+    st.markdown("## Your Hinglish")
     st.text_area(
         "Roman Hindi", key="source_text",
         height=190, max_chars=500, on_change=clear_result,
         placeholder="kal mujhe college jana hai...",
-        label_visibility="collapsed",
+        label_visibility="visible",
     )
     protected = st.text_input(
         "Keep English words unchanged (optional, comma-separated)",
@@ -106,15 +209,16 @@ with col1:
     )
     a, b = st.columns([2, 1])
     with a:
-        convert = st.button("✦ Convert to Hindi", type="primary", use_container_width=True)
+        convert = st.button("Convert to Hindi", type="primary", use_container_width=True)
     with b:
         st.button("Clear", use_container_width=True, on_click=reset)
-    st.caption("Examples")
+    st.caption("TRY AN EXAMPLE")
     for i, example in enumerate(EXAMPLES):
         st.button(example, key=f"example_{i}", on_click=choose_example, args=(example,), use_container_width=True)
 
 with col2:
-    st.markdown("## Your Devanagari result")
+    st.caption("02 · OUTPUT")
+    st.markdown("## Your Devanagari")
     if convert:
         clear_result()
         try:
@@ -144,7 +248,7 @@ with col2:
     if st.session_state["converted_text"]:
         st.success("Generated by IndicXlit" if st.session_state["did_transliterate"] else "No Roman-Hindi words required conversion; text kept unchanged.")
         st.code(st.session_state["converted_text"], language=None, wrap_lines=True)
-        st.caption("Use the copy icon in the output box to copy the result.")
+        st.caption("Use the code-block copy icon, or download the original UTF-8 result below.")
         if not st.session_state["human_edit"]:
             st.session_state["human_edit"] = st.session_state["converted_text"]
         with st.expander("Review and refine Hindi manually", expanded=False):
@@ -255,4 +359,4 @@ with col2:
 st.divider()
 st.markdown("## Model transparency")
 st.caption("Core: AI4Bharat IndicXlit (verified). Optional writing: independent Hindi mT5 grammar model and Helsinki OPUS-MT translation; enable separately. BharatGen Param-1 was genuinely executed in a private T4 Colab research run (1 smoke + 10 cases), and is only available through explicit local opt-in; not on public deployments. IndicTrans2 requires HF terms acceptance and is not integrated.")
-st.caption("CS3235 • Working with LLMs • Munnaluri Rishikesh • 1RVU23CSE291")
+st.markdown('<div class="footer-note">CS3235 · Working with LLMs · RV University · Munnaluri Rishikesh · 1RVU23CSE291</div>', unsafe_allow_html=True)
