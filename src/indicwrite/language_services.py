@@ -65,7 +65,7 @@ def capability_status(
 
 
 _LATIN_TERM = re.compile(r"[A-Za-z][A-Za-z0-9_+.#-]*")
-_DIGIT_GROUP = re.compile(r"\\d+", flags=re.UNICODE)
+_DIGIT_GROUP = re.compile(r"\d+", flags=re.UNICODE)
 _MEANING_CUES = ("नहीं", "शायद", "अगर", "बिना", "मत")
 
 
@@ -194,7 +194,7 @@ def validate_rewrite_candidate(original: str, candidate: str) -> str:
     candidate = candidate.strip()
     letters = [ch for ch in candidate if ch.isalpha()]
     proportion = (
-        sum("\\u0900" <= ch <= "\\u097f" for ch in letters) / len(letters)
+        sum(chr(0x0900) <= ch <= chr(0x097f) for ch in letters) / len(letters)
         if letters else 0.0
     )
     if proportion < 0.85:
