@@ -19,7 +19,7 @@
 - [x] Genuine pretrained BharatGen rewriting **GPU execution**: 1 smoke + 10 cases privately verified on Tesla T4 (FP16); preliminary editorial review only
 - [ ] Independent Hindi-expert meaning-preservation and larger-scale quality evaluation: **not completed**
 - [ ] Genuine gated IndicTrans2 translation: **not executed** (optional)
-- [ ] Public hosting and real public URL: **not verified**
+- [x] Student-observed conversion on the existing public Streamlit URL (2 November 2026 screenshot). **Independent unattended public-browser smoke remains unverified / last completed run failed.**
 - [ ] Complete accessibility/WCAG and native Windows tests: not performed
 - [ ] Faculty upload to Google Classroom: requires student account and review; not submitted from GitHub
 
@@ -102,3 +102,16 @@ Download the **latest successful** ZIP from the [faculty package workflow](https
 - [x] Python3.12 supported Docker image built and genuinely checked on localhost [41211613516](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41211613516).
 - [ ] Free Streamlit Community Cloud **actual site creation and external browser checks** still need authenticated GitHub owner access. There is no validated public link yet.
 - [ ] Faculty Google Classroom submission remains a separate student-controlled action. No BharatGen public release permission has been granted.
+
+
+## Final faculty delivery reconciliation — 5 November 2026
+
+**Newer than the dated October sections above.** The source, genuine-model tests, 40-case metrics, PDF report, private BharatGen research report, Docker fallback and package verifier are finished. The student supplied screenshots of a successful public Streamlit official-model conversion and manual editing/download controls. These are genuine user-observed evidence, not a successful unattended CI result. The last completed independent public probe [41414939039](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41414939039) failed while locating the Convert button; a fresh re-run was requested November 5.
+
+- [x] Native Streamlit deployment fixes merged as PR [#29](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/29); official model remains original.
+- [x] Vercel production build repaired by PR [#30](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/30). Its *external hosted API conversion* is still NOT verified.
+- [x] Dated limitations and verified evidence: [Final deployment evidence](FINAL_DEPLOYMENT_EVIDENCE_2026-11-05.md).
+- [ ] Fresh unattended **public** browser conversion success (separate from user screenshot and local browser CI).
+- [ ] Independently verified student Google Classroom **Turned in** receipt / final upload. Required before 6 Nov 2026, 10:00 AM IST.
+
+**Submission guidance:** Use the newest green GitHub Actions submission package artifact, not October's archived package, and submit both the current academic report and the November deployment addendum if faculty permits supporting evidence. Private BharatGen outputs must stay private.

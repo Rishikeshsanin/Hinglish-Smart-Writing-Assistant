@@ -6,6 +6,10 @@
 
 Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an interactive Streamlit interface. This is an academic application under active development, not a claim that all proposed features are complete.
 
+## 5 November 2026 final-project status
+
+**The genuine IndicXlit transliteration MVP and evaluation are complete.** The student supplied later screenshots showing the existing free [Streamlit website](https://hinglish-smart-writing-assistant-indicwrite-rishi.streamlit.app/) actually generating Hindi; previous unattended public Playwright checks still failed before reaching the conversion control, so ongoing external reliability is not certified. [Read the dated deployment evidence](docs/FINAL_DEPLOYMENT_EVIDENCE_2026-11-05.md), which supersedes older October "not publicly hosted" statements. The separate [Vercel web edition](https://indicwrite-public-web.vercel.app/) builds but depends on an unavailable/unverified external word-level API. The university release does **not** include production BharatGen rewriting, automatic grammar correction or gated IndicTrans2 translation. Source, faculty PDF, real model evaluations and SHA-256 verified package remain available.
+
 ## Current features
 
 - Real-model IndicXlit wrapper via the official `ai4bharat-transliteration` Python package (no hardcoded generated results).

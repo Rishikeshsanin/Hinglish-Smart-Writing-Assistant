@@ -13,6 +13,7 @@ required=[
  "evaluation/cases.csv","evaluation/results/metrics.json",
  "evaluation/results/predictions.csv","evaluation/results/worst_cases.csv",
  "screenshots/desktop.png","screenshots/mobile.png",
+ "docs/FINAL_DEPLOYMENT_EVIDENCE_2026-11-05.md",
  "reports/IndicWrite_CS3235_Project_Report.pdf",
 ]
 for rel in required:
@@ -25,7 +26,7 @@ for pattern in (
  "Dockerfile.demo","Dockerfile.cloud","compose.demo.yml",".dockerignore",
  "src/**/*.py","research/**/*.py","scripts/**/*.py","tests/**/*.py","evaluation/*.py","evaluation/*.csv",
  "evaluation/*.md","evaluation/results/*.json","evaluation/results/*.csv",
- "docs/*.md","screenshots/*.png","screenshots/*.json","reports/*.pdf",
+ "docs/*.md","web/**/*.js","web/**/*.html","web/**/*.css","web/*.json","web/*.md","web/**/*.mjs","screenshots/*.png","screenshots/*.json","reports/*.pdf",
  "notebooks/*.ipynb",".github/workflows/*.yml",".streamlit/*.toml",
 ):
     for item in ROOT.glob(pattern):
@@ -45,13 +46,14 @@ manifest={
     "Independent Helsinki-NLP OPUS-MT Hindi-to-English real model and browser inference",
     "Official BharatGen Param-1 private Tesla T4 research: 1 smoke plus 10 complete generations"
  ],
+ "release_note":"See docs/FINAL_DEPLOYMENT_EVIDENCE_2026-11-05.md for dated user-observed public evidence and separate CI failures.",
  "not_verified":[
     "Public BharatGen hosting/output distribution license approval",
     "End-to-end private-GPU Streamlit browser QA",
     "Independent expert assessment of Hindi rewriting quality",
     "Gated AI4Bharat IndicTrans2 model inference",
-    "Account-created and browser-verified Streamlit Community Cloud public URL",
-    "Google Classroom upload"
+    "Independent unattended browser verification of the public Streamlit conversion (student-supplied screenshots show a real hosted result; last completed Playwright run failed)",
+    "Authenticated Google Classroom Turned-in receipt"
  ],
  "files":{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in included}
 }
