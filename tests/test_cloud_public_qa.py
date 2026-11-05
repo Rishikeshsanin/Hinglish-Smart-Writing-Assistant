@@ -31,7 +31,7 @@ def public_script(monkeypatch):
 
 def test_public_failure_categories_distinguish_selector_from_provider(monkeypatch):
     module = public_script(monkeypatch)
-    assert module.classify_page("This app has gone to sleep", [], 200) == "provider_or_app_error"
+    assert module.classify_page("This app has gone to sleep", [], 200) == "provider_asleep"
     assert module.classify_page("", [], 503) == "http_unavailable"
     assert module.classify_page("✦ Convert to Hindi", [], 200) == "selector_mismatch"
     assert module.classify_page("Express yourself.", [], 200) == "app_render_incomplete"
@@ -54,6 +54,9 @@ def test_public_browser_checks_multiple_distinct_inputs(monkeypatch):
     assert len(module.CASES) >= 3
     assert len({case[0] for case in module.CASES}) == len(module.CASES)
     assert module.URL == "https://hinglish-smart-writing-assistant-indicwrite-rishi.streamlit.app/"
+    script = (ROOT / "scripts/check_public_streamlit.py").read_text()
+    assert "PUBLIC_STREAMLIT_WAKE_SUCCEEDED" in script
+    assert "Yes, get this app back up!" in script
     workflow = (ROOT / ".github/workflows/public-streamlit-smoke.yml").read_text()
     assert "pull_request:" in workflow and "workflow_dispatch:" in workflow
     assert "if: always()" in workflow and "public-qa/" in workflow
