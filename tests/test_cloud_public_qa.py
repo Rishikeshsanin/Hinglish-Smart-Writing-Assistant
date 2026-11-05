@@ -76,8 +76,8 @@ def test_cloud_bootstrap_cache_reuse_and_failed_install_retry(monkeypatch, tmp_p
     added = []
     def fake_venv(path, *, with_pip, clear):
         assert path == root and with_pip and clear
-        lib.mkdir(parents=True)
-        py.parent.mkdir(parents=True)
+        lib.mkdir(parents=True, exist_ok=True)
+        py.parent.mkdir(parents=True, exist_ok=True)
         py.write_text("fake-python")
     def fake_run(*args):
         commands.append(args)
