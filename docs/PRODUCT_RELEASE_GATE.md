@@ -135,3 +135,15 @@ evidence returns `BLOCKED` with exit code 2.
 full proposed multi-model product. The final full product is not `LIVE` until
 the actual public native Streamlit conversion and all enabled capabilities
 pass independent QA on integrated production, with no P0/P1 regressions.
+
+
+## Lead-integrator update — 5 November 2026 (supersedes historical audit snapshot)
+
+The original audit above records the baseline from commit `4b9e2ae`.
+Since that baseline, Agents B/C/A merged as PRs #38/#40/#37 and the genuine-language dependency repair as PR #41. The original model and historical forty predictions remain unchanged.
+
+**New independently verified public inference:** Post-Agent-A-merge [GitHub Actions run 42064251263](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42064251263) completed successfully on the existing public URL. PR-head [run 42060082485](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42060082485) captured three actual hosted Hindi outputs. This supersedes the earlier failed sleeping-app check as a current-state summary, not as historical evidence.
+
+The latest QA branch reuses Agent A's sleep/wake control and embedded `iframe[title="streamlitApp"]` selector. Its pull-request CI runs a **genuine ten-distinct-input public Chromium test**, plus protected English terms, blank-input handling, UTF-8 download and manual edit, clipboard, responsive 320/390/768/1440 screenshots and errors. These are **attempted QA gates, not passes** until the branch's real CI logs establish them.
+
+**Still not certified:** all expanded acceptance gates, repeatable uptime, comprehensive screen-reader/accessibility review, and optional-language model quality/license clearance. The most recent successful public evidence covers three actual sentences; it does not on its own prove ten sentences or full product release.
