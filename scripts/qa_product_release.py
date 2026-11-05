@@ -291,7 +291,7 @@ def browser_smoke(url, target, output_dir, ten_cases=False):
 
                 started = time.monotonic()
                 preserved = _convert(
-                    page, "kal Python AI 42 https://example.org/a?q=1 हिंदी 🚀",
+                    view, "kal Python AI 42 https://example.org/a?q=1 हिंदी 🚀",
                     preserve="Python",
                 )
                 assert "कल" in preserved
