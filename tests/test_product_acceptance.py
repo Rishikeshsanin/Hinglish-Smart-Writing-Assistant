@@ -157,3 +157,56 @@ def test_official_checkpoint_loader_has_no_stub_substitution():
     assert "ai4bharat.transliteration" in source
     assert "XlitEngine" in source
     assert 'XlitEngine("hi"' in source
+
+
+def test_release_gate_refuses_offline_or_mismatched_public_evidence():
+    from scripts.qa_product_release import release_gate
+
+    assert release_gate({"mode": "offline-inventory"})["decision"] == "BLOCKED"
+    fake = {
+        "target": "public", "browser_smoke": "PASS",
+        "commit": "a" * 40,
+        "workflow_url": "https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/999",
+        "checks": {},
+    }
+    integrations = {
+        "agents_a_b_c_merged_into_main": True,
+        "integrated_main_sha": "b" * 40,
+        "all_required_ci_green": True,
+        "official_model_parity_green": True,
+        "no_unresolved_p0_p1": True,
+        "enabled_model_quality_and_license_review": True,
+        "production_stability_review": True,
+    }
+    result = release_gate(fake, integrations)
+    assert result["decision"] == "BLOCKED"
+    assert any("SHA" in reason for reason in result["reasons"])
+    assert any("ten_real_cases_ran" in reason for reason in result["reasons"])
+
+
+def test_release_gate_only_offers_coordinator_review_after_all_evidence():
+    """Synthetic gate METADATA only, never claim real production inference."""
+    from scripts.qa_product_release import release_gate
+
+    sha = "a" * 40
+    checks = {key: True for key in (
+        "real_hindi_conversion", "english_urls_numbers_unicode_preserved",
+        "ten_real_cases_ran", "unicode_download", "manual_edit_download",
+        "clipboard_copy", "blank_rejected", "responsive_320_390_768_1440",
+        "keyboard_focus", "invalid_preserve_rejected",
+        "private_bharatgen_not_public", "unvalidated_grammar_disabled",
+        "clear_invalidates_output", "no_browser_js_exceptions",
+    )}
+    checks["enabled_translation_real"] = "not enabled"
+    evidence = {
+        "target": "public", "browser_smoke": "PASS", "commit": sha, "checks": checks,
+        "workflow_url": "https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/999",
+    }
+    integration = {
+        "agents_a_b_c_merged_into_main": True, "integrated_main_sha": sha,
+        "all_required_ci_green": True, "official_model_parity_green": True,
+        "no_unresolved_p0_p1": True,
+        "enabled_model_quality_and_license_review": True,
+        "production_stability_review": True,
+    }
+    assert release_gate(evidence, integration)["decision"] == "READY_FOR_COORDINATOR_REVIEW"
