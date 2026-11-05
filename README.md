@@ -4,11 +4,15 @@
 
 **Student:** Munnaluri Rishikesh · **USN:** 1RVU23CSE291
 
-Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an interactive Streamlit interface. This is an academic application under active development, not a claim that all proposed features are complete.
+Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an interactive Streamlit interface. The supported public application performs genuine IndicXlit transliteration; advanced language-model research remains separately gated and must not be represented as shipped.
 
-## 5 November 2026 final-project status
+## Current production status — 5 November 2026
 
-**The genuine IndicXlit transliteration MVP and evaluation are complete.** The student supplied later screenshots showing the existing free [Streamlit website](https://hinglish-smart-writing-assistant-indicwrite-rishi.streamlit.app/) actually generating Hindi; previous unattended public Playwright checks still failed before reaching the conversion control, so ongoing external reliability is not certified. [Read the dated deployment evidence](docs/FINAL_DEPLOYMENT_EVIDENCE_2026-11-05.md), which supersedes older October "not publicly hosted" statements. The separate [Vercel web edition](https://indicwrite-public-web.vercel.app/) builds but depends on an unavailable/unverified external word-level API. The university release does **not** include production BharatGen rewriting, automatic grammar correction or gated IndicTrans2 translation. Source, faculty PDF, real model evaluations and SHA-256 verified package remain available.
+**Canonical AI converter:** [IndicWrite on Streamlit](https://hinglish-smart-writing-assistant-indicwrite-rishi.streamlit.app/), using the original official AI4Bharat IndicXlit checkpoint. An independent, external Chromium run [42071288867](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42071288867) exercised **ten distinct genuine Roman Hindi conversions** and a mixed-script preservation case, UTF-8 downloads, clipboard, validation and 320/390/768/1440 px layouts, with successful evidence. QA PR [#42](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/42) was merged as [`3567aa1`](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/commit/3567aa1b9f36b91db0030626856d0b3f6d769606). The fresh post-merge public-browser run [42073053397](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42073053397) is the authoritative release verification; assess its conclusion and artifact separately from the earlier PR run.
+
+**Vercel public page:** [indicwrite-public-web.vercel.app](https://indicwrite-public-web.vercel.app/) is a **premium gateway linking to Streamlit**, not a standalone AI converter. Its old, unreliable hosted-word proxy is explicitly retired with HTTP 410; no fabricated results, external open relay, or wildcard CORS. An actual Vercel public-browser check is supplied by [`vercel-gateway-live.yml`](.github/workflows/vercel-gateway-live.yml). A READY build is not by itself proof of browser usability.
+
+**Feature boundaries:** grammar rewriting is disabled because real candidates failed quality checks. Helsinki-NLP OPUS-MT Hindi→English ran genuine inference in separate optional/local tests, but is not enabled on the free public app and is **not IndicTrans2**. BharatGen Param-1 completed private pretrained T4 research inference; output/hosting remain restricted by unresolved license terms and lack of independent linguistic certification. Official gated IndicTrans2 has not been accessed or executed. No invented model outputs or substitutions are shipped. More detail: [product release gate](docs/PRODUCT_RELEASE_GATE.md), [language capabilities](docs/LANGUAGE_CAPABILITIES.md), and [dated faculty evidence](docs/FINAL_DEPLOYMENT_EVIDENCE_2026-11-05.md).
 
 ## Current features
 
@@ -19,11 +23,11 @@ Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an 
 
 **Model execution status:** VERIFIED on Ubuntu 22.04 / Python 3.10 in [genuine IndicXlit smoke run #40870311669](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/40870311669), with official downloaded neural weights. Unit tests remain distinct from real inference.
 
-**Optional-model evidence:** OPUS-MT Hindi→English ran successfully on two smoke cases. Four separate Hindi rewrite candidates were genuinely executed but failed the quality gate: one produced mixed-script output, one corrected only 1/5 cases, Qwen2.5-0.5B corrected 2/5 with severe drift elsewhere, and Qwen3-0.6B corrected 0/5. Grammar rewriting therefore remains disabled by default. A pinned BharatGen adapter and 12-case evaluation protocol exist, but no genuine BharatGen output has been recorded. IndicTrans2 remains an investigated, gated path rather than an executed feature.
+**Optional-model evidence:** OPUS-MT Hindi→English ran successfully on two smoke cases. Four separate Hindi rewrite candidates were genuinely executed but failed the quality gate: one produced mixed-script output, one corrected only 1/5 cases, Qwen2.5-0.5B corrected 2/5 with severe drift elsewhere, and Qwen3-0.6B corrected 0/5. Grammar rewriting therefore remains disabled by default. A pinned BharatGen adapter and evaluation protocol exist; 11 genuine private T4 outputs were recorded and withheld from public distribution pending licensing review. IndicTrans2 remains an investigated, gated path rather than an executed feature.
 
 ## Deployment dependency split (1 November 2026)
 
-The **existing free Streamlit Community Cloud app** uses root `requirements.txt` for Streamlit only on Python 3.12. Its `cloud_app.py` installs the **same official AI4Bharat IndicXlit model** into an isolated pip23 environment at first launch. For the proven Python 3.10 local/WSL2 and Docker demos, install `requirements-local.txt` instead. The old Cloud Conda spec is retained for incident history at `docs/legacy-conda-environment.yml` but is not used for production. **Public browser conversion remains unverified until a real successful hosted smoke test.**
+The **existing free Streamlit Community Cloud app** uses root `requirements.txt` for Streamlit only on Python 3.12. Its `cloud_app.py` installs the **same official AI4Bharat IndicXlit model** into an isolated pip23 environment at first launch. For the proven Python 3.10 local/WSL2 and Docker demos, install `requirements-local.txt` instead. The old Cloud Conda spec is retained for incident history at `docs/legacy-conda-environment.yml` but is not used for production. **Public browser conversion has been independently verified** (run [42071288867](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42071288867)); ongoing uptime, free-host cold starts and complete WCAG conformance require separate evidence.
 
 ## Quick start (Windows / PowerShell)
 
@@ -85,7 +89,8 @@ The engine is cached per Python process (concurrent cold starts require separate
 - [x] Stubbed text-handling tests and real-model smoke-test script
 - [x] Successful genuine IndicXlit inference with captured logs
 - [x] 40 real-model cases, recorded predictions and error analysis (macro CER 5.58%, word accuracy 82.67%; handcrafted test set)
-- [ ] Verified smart rewriting and optional translation (if feasible)
+- [x] Genuine optional OPUS-MT local translation smoke (not public, not IndicTrans2)
+- [ ] Quality-approved automatic Hindi grammar/rewrite service (disabled pending further evidence)
 - [x] Actual Chromium desktop/mobile screenshots and browser QA
 - [x] Academic PDF report, generated from measured evidence and actual screenshots
 
@@ -117,7 +122,7 @@ Run `INDICWRITE_ENABLE_LANGUAGE_SERVICES=1 PYTHONPATH=src streamlit run app.py` 
 
 **Grammar is intentionally disabled by default**, including in the optional environment. Two genuine MIT Hindi mT5 checkpoints failed quality review. Apache-2.0 Qwen2.5-0.5B and Qwen3-0.6B experiments scored 2/5 and 0/5 exact corrections respectively, with meaning loss or language drift. For controlled research only, set `INDICWRITE_ENABLE_GEC_EXPERIMENTAL=1`; outputs are checked for script drift and exact numeral preservation but still require human scrutiny. None of these models is BharatGen.
 
-The BharatGen repository history contains a restrictive Research License even though the live metadata currently advertises Apache-2.0 and the license file has changed. Public output/hosting therefore remains blocked pending written clarification. We do not publicly host it or claim to have executed it. The original 40-case IndicXlit evaluation remains unchanged and is not a grammar accuracy measure.
+The BharatGen repository history contains a restrictive Research License even though the live metadata currently advertises Apache-2.0 and the license file has changed. Public output/hosting therefore remains blocked pending written clarification. We do not publicly host it or disclose raw private outputs; real private checkpoint execution has been recorded with restricted evidence. The original 40-case IndicXlit evaluation remains unchanged and is not a grammar accuracy measure.
 
 
 ### Input safety and provenance
@@ -187,4 +192,4 @@ The [human-review rubric](docs/PRIVATE_HUMAN_REVIEW.md) enables qualified review
 
 The free Community Cloud entrypoint is [cloud_app.py](cloud_app.py), repo `Rishikeshsanin/Hinglish-Smart-Writing-Assistant`, branch `main`, Python **3.12**, with [environment.yml](environment.yml) controlling dependencies. [Deployment guide](docs/STREAMLIT_CLOUD.md). **No free Streamlit service URL is live yet**: account-owner GitHub OAuth plus creation in [Streamlit Cloud](https://share.streamlit.io/) must be completed, followed by an external real-browser test. No secrets, no public BharatGen outputs, and no paid services.
 
-An isolated Vercel Hobby experiment deployed a static edition that depended on AI4Bharat's unrelated hosted web API. Its live API call returned HTTP 503, so that PR was closed without merging and its new Vercel project was access-restricted. It is **not** the verified public conversion service. Existing Vercel apps remain unchanged.
+**Historical October 31 experiment (superseded):** an earlier Vercel frontend depended on an unreliable external API and returned HTTP 503. The current Vercel production page instead directs users to the canonical native Streamlit converter, with no fake inference. See the current production status at the top of this README.
