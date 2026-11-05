@@ -13,7 +13,7 @@ from indicwrite.engine import load_indicxlit
 from indicwrite.language_services import generate_hindi_gec, generate_english
 from indicwrite.private_bharatgen import private_research_enabled, run_private_research
 
-st.set_page_config(page_title="IndicWrite • Write Hindi, Your Way", page_icon="इ", layout="wide")
+st.set_page_config(page_title="IndicWrite • Write Hindi, Your Way", page_icon="✍️", layout="wide")
 
 st.markdown(
     """
