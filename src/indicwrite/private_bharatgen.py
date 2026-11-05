@@ -5,14 +5,13 @@ academic context. This module never loads model weights merely upon import.
 There is no public hosted API, silent fallback, or automatic edit acceptance.
 """
 from __future__ import annotations
-from collections import Counter
 from functools import lru_cache
 from threading import RLock
 import os
-import re
 from typing import Mapping
 
-from .param_rewrite import build_messages
+from .param_rewrite import build_messages, has_devanagari_letter
+from .language_services import preservation_warnings
 
 RESEARCH_FLAGS = (
     "INDICWRITE_PRIVATE_BHARATGEN",
@@ -20,8 +19,6 @@ RESEARCH_FLAGS = (
     "INDICWRITE_ACKNOWLEDGE_BHARATGEN_LICENSE",
 )
 LOOPBACK_ADDRESSES = frozenset({"127.0.0.1", "localhost", "::1", "[::1]"})
-LATIN_WORD = re.compile(r"[A-Za-z][A-Za-z0-9_+.#-]*")
-NUMBERS = re.compile(r"[0-9]+")
 
 
 def private_research_enabled(
@@ -37,25 +34,17 @@ def private_research_enabled(
 
 
 def review_candidate(original: str, proposed: str) -> list[str]:
-    """Non-semantic safeguards; warnings mean a human must inspect carefully."""
+    """Private-only heuristic warnings, never an automatic human-quality pass.
+
+    Meaning preservation requires actual human comparison even when the warning
+    list is empty. No sentence is logged, uploaded, or automatically applied.
+    """
     build_messages(original)
     if not isinstance(proposed, str) or not proposed.strip():
         raise ValueError("BharatGen returned an empty suggestion.")
-    warnings: list[str] = []
-    original_numbers = Counter(NUMBERS.findall(original))
-    proposed_numbers = Counter(NUMBERS.findall(proposed))
-    if original_numbers != proposed_numbers:
-        warnings.append("Digits or numeric quantities changed. Check against original.")
-    source_latin = Counter(item.casefold() for item in LATIN_WORD.findall(original))
-    dest_latin = Counter(item.casefold() for item in LATIN_WORD.findall(proposed))
-    if any(dest_latin[word] < count for word, count in source_latin.items()):
-        warnings.append("An English name or technical term changed or disappeared.")
-    for required in ("नहीं", "शायद", "अगर"):
-        if required in original and required not in proposed:
-            warnings.append(f"Meaning-bearing cue {required!r} was removed.")
-    if proposed.strip() == original.strip():
-        warnings.append("The model returned the text unchanged; no correction was needed or made.")
-    return warnings
+    if not has_devanagari_letter(proposed):
+        raise ValueError("BharatGen returned a non-Hindi suggestion.")
+    return preservation_warnings(original, proposed)
 
 
 _MODEL_LOCK = RLock()
@@ -88,7 +77,7 @@ def run_private_research(
         with _MODEL_LOCK:
             engine = _load_private_engine()
     record = engine.generate_record(original)
-    if not record.get("runtime_candidate_ok"):
+    if not isinstance(record, dict) or record.get("runtime_candidate_ok") is not True:
         raise RuntimeError("Incomplete or invalid pretrained model output; no edit was applied.")
     candidate = record["candidate"]
     return {

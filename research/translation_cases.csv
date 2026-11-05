@@ -1,0 +1,13 @@
+id,category,input_hindi,review_focus
+T01,ordinary,मुझे कल कॉलेज जाना है।,future obligation
+T02,code_mixing,मुझे Python 3 सीखना है।,preserve Python and 3
+T03,time,ट्रेन शाम 6 बजे आएगी।,preserve 6 and arrival meaning
+T04,quantity,राहुल ने 21 किताबें खरीदीं।,preserve 21 and completed action
+T05,negation,मैं नहीं जाऊँगा।,preserve negation
+T06,question,क्या तुम मेरी मदद कर सकते हो?,preserve question
+T07,uncertainty,शायद वह कल आएगा।,preserve uncertainty
+T08,time,हम अगले सोमवार मिलेंगे।,preserve future Monday
+T09,ordinary,आज मौसम बहुत अच्छा है।,avoid invented details
+T10,code_mixing,कृपया Zoom meeting शुरू करें।,preserve technical terms
+T11,quantity,18 में से 12 छात्रों ने भाग लिया।,preserve ratio 12 of 18
+T12,gender,मेरी बहन डॉक्टर है।,preserve family relationship and gender
