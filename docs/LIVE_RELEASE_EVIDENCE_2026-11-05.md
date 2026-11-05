@@ -85,9 +85,26 @@ AI4Bharat call. New free Chromium acceptance in
 Vercel URL, real CTA navigation, mobile layout, keyboard skip-link, browser
 errors and screenshots separately from actual Streamlit inference.
 
-Vercel production build state and link testing must both be checked after
-the gateway-hardening merge. READY alone is not evidence that a browser
-can reach or navigate the site.
+**Critical Vercel public-access issue found and fixed on 5 Nov:** project
+`indicwrite-public-web` previously had Vercel Authentication enabled for
+**all** deployments, redirecting anonymous production visitors to
+`https://vercel.com/login`. The release engineer changed ONLY this existing
+project's `ssoProtection.deploymentType` from `all` to `preview`.
+Production now allows public access, while preview deploys remain protected.
+
+A genuinely unauthenticated external Chromium run
+[42074411953 (rerun attempt 2)](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42074411953)
+**PASSED** on the established public Vercel URL after the settings fix.
+Artifact **13437807032** includes actual public screenshots and JSON:
+HTTP 200 and the IndicWrite heading at 320, 390, 768 and 1440 px,
+no horizontal overflow, keyboard skip-link present, zero JS exceptions,
+and an actual CTA click navigating to the original Streamlit URL.
+This is proof of the gateway's browser usability, **not** model inference.
+
+After the final gateway-hardening PR is merged, a new **main** run must
+additionally verify the real `/api/transliterate` endpoint returns HTTP 410
+with no wildcard CORS, plus repeat the complete public Streamlit Chromium
+suite on the final source SHA. A READY Vercel build alone cannot certify this.
 
 ## AI capability matrix and external blockers
 
