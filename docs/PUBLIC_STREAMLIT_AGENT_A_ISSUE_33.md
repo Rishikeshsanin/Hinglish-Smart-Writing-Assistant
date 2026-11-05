@@ -22,6 +22,7 @@ The **actual screenshot artifact** from run 41414939039 was downloaded and visua
 - Cloud logs print dependency stage durations, available disk MB at first install, cache hits, and real official checkpoint load times. They do not print user inputs or secrets.
 - Independent Playwright detects the observed sleeping-provider screen, clicks its public wake control, gives the original app up to four minutes to initialize and then checks conversion. It captures screenshots per failed attempt, body excerpt, accessible button labels, HTTP status, JS errors, diagnostics JSON and a browser trace on failure.
 - The test separates provider asleep, HTTP errors, provider/app error messages, app not rendered, partially rendered app, and visible-but-mismatched selector; no missing-button outcome is called a successful conversion.
+- **Confirmed browser-selector defect:** A fully rendered public IndicWrite interface was visible in the screenshot from Actions run 42057411393 after waking, while the test read empty top-level body text. The downloaded Playwright trace establishes Streamlit's real app is nested in `iframe[title="streamlitApp"]` at `/~/+/`. The old test was searching the outer Cloud wrapper. The revised script searches the live iframe, including result selectors, without modifying the frontend.
 - It requires fresh real hosted Devanagari output for three distinct Roman Hindi sentences, with expected tokens and punctuation preserved. Logs capture the exact observed output and browser wait time. The test does not create substitute predictions.
 - Browser CI now runs on pull requests and can be manually dispatched; its artifact is retained on both success and failure.
 
@@ -36,6 +37,8 @@ The **actual screenshot artifact** from run 41414939039 was downloaded and visua
 | PUBLIC_UI_READY | Public web control appeared | Model inference worked |
 | Three PUBLIC_INDICXLIT_CONVERSION_PASS records plus passing diagnostic JSON | Three hosted browser conversions were actually rendered | Permanent uptime |
 | PUBLIC_UI_BLOCKED / PUBLIC_INFERENCE_FAILED / PUBLIC_CONVERSION_TIMEOUT | Public release gate is blocked | Model quality failure |
+
+Do not claim the prior iframe-blind external run exercised the model: it only clicked wake and saw the app visually. The new frame-aware run must log actual output before release.
 
 Cloud server log markers include INDICWRITE_CLOUD_MODEL_VENV_BUILD, INDICWRITE_CLOUD_MODEL_VENV_READY, INDICWRITE_CLOUD_MODEL_VENV_CACHE_HIT, INDICWRITE_OFFICIAL_MODEL_COLD_LOAD_OK, and failure equivalents. Cold-load durations shown by server and per-conversion wall times by browser must be compared only after actual hosted runs. No hosted RAM or startup data are fabricated.
 
