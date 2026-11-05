@@ -14,14 +14,14 @@ This work covers only the IndicWrite Streamlit Cloud backend and external public
 
 On 5 November the rerun of https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/41414939039 tried the live Streamlit URL six times. Playwright never saw the Convert to Hindi control; the job failed. It did **not** run hosted model inference. Earlier user screenshots from 2 November displayed a real hosted IndicXlit result, but are not evidence of current uptime or unattended verification.
 
-The underlying reason is **not yet verified**. It may be a sleeping or failed hosted app, process crash, provider WebSocket startup, or selector mismatch. The old test could not distinguish these. Authenticated Streamlit runtime logs have not been read in this PR.
+The **actual screenshot artifact** from run 41414939039 was downloaded and visually inspected. It explicitly displays Streamlit's **Zzzz / This app has gone to sleep due to inactivity** screen and the **Yes, get this app back up!** public wake control. Thus a sleeping provider app is the confirmed reason the Convert control was absent *in that failed run*. This does not explain whether model bootstrap succeeds after waking. Authenticated Streamlit runtime logs have not been accessed in this PR.
 
 ## Improvements in the draft PR
 
 - A Linux process file lock prevents overlapping venv install attempts. The lock is stored outside the directory cleared by venv rebuild; failed installs do not write the ready stamp.
 - Cloud logs print dependency stage durations, available disk MB at first install, cache hits, and real official checkpoint load times. They do not print user inputs or secrets.
-- Independent Playwright captures screenshot per failed attempt, body excerpt, accessible button labels, HTTP status, JS errors, diagnostics JSON and a browser trace on failure.
-- The test separates HTTP errors, provider/app error messages, app not rendered, partially rendered app, and visible-but-mismatched selector; no missing-button outcome is called a successful conversion.
+- Independent Playwright detects the observed sleeping-provider screen, clicks its public wake control, gives the original app up to four minutes to initialize and then checks conversion. It captures screenshots per failed attempt, body excerpt, accessible button labels, HTTP status, JS errors, diagnostics JSON and a browser trace on failure.
+- The test separates provider asleep, HTTP errors, provider/app error messages, app not rendered, partially rendered app, and visible-but-mismatched selector; no missing-button outcome is called a successful conversion.
 - It requires fresh real hosted Devanagari output for three distinct Roman Hindi sentences, with expected tokens and punctuation preserved. Logs capture the exact observed output and browser wait time. The test does not create substitute predictions.
 - Browser CI now runs on pull requests and can be manually dispatched; its artifact is retained on both success and failure.
 
