@@ -8,6 +8,12 @@ Convert Roman-script Hindi to Devanagari using **AI4Bharat IndicXlit**, with an 
 
 ## Current production status — 5 November 2026
 
+Latest optional-model work: the [final model assessment](docs/FINAL_MODEL_ASSESSMENT_2026-11-05.md)
+records a genuine 12-case OPUS-MT evaluation on Linux and Windows, three
+material meaning-preservation failures, and fresh passing public-browser QA.
+Public translation remains disabled on quality grounds; no independent human
+scores are fabricated. The existing converter and original metrics are preserved.
+
 **Canonical AI converter:** [IndicWrite on Streamlit](https://hinglish-smart-writing-assistant-indicwrite-rishi.streamlit.app/), using the original official AI4Bharat IndicXlit checkpoint. An independent, external Chromium run [42071288867](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42071288867) exercised **ten distinct genuine Roman Hindi conversions** and a mixed-script preservation case, UTF-8 downloads, clipboard, validation and 320/390/768/1440 px layouts, with successful evidence. QA PR [#42](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/pull/42) was merged as [`3567aa1`](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/commit/3567aa1b9f36b91db0030626856d0b3f6d769606). The fresh post-merge public-browser run [42073053397](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42073053397) is the authoritative release verification; assess its conclusion and artifact separately from the earlier PR run.
 
 **Vercel public page:** [indicwrite-public-web.vercel.app](https://indicwrite-public-web.vercel.app/) is a **premium gateway linking to Streamlit**, not a standalone AI converter. Its old, unreliable hosted-word proxy is explicitly retired with HTTP 410; no fabricated results, external open relay, or wildcard CORS. An actual Vercel public-browser check is supplied by [`vercel-gateway-live.yml`](.github/workflows/vercel-gateway-live.yml). A READY build is not by itself proof of browser usability.
