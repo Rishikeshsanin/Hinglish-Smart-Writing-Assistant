@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
     paths:
+      - 'README.md'
+      - 'web/**'
+      - 'docs/PRODUCT_RELEASE_GATE.md'
       - 'app.py'
       - 'cloud_app.py'
       - 'src/indicwrite/**'
@@ -12,6 +15,8 @@ on:
       - '.github/workflows/product-acceptance.yml'
   pull_request:
     paths:
+      - 'README.md'
+      - 'web/**'
       - 'tests/test_product_acceptance.py'
       - 'scripts/qa_product_release.py'
       - 'docs/PRODUCT_RELEASE_GATE.md'

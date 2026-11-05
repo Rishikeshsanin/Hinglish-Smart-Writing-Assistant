@@ -56,3 +56,21 @@ evaluation. Public deployment must show a reachable independently tested URL.
 
 Do not assume two independent ChatGPT chats communicate automatically: paste
 handoffs or commit them to GitHub for coordinator review.
+
+
+## Current verified handoff (5 November 2026; supersedes early project snapshot)
+
+Agents A/B/C have been integrated via PRs #37/#38/#40; the optional-model
+runtime fix is PR #41. The independent ten-case product QA PR #42 merged at
+`3567aa1b9f36b91db0030626856d0b3f6d769606`. Its [post-merge external
+Chromium CI run 42073053397](https://github.com/Rishikeshsanin/Hinglish-Smart-Writing-Assistant/actions/runs/42073053397)
+passed 10 genuine official-IndicXlit public cases plus a mixed-language case,
+real clipboard and Unicode downloads, keyboard controls and four viewports.
+This documents the **core conversion product** only; no inference was mocked.
+
+Later private research evidence confirms BharatGen pinned-pretrained T4
+inference (1 smoke + 10 cases), but NOT human-certified semantic/grammar
+quality and NOT permission to publish generated results or host the model.
+IndicTrans2 remains access-gated; experimental grammar correction remains
+disabled. Never leak private research data. A free-host public browser success
+is not a guarantee of uptime or complete WCAG accessibility.

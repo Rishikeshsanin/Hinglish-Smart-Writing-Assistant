@@ -1,0 +1,44 @@
+name: Live Vercel gateway browser acceptance
+on:
+  pull_request:
+    paths:
+      - 'web/**'
+      - 'scripts/qa_vercel_gateway.py'
+      - 'README.md'
+      - '.github/workflows/vercel-gateway-live.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - 'scripts/qa_vercel_gateway.py'
+      - 'README.md'
+      - '.github/workflows/vercel-gateway-live.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-vercel-gateway:
+    name: Browser-check real public Vercel gateway (not model inference)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright for public-browser QA
+        run: |
+          python -m pip install 'playwright==1.56.0'
+          python -m playwright install --with-deps chromium
+      - name: Check existing production URL and native converter CTA
+        run: python scripts/qa_vercel_gateway.py
+      - name: Preserve public browser evidence including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: indicwrite-vercel-gateway-browser
+          path: gateway-qa/
+          if-no-files-found: ignore
+          retention-days: 7
